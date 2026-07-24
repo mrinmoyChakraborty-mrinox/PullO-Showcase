@@ -17,5 +17,4 @@ No permission is granted to reproduce, modify, distribute, reverse engineer,
 or create derivative works of the proprietary PullO software without prior
 written permission from Runtime.co.
 
-For licensing or partnership inquiries, contact:
-contact@runtime.co
+For licensing or partnership inquiries, contact:runtimeco.team@gmail.com
