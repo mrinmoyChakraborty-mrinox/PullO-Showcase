@@ -1,12 +1,8 @@
-# Repository Notice
-
-- This repository is a public showcase for PullO. It contains documentation, architecture diagrams, screenshots, branding assets, and other public resources. The production backend, browser extension, infrastructure, and implementation remain proprietary and are not included in this repository.
-
 # PullO
 
 <div align="center">
 
-<img src="./branding/logo-dark.png" alt="PullO Logo" width="120"/>
+<img src="https://runtimeco.qzz.io/images/logo.png" alt="PullO Logo" width="120"/>
 
 # Connect your local AI to your team.
 
