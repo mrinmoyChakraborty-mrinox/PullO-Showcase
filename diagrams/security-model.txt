@@ -1,47 +1,146 @@
-PULLO SECURITY MODEL
-=====================
+╔══════════════════════════════════════════════════════════╗
+║     THE SECURITY MODEL                                   ║
+║  (Or: how your machine ghosts the internet)              ║
+╚══════════════════════════════════════════════════════════╝
 
-                    ┌────────────────────────┐
-                    │       Internet         │
-                    │                        │
-                    │   PullO Cloud Relay    │
-                    │   (authenticated,      │
-                    │    rate-limited API)   │
-                    └────────┬───────────────┘
-                             │
-               Only outbound │ WebSocket
-               No inbound    │ (TLS encrypted)
-               ports open    │
-                             │
-                    ┌────────▼───────────────┐
-                    │     Your Machine        │
-                    │                         │
-                    │  ┌───────────────────┐  │
-                    │  │ Chrome Extension  │  │
-                    │  │ (MV3, sandboxed)  │  │
-                    │  │                   │  │
-                    │  │ WebSocket Client  │  │
-                    │  │ API Key Storage   │  │
-                    │  │ (chrome.storage)  │  │
-                    │  └────────┬──────────┘  │
-                    │           │              │
-                    │  ┌────────▼──────────┐  │
-                    │  │ Local AI Provider │  │
-                    │  │ (localhost only)  │  │
-                    │  │ Ollama | LM Studio│  │
-                    │  │ llama.cpp | Custom│  │
-                    │  └───────────────────┘  │
-                    │                         │
-                    │  Firewall: NO inbound   │
-                    │  rules needed           │
-                    └─────────────────────────┘
+  "Your laptop has no public IP. No open ports.
+   No incoming connections. To the internet, it's a ghost."
 
-SECURITY PROPERTIES:
-  ✓ No public IP required
-  ✓ No open inbound ports
-  ✓ Works behind NAT / corporate proxy
-  ✓ API key authentication (SHA-256 hashed)
-  ✓ Per-model access scoping
-  ✓ Rate limiting per key (RPM + daily budget)
-  ✓ Prompts never persisted to disk
-  ✓ mTLS between extension and cloud relay
+
+                      ┌──────────────────────────────────┐
+                      │          THE INTERNET              │
+                      │                                  │
+                      │  🌐 Curious bots scanning for    │
+                      │     open ports? They'll find      │
+                      │     NOTHING. Your machine isn't   │
+                      │     even in the phone book.       │
+                      │                                  │
+                      │  🔐 PullO Cloud Relay sits here   │
+                      │     — it's the only thing the     │
+                      │     internet can see. It handles  │
+                      │     auth, rate limiting, and      │
+                      │     request queuing.               │
+                      │                                  │
+                      │  📡 It talks to your extension    │
+                      │     via WebSocket — but only      │
+                      │     because the extension         │
+                      │     called FIRST.                  │
+                      └──────────────┬───────────────────┘
+                                     │
+                                     │
+                    ┌────────────────┴────────────────────┐
+                    │  THE MAGIC LAYER (nobody knows)      │
+                    │                                     │
+                    │  One single outbound WebSocket       │
+                    │  connection. Looks like HTTPS        │
+                    │  traffic to any firewall.             │
+                    │                                     │
+                    │  ┌─────────────────────────────────┐ │
+                    │  │ Your IT department: "It's just  │ │
+                    │  │ web traffic, move along."       │ │
+                    │  │ They never suspect a thing.     │ │
+                    │  └─────────────────────────────────┘ │
+                    │                                     │
+                    │  Direction: OUTBOUND ONLY            │
+                    │  Initiator: THE EXTENSION, not cloud │
+                    │  Protocol: WSS (WebSocket over TLS)  │
+                    │  Firewall: No rules needed           │
+                    └────────────────┬────────────────────┘
+                                     │
+                                     │
+                      ┌──────────────▼────────────────────┐
+                      │     YOUR MACHINE                    │
+                      │   (The Fortress)                    │
+                      │                                    │
+                      │  ┌──────────────────────────────┐  │
+                      │  │  CHROME EXTENSION            │  │
+                      │  │  (Manifest V3, sandboxed)    │  │
+                      │  │                              │  │
+                      │  │  Lives in browser isolation  │  │
+                      │  │  • Can't read your files      │  │
+                      │  │  • Can't access other tabs   │  │
+                      │  │  • Can only talk to PullO    │  │
+                      │  │    + localhost (your models) │  │
+                      │  │                              │  │
+                      │  │  API keys stored in           │  │
+                      │  │  chrome.storage (encrypted)  │  │
+                      │  └───────────┬──────────────────┘  │
+                      │              │                      │
+                      │              │ localhost only       │
+                      │              │ (not exposed to LAN) │
+                      │              │                      │
+                      │  ┌───────────▼──────────────────┐  │
+                      │  │  LOCAL AI PROVIDER            │  │
+                      │  │                              │  │
+                      │  │  Ollama  → 127.0.0.1:11434   │  │
+                      │  │  LM Studio → 127.0.0.1:1234  │  │
+                      │  │  llama.cpp → 127.0.0.1:8080  │  │
+                      │  │                              │  │
+                      │  │  Bound to loopback.           │  │
+                      │  │  Your WiFi neighbor can't     │  │
+                      │  │  even see these ports.        │  │
+                      │  └──────────────────────────────┘  │
+                      │                                    │
+                      │  🛡️  Your GPU: running models,     │
+                      │     not exposing them.              │
+                      │                                    │
+                      │  🔥 Firewall: Inbound rules = 0    │
+                      │     Outbound rule = 1 (WebSocket)  │
+                      └────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════╗
+║  ATTACK SURFACE ANALYSIS                                 ║
+╚══════════════════════════════════════════════════════════╝
+
+  ┌────────────────────────────────────────────────────────┐
+  │  What an attacker CAN see:                             │
+  │    • PullO Cloud API (rate-limited, authenticated)    │
+  │    • Your public IP? No — they see PullO's servers    │
+  │                                                       │
+  │  What an attacker CAN'T see:                          │
+  │    • Your machine's IP                               │
+  │    • Your local network                              │
+  │    • Your running models                             │
+  │    • Your prompts (not stored anywhere)               │
+  │    • Your API keys (hashed at rest, TLS in transit)   │
+  │    • Your Ollama endpoint (localhost, unreachable)    │
+  │                                                       │
+  │  What if they steal an API key?                      │
+  │    • Scoped to specific model(s)                      │
+  │    • Rate limited (configurable RPM + daily budget)   │
+  │    • Revocable from dashboard in one click            │
+  │    • Logged — you'll know exactly what was used       │
+  └────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════╗
+║  THE COMPARISON                                          ║
+║  (ngrok/Cloudflare Tunnel vs. PullO — the real talk)    ║
+╚══════════════════════════════════════════════════════════╝
+
+  ┌────────────────────────────────────────────────────────┐
+  │                  │  ngrok / Tunnel    │  PullO         │
+  ├────────────────────────────────────────────────────────┤
+  │  Connection      │  Inbound tunnel   │  Outbound pull │
+  │  Your IP         │  Public (exposed) │  Invisible     │
+  │  Firewall config │  Open port needed │  Nothing       │
+  │  Auth            │  Optional add-on  │  Built-in      │
+  │  Per-model       │  No               │  Yes           │
+  │  Team workspaces │  No               │  Yes           │
+  │  Usage tracking  │  No               │  Yes           │
+  │  Streaming       │  Depends          │  Native SSE    │
+  └────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════╗
+║  PRIVACY GUARANTEES (the short version)                  ║
+╚══════════════════════════════════════════════════════════╝
+
+  ✓ Prompts are NEVER written to disk on PullO servers
+  ✓ Models NEVER leave your machine
+  ✓ Request metadata (tokens used, model name, latency)
+    is logged for analytics — NOT the content
+  ✓ Your machine's IP is NEVER exposed to API callers
+  ✓ No inbound ports. Ever. Period.
+  ✓ No data stored = nothing to leak in a breach

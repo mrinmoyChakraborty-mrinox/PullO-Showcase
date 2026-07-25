@@ -1,38 +1,137 @@
-PULLO ARCHITECTURE OVERVIEW
-============================
+╔══════════════════════════════════════════════════════════╗
+║           PULLO — THE BIG PICTURE                        ║
+║    How local models become team APIs without the pain    ║
+╚══════════════════════════════════════════════════════════╝
 
-                     ┌──────────────────────┐
-                     │     Team Apps         │
-                     │  (OpenAI SDK / Curl   │
-                     │   / LangChain / ...)  │
-                     └──────────┬───────────┘
-                                │ pk_xxx API key
-                     ┌──────────▼───────────┐
-                     │    PullO Cloud Relay  │
-                     │                       │
-                     │  ┌─────────────────┐  │
-                     │  │ Auth + Rate     │  │
-                     │  │ Limit + Queue   │  │
-                     │  └────────┬────────┘  │
-                     └──────────┬───────────┘
-                                │ WebSocket (outbound)
-                     ┌──────────▼───────────┐
-                     │  Chrome Extension     │
-                     │  (pulls requests,     │
-                     │   streams responses)  │
-                     └──────────┬───────────┘
-                                │ localhost
-                     ┌──────────▼───────────┐
-                     │    Local AI Runtime   │
-                     │                       │
-                     │  Ollama | LM Studio   │
-                     │  llama.cpp | Custom   │
-                     └────────────────────────┘
+    "PullO is a teeny tiny cloud relay + a browser extension.
+     The magic? Your machine stays invisible to the internet."
 
 
-KEY PRINCIPLES:
-- Zero inbound ports: Extension initiates all connections
-- Pull-based: Extension polls cloud queue for pending requests
-- Privacy: Prompts never stored; models never leave local hardware
-- Compatibility: OpenAI SDK drop-in via /v1/chat/completions
-- Streaming: Native SSE streaming from local model to client
+                         ┌──────────────────────────┐
+                         │   YOUR TEAM / APPS        │
+                         │                           │
+                         │  Python scripts, CI       │
+                         │  pipelines, chatbots,     │
+                         │  LangChain agents,        │
+                         │  VS Code extensions...    │
+                         │                           │
+                         │  They all speak OpenAI.   │
+                         │  None of them know (or    │
+                         │  care) where the model    │
+                         │  actually runs.           │
+                         └───────────┬───────────────┘
+                                     │
+                                     │  "Hey PullO, I need
+                                     │   deepseek-r1 to
+                                     │   analyze this..."
+                                     │  (Bearer pk_xxxxxxxxx)
+                                     │
+                         ┌───────────▼───────────────┐
+                         │   PULLO CLOUD RELAY        │
+                         │                             │
+                         │  ┌───────────────────────┐  │
+                         │  │ 1. "Who is this?"      │  │
+                         │  │    → API key check     │  │
+                         │  │                        │  │
+                         │  │ 2. "Are they allowed?"  │  │
+                         │  │    → Rate limit check  │  │
+                         │  │                        │  │
+                         │  │ 3. "Is the model up?"   │  │
+                         │  │    → Heartbeat check   │  │
+                         │  │                        │  │
+                         │  │ 4. "Queue it."         │  │
+                         │  │    → Push to extension │  │
+                         │  └───────────┬───────────┘  │
+                         └─────────────┬───────────────┘
+                                       │
+                                       │  WebSocket (outbound)
+                                       │  Your IT dept sees
+                                       │  "just another HTTPS
+                                       │  connection" — boring,
+                                       │  exactly how we want it.
+                                       │
+                         ┌─────────────▼───────────────┐
+                         │   CHROME EXTENSION            │
+                         │   (The invisible worker)      │
+                         │                                │
+                         │  Sits quietly in your          │
+                         │  browser toolbar.              │
+                         │                                │
+                         │  Job:                          │
+                         │  • Polls cloud for requests    │
+                         │  • Forwards them to Ollama     │
+                         │  • Streams tokens back         │
+                         │  • Injects browser tools       │
+                         │    (search, read, screenshot)  │
+                         │  • Never exposes your IP       │
+                         │                                │
+                         │  Chrome can be in the          │
+                         │  background. It doesn't care.  │
+                         └─────────────┬─────────────────┘
+                                       │
+                                       │  localhost:11434
+                                       │  (your machine, your
+                                       │   GPU, your rules)
+                                       │
+                         ┌─────────────▼─────────────────┐
+                         │   LOCAL AI RUNTIME              │
+                         │                                 │
+                         │  ┌──────┐  ┌──────────┐       │
+                         │  │Ollama│  │LM Studio │       │
+                         │  └──┬───┘  └────┬─────┘       │
+                         │     │            │              │
+                         │  ┌──▼────────────▼──┐          │
+                         │  │   llama.cpp      │          │
+                         │  │   Custom API     │          │
+                         │  │   Anything that  │          │
+                         │  │   speaks OpenAI  │          │
+                         │  └─────────────────┘          │
+                         │                                 │
+                         │  Your models. Your hardware.    │
+                         │  Your data never leaves.        │
+                         └─────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════╗
+║  THE CORE INSIGHT (say it loud for the people in back)   ║
+╚══════════════════════════════════════════════════════════╝
+
+  Instead of PUSHING traffic into your machine (open ports,
+  firewall holes, praying to the networking gods)…
+
+  …PullO's extension PULLS requests from a cloud queue over
+  a single outbound connection. Like checking your email
+  instead of leaving your door unlocked.
+
+  ┌─────────────────────────────────────────────────────┐
+  │  ✓ Zero inbound ports    ✓ Works behind any NAT     │
+  │  ✓ No public IP needed   ✓ No DevOps degree required│
+  │  ✓ Corporate firewall?    ¯\_(ツ)_/¯  Still works.    │
+  └─────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════╗
+║  PRODUCT LINGO (for pitch decks and hackathon judges)    ║
+╚══════════════════════════════════════════════════════════╝
+
+  Connection model   → Outbound WebSocket polling (pull)
+  Machine exposure   → Zero inbound ports; you're invisible
+  Auth               → Scoped API keys per workspace/model
+  Team sharing       → Role-based workspaces (Owner/Admin/Member)
+  Usage tracking     → Per-request analytics + token counts
+  Provider support   → Ollama, LM Studio, llama.cpp, any /v1
+  Streaming          → Native SSE from model → client
+  Privacy            → Prompts never stored. Ever.
+  Overhead           → ~20-80ms — you won't notice it
+
+
+╔══════════════════════════════════════════════════════════╗
+║  WHAT THIS IS NOT                                         ║
+╚══════════════════════════════════════════════════════════╝
+
+  ✗ NOT a cloud inference provider (we don't run models)
+  ✗ NOT a VPN (your machine isn't on a virtual network)
+  ✗ NOT a tunnel (there's nothing to tunnel TO)
+  ✗ NOT magic (just a well-designed WebSocket relay)
+
+  It's a private AI network layer. Nothing more, nothing less.

@@ -1,34 +1,114 @@
-PULLO REQUEST LIFECYCLE
-=========================
+╔══════════════════════════════════════════════════════════╗
+║     THE JOURNEY OF A SINGLE REQUEST                      ║
+║  (Or: how your teammate's API call finds your laptop)    ║
+╚══════════════════════════════════════════════════════════╝
 
-Client            PullO Cloud        Extension          Local Model
- (SDK)             (Relay)            (Browser)          (Ollama)
-   |                  |                  |                  |
-   | POST /v1/chat    |                  |                  |
-   | (Bearer pk_xxx)  |                  |                  |
-   |----------------->|                  |                  |
-   |                  | Validate key     |                  |
-   |                  | Rate limit check |                  |
-   |                  | Model online?    |                  |
-   |                  |                  |                  |
-   |                  | Queue request    |                  |
-   |                  |----------------->|                  |
-   |                  | (WebSocket push) |                  |
-   |                  |                  | POST /v1/chat    |
-   |                  |                  | (localhost)      |
-   |                  |                  |----------------->|
-   |                  |                  |                  |
-   |                  |                  |  Stream tokens   |
-   |                  |                  |<-----------------|
-   |                  |                  |                  |
-   |  Stream response |                  |                  |
-   |<-----------------|                  |                  |
-   |                  |                  |                  |
+  You: "Hey Ollama, generate a poem about Rust."
+
+  What actually happens:
+
+  ┌──────────┐         ┌────────────┐         ┌────────────┐         ┌──────────┐
+  │  CLIENT  │         │  PULLO     │         │ EXTENSION  │         │  LOCAL   │
+  │  (SDK)   │         │  CLOUD     │         │ (BROWSER)  │         │  MODEL   │
+  └────┬─────┘         └─────┬──────┘         └─────┬──────┘         └────┬─────┘
+       │                     │                      │                     │
+       │  1. "Generate!"     │                      │                     │
+       │  POST /v1/chat      │                      │                     │
+       │  Bearer pk_xxx      │                      │                     │
+       │────────────────────>│                      │                     │
+       │                     │                      │                     │
+       │       ╔═════════════╧══════════════╗       │                     │
+       │       ║  CLOUD CHECKS EVERYTHING   ║       │                     │
+       │       ║                            ║       │                     │
+       │       ║  ✓ Is this API key valid?  ║       │                     │
+       │       ║  ✓ Is this model allowed?  ║       │                     │
+       │       ║  ✓ Are we rate limited?    ║       │                     │
+       │       ║  ✓ Is the extension alive? ║       │                     │
+       │       ║  ✓ Is the model online?    ║       │                     │
+       │       ╚════════════════════════════╝       │                     │
+       │                     │                      │                     │
+       │                     │  2. "Got a job for you"                  │
+       │                     │─────────────────────>│                     │
+       │                     │  (WebSocket push —   │                     │
+       │                     │   milliseconds)      │                     │
+       │                     │                      │                     │
+       │                     │                      │  3. "Hey Ollama!"   │
+       │                     │                      │  POST /v1/chat      │
+       │                     │                      │  (localhost:11434)   │
+       │                     │                      │────────────────────>│
+       │                     │                      │                     │
+       │                     │                      │       ╔════════════╧══════╗
+       │                     │                      │       ║  MODEL GOES BRRR  ║
+       │                     │                      │       ║                   ║
+       │                     │                      │       ║  Tokens appear    ║
+       │                     │                      │       ║  one by one...    ║
+       │                     │                      │       ║  (or in a batch   ║
+       │                     │                      │       ║   if you're not   ║
+       │                     │                      │       ║   streaming)      ║
+       │                     │                      │       ╚══════════════════╝
+       │                     │                      │                     │
+       │                     │                      │  4. "Here you go!"  │
+       │                     │                      │  Stream: t... th... │
+       │                     │                      │  the... rust...     │
+       │                     │                      │<────────────────────│
+       │                     │                      │                     │
+       │                     │  5. Streaming back   │                     │
+       │                     │<─────────────────────│                     │
+       │                     │  (SSE chunks, real-  │                     │
+       │                     │   time, as they come)│                     │
+       │                     │                      │                     │
+       │  6. Client receives │                      │                     │
+       │  <──────────────────│                      │                     │
+       │  {                  │                      │                     │
+       │   "choices":[{"     │                      │                     │
+       │    "message":{      │                      │                     │
+       │     "content":"In   │                      │                     │
+       │     systems old,    │                      │                     │
+       │     where pointers  │                      │                     │
+       │     dance..."}}]}   │                      │                     │
+       │                     │                      │                     │
+       │  🎉 Done.           │                      │                     │
+       │  Your teammate has  │                      │                     │
+       │  no idea that model │                      │                     │
+       │  is on your laptop. │                      │                     │
+       │                     │                      │                     │
 
 
-TIMING:
-  Client → Cloud:    ~5-20ms  (network latency)
-  Cloud → Extension: ~1-5ms   (WebSocket push)
-  Extension → Model: ~1ms     (localhost)
-  Inference:         ~500ms+  (depends on model/hardware)
-  Response stream:   real-time SSE back through same path
+╔══════════════════════════════════════════════════════════╗
+║  THE NUMBERS (latency breakdown)                         ║
+╚══════════════════════════════════════════════════════════╝
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Step                   │  Typical                   │
+  ├──────────────────────────────────────────────────────┤
+  │  Client → Cloud         │  ~5-20ms  (network)       │
+  │  Cloud → Extension      │  ~1-5ms   (WebSocket push)│
+  │  Extension → Ollama     │  ~1ms     (localhost)     │
+  │  Model inference        │  ~500ms+  (you know this) │
+  │  Response streaming     │  real-time, same path back│
+  │                         │                           │
+  │  TOTAL OVERHEAD         │  ~20-80ms                 │
+  │  (without inference)    │  ─ barely measurable      │
+  └──────────────────────────────────────────────────────┘
+
+  Translation: Your model's response time is dominated by
+  the model itself. The relay overhead is a rounding error.
+
+
+╔══════════════════════════════════════════════════════════╗
+║  WHAT COULD GO WRONG                                     ║
+╚══════════════════════════════════════════════════════════╝
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Extension offline?     → Request queues for 30s    │
+  │                          → Then 503 Service Unavail │
+  │                          → Clean failure, no fraud  │
+  ├──────────────────────────────────────────────────────┤
+  │  Model crashes mid-     → Error forwarded verbatim  │
+  │  request?               → Client sees the Ollama    │
+  │                          error, just like direct    │
+  ├──────────────────────────────────────────────────────┤
+  │  Chrome suspended?      → Extension reconnects on   │
+  │                          wake → picks up where it   │
+  │                          left off                   │
+  └──────────────────────────────────────────────────────┘
