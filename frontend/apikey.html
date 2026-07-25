@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Keys | PullO Infrastructure</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --void:        #080B14;
+      --surface-1:   #0D1117;
+      --surface-2:   #111827;
+      --surface-3:   #1A2234;
+      --surface-4:   #1E2A3E;
+      --border:      rgba(255,255,255,0.06);
+      --border-hi:   rgba(255,255,255,0.12);
+      --violet:      #7C3AED;
+      --violet-hi:   #9D5CF6;
+      --violet-glow: rgba(124,58,237,0.25);
+      --indigo:      #4F46E5;
+      --cyan:        #06B6D4;
+      --emerald:     #10B981;
+      --amber:       #F59E0B;
+      --rose:        #F43F5E;
+      --teal:        #14B8A6;
+      --text-hi:     #F1F5F9;
+      --text-md:     #94A3B8;
+      --text-lo:     #475569;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-xl:   20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--void);
+      color: var(--text-hi);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+
+    /* Ambient */
+    .bg-ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.15;
+      animation: orb-drift 20s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 600px; height: 600px; background: var(--violet); top: -200px; right: -100px; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: var(--indigo); bottom: -100px; left: 200px; animation-delay: -7s; }
+    .orb-3 { width: 300px; height: 300px; background: var(--teal); top: 40%; right: 20%; animation-delay: -14s; opacity: 0.07; }
+    @keyframes orb-drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 20px) scale(1.05); }
+    }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed; left: 0; top: 0; height: 100vh; width: 240px;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      z-index: 50;
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    #sidebar.collapsed { width: 0; transform: translateX(-100%); }
+    #main { margin-left: 240px; transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; z-index: 1; }
+    #main.expanded { margin-left: 0; }
+    .sidebar-label { white-space: nowrap; transition: opacity 0.15s ease; }
+    #sidebar.collapsed .sidebar-label { opacity: 0; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 14px; border-radius: var(--radius-sm);
+      font-size: 13.5px; font-weight: 500; color: var(--text-md);
+      cursor: pointer; transition: all 0.15s ease;
+      position: relative; text-decoration: none;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text-hi); }
+    .nav-item.active { background: rgba(124,58,237,0.15); color: #C4B5FD; }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; background: var(--violet-hi);
+      border-radius: 0 4px 4px 0;
+    }
+    .nav-icon { font-size: 17px; flex-shrink: 0; }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-lo);
+      padding: 6px 12px 4px;
+    }
+
+    /* Card — deeper glass */
+    .card {
+      background: rgba(10,14,26,0.72);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-lg);
+      transition: border-color 0.25s, box-shadow 0.3s, transform 0.25s;
+      /* inner top-edge highlight to sell the glass */
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.35);
+    }
+    .card:hover {
+      border-color: rgba(255,255,255,0.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), 0 6px 32px rgba(0,0,0,0.5);
+    }
+
+    /* Bento cards — glow + lift on hover */
+    .bento-card {
+      transition: border-color 0.3s, box-shadow 0.4s, transform 0.3s;
+    }
+    .bento-monitor:hover {
+      border-color: rgba(124,58,237,0.45) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 0 0 1px rgba(124,58,237,0.18),
+        0 0 40px rgba(124,58,237,0.18),
+        0 0 80px rgba(124,58,237,0.08),
+        0 20px 50px rgba(0,0,0,0.5) !important;
+      transform: translateY(-3px);
+    }
+    .bento-latency:hover {
+      border-color: rgba(167,139,250,0.55) !important;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 0 0 1px rgba(124,58,237,0.25),
+        0 0 50px rgba(124,58,237,0.28),
+        0 0 100px rgba(79,70,229,0.15),
+        0 20px 50px rgba(0,0,0,0.5) !important;
+      transform: translateY(-3px);
+    }
+
+    /* Topbar */
+    #topbar {
+      height: 60px; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(8,11,20,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 40;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--violet) 0%, var(--indigo) 100%);
+      color: #fff; border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      padding: 10px 18px; cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 0 0 0 rgba(124,58,237,0);
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: calc(var(--radius-sm) + 1px);
+      background: linear-gradient(135deg, #9D5CF6, #6366F1);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      z-index: -1;
+    }
+    .btn-primary:hover {
+      box-shadow:
+        0 0 0 3px rgba(124,58,237,0.25),
+        0 0 20px rgba(124,58,237,0.45),
+        0 0 45px rgba(124,58,237,0.2),
+        0 4px 16px rgba(0,0,0,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:active { transform: translateY(0); box-shadow: 0 0 0 2px rgba(124,58,237,0.2); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border-hi);
+      color: var(--text-md);
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 500;
+      padding: 9px 16px; cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.05); color: var(--text-hi); }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table thead th {
+      padding: 11px 20px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-lo);
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s ease; }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+    .data-table tbody td { padding: 15px 20px; font-size: 13px; vertical-align: middle; }
+
+    /* Status badge */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: 99px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .badge-active  { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.2); }
+    .badge-expired { background: rgba(244,63,94,0.12);  color: #FB7185; border: 1px solid rgba(244,63,94,0.2); }
+    .badge-revoked { background: rgba(244,63,94,0.12);  color: #F87171; border: 1px solid rgba(244,63,94,0.2); }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .dot-active  { background: #34D399; box-shadow: 0 0 5px #34D399; animation: pulse-dot 2s infinite; }
+    .dot-expired { background: #FB7185; }
+    .dot-revoked { background: #F87171; }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 4px #34D399; }
+      50%       { box-shadow: 0 0 10px #34D399, 0 0 20px rgba(52,211,153,0.4); }
+    }
+
+    /* Model chip */
+    .model-chip {
+      background: rgba(124,58,237,0.12);
+      border: 1px solid rgba(124,58,237,0.22);
+      color: #C4B5FD;
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px; font-weight: 600;
+      padding: 3px 8px; border-radius: 5px;
+    }
+
+    /* Tool icons */
+    .tool-ring {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(17,24,39,0.8);
+      border: 1px solid var(--border-hi);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-md);
+      margin-left: -6px; transition: border-color 0.15s;
+    }
+    .tool-ring:first-child { margin-left: 0; }
+    .tool-ring:hover { border-color: #C4B5FD; color: #C4B5FD; z-index: 2; }
+
+    /* Key chip */
+    .key-chip {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px; color: var(--text-md);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Icon action */
+    .icon-btn {
+      width: 30px; height: 30px;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 7px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-lo);
+      transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.06); border-color: var(--border-hi); color: var(--text-hi);cursor: pointer; }
+    .icon-btn.danger:hover { background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3); color: #FB7185; }
+
+    /* Notification dot */
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--violet-hi);
+      border: 2px solid var(--void);
+      animation: pulse-dot 2s infinite;
+    }
+
+    /* Bento */
+    .bento-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .bento-span2 { grid-column: span 2; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: rgba(13,17,23,0.98);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-xl);
+      width: 100%; max-width: 520px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+      transform: translateY(12px) scale(0.97);
+      transition: transform 0.2s ease;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+
+    /* Input */
+    .field-input {
+      width: 100%; background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 13px; color: var(--text-hi);
+      font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field-input:focus { border-color: rgba(124,58,237,0.6); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+    .field-input::placeholder { color: var(--text-lo); }
+    select.field-input { appearance: none; cursor: pointer; }
+    .field-label { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-md); margin-bottom: 6px; text-transform: uppercase; }
+
+    /* Bento shimmer on hover */
+    .bento-monitor::after, .bento-latency::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .bento-monitor:hover::after, .bento-latency:hover::after { opacity: 1; }
+
+    /* Tool toggle enhanced */
+    .tool-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 11px 14px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .tool-toggle:hover {
+      border-color: rgba(124,58,237,0.3);
+      background: rgba(124,58,237,0.06);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.06), 0 0 12px rgba(124,58,237,0.1);
+    }
+    .tool-toggle.checked {
+      border-color: rgba(124,58,237,0.38);
+      background: rgba(124,58,237,0.09);
+      box-shadow: inset 0 1px 0 rgba(196,181,253,0.08), 0 0 16px rgba(124,58,237,0.14);
+    }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 32px; height: 18px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 99px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+    .toggle input:checked + .toggle-track {
+      background: var(--violet);
+      border-color: var(--violet);
+      box-shadow: 0 0 10px rgba(124,58,237,0.5), 0 0 20px rgba(124,58,237,0.2);
+    }
+    .toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), background 0.2s, box-shadow 0.2s;
+      pointer-events: none;
+    }
+    .toggle input:checked ~ .toggle-thumb {
+      transform: translateX(14px);
+      background: #fff;
+      box-shadow: 0 0 6px rgba(196,181,253,0.6);
+    }
+
+    /* Success overlay */
+    .success-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 110;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .success-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* Fade up animation */
+    .fade-up { opacity: 0; transform: translateY(10px); animation: fade-up-in 0.4s ease forwards; }
+    @keyframes fade-up-in { to { opacity: 1; transform: translateY(0); } }
+    .d1 { animation-delay: 0.04s; } .d2 { animation-delay: 0.08s; } .d3 { animation-delay: 0.12s; }
+    .d4 { animation-delay: 0.16s; } .d5 { animation-delay: 0.20s; }
+
+    /* Key reveal toggle */
+    .key-field-wrap {
+      display: inline-flex; align-items: center; gap: 2px;
+    }
+    .key-display {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px; color: var(--text-md);
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: 1px solid transparent;
+      transition: border-color 0.25s, box-shadow 0.3s, background 0.3s;
+    }
+    .key-display.revealed {
+      border-color: rgba(124,58,237,0.35);
+      background: rgba(124,58,237,0.06);
+      box-shadow: 0 0 12px rgba(124,58,237,0.15), 0 0 30px rgba(124,58,237,0.06);
+      color: #C4B5FD;
+      animation: key-reveal 0.35s ease;
+    }
+    @keyframes key-reveal {
+      0%   { border-color: transparent; box-shadow: 0 0 0 rgba(124,58,237,0); background: transparent; }
+      50%  { border-color: rgba(124,58,237,0.55); box-shadow: 0 0 22px rgba(124,58,237,0.35), 0 0 50px rgba(124,58,237,0.12); background: rgba(124,58,237,0.09); }
+      100% { border-color: rgba(124,58,237,0.35); box-shadow: 0 0 12px rgba(124,58,237,0.15), 0 0 30px rgba(124,58,237,0.06); background: rgba(124,58,237,0.06); }
+    }
+    .eye-btn { width: 24px; height: 24px; }
+
+    .model-dropdown {
+      display: none; position: absolute; right: 0; top: calc(100% + 6px);
+      background: rgba(13,17,23,0.98);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-md);
+      padding: 6px; min-width: 140px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      z-index: 30;
+    }
+    .model-dropdown.open { display: block; }
+    .model-dropdown-item {
+      padding: 6px 10px; border-radius: 5px;
+      font-size: 12px; color: var(--text-md);
+      white-space: nowrap; cursor: default;
+    }
+    .model-dropdown-item:hover { background: rgba(255,255,255,0.05); color: var(--text-hi); }
+
+    #keyName { color: #000; background: #f1f5f9; }
+    #keyName:focus { background: #fff; border-color: rgba(124,58,237,0.6); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+
+    /* Force black text cursor in the create-key modal */
+    #createModal input,
+    #createModal select,
+    #createModal textarea {
+      caret-color: #000 !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    @media (max-width: 1024px) {
+      #sidebar { width: 0; transform: translateX(-100%); }
+      #main { margin-left: 0 !important; }
+    }
+
+    /* ── Models Access ── */
+    .models-section { display: flex; flex-direction: column; gap: 12px; }
+    .models-section-header { display: flex; align-items: center; gap: 6px; }
+    @keyframes infoFadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Tools Tooltip ── */
+    .tools-info-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0; display: inline-flex; align-items: center; justify-content: center;
+      position: relative; color: var(--text-lo); border-radius: 50%;
+      transition: color 0.15s;
+    }
+    .tools-info-btn:hover { color: var(--text-hi); }
+    .tools-info-btn:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+    .tools-tooltip {
+      position: absolute; bottom: calc(100% + 14px); left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: #1e1e1e; color: #fff; border-radius: 8px;
+      padding: 14px 18px; width: 250px; font-size: 15px; line-height: 1.5;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      opacity: 0; pointer-events: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+      z-index: 999; text-align: center;
+    }
+    .tools-tooltip.visible {
+      opacity: 1; pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .tools-tooltip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid #1e1e1e;
+    }
+    .models-control-row { display: flex; gap: 10px; align-items: flex-start; }
+    .models-dropdown-wrapper { position: relative; flex: 1; }
+    .models-search-input {
+      width: 100%; height: 52px;
+      background: #FFFFFF; border: 1px solid #D1D5DB;
+      border-radius: 12px; padding: 0 48px 0 16px;
+      font-size: 13px; color: #000000; caret-color: #000!important;
+      font-family: 'Inter', sans-serif; outline: none; cursor: text;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .models-search-input::placeholder { color: #6B7280; }
+    .models-search-input:focus {
+      border-color: rgba(124,58,237,0.6);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+      caret-color: #000 !important;
+    }
+    .models-chevron-wrap {
+      position: absolute; right: 8px; top: 50%;
+      transform: translateY(-50%); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 8px;
+      transition: background 0.15s, transform 0.2s;
+    }
+    .models-chevron-wrap:hover { background: rgba(0,0,0,0.06); }
+    .models-chevron-wrap.open { transform: translateY(-50%) rotate(180deg); }
+    .models-chevron-wrap svg { display: block; }
+    .models-listbox {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: #171923; border: 1px solid #2A2E39;
+      border-radius: 12px; padding: 6px;
+      max-height: 280px; overflow-y: auto; z-index: 60;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      animation: ddOpen 0.2s ease;
+    }
+    @keyframes ddOpen {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .models-listbox-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 13px; color: #9CA3AF; cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .models-listbox-item:hover,
+    .models-listbox-item.focused {
+      background: rgba(124,58,237,0.1);
+      color: #F5F5F5;
+    }
+    .models-listbox-item.selected {
+      background: rgba(124,58,237,0.18);
+      color: #F5F5F5;
+      border: 1px solid rgba(124,58,237,0.3);
+    }
+    .models-listbox-item .ck {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 4px;
+      border: 1.5px solid #343447; flex-shrink: 0;
+      font-size: 11px; color: #7C3AED; font-weight: 700;
+      transition: all 0.15s;
+    }
+    .models-listbox-item.selected .ck {
+      background: #7C3AED; border-color: #7C3AED; color: #fff;
+    }
+    .btn-add-model {
+      height: 52px; padding: 0 20px;
+      background: transparent;
+      border: 1.5px solid #7C3AED;
+      border-radius: 12px; color: #7C3AED;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; white-space: nowrap;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .btn-add-model:hover {
+      background: rgba(124,58,237,0.15);
+      border-color: #9D5CF6; color: #9D5CF6;
+    }
+    .models-validation {
+      font-size: 12px; color: #F43F5E;
+      display: flex; align-items: center; gap: 4px;
+      animation: infoFadeIn 0.2s ease;
+    }
+    .models-chips-container {
+      display: flex; flex-wrap: wrap; gap: 10px; min-height: 0;
+    }
+    .model-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #1B1B24; border: 1px solid #343447;
+      border-radius: 999px; padding: 8px 16px;
+      font-size: 13px; color: #F5F5F5; font-weight: 500;
+      animation: chipIn 0.2s ease;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .model-chip:hover { background: #23232E; transform: scale(1.03); }
+    .model-chip-remove {
+      background: none; border: none; cursor: pointer;
+      padding: 0; color: #9CA3AF; font-size: 14px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s;
+    }
+    .model-chip-remove:hover { color: #F43F5E; }
+    @keyframes chipIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .model-chip.removing { animation: chipOut 0.2s ease forwards; }
+    @keyframes chipOut {
+      to { opacity: 0; transform: scale(0.9); }
+    }
+    @media (max-width: 768px) {
+      .models-control-row { flex-direction: column; }
+      .models-dropdown-wrapper { width: 100%; }
+      .btn-add-model { width: 100%; justify-content: center; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .models-control-row { flex-wrap: wrap; }
+      .models-dropdown-wrapper { width: 100%; }
+      .btn-add-model { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient -->
+<div class="bg-ambient">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+</div>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside id="sidebar">
+    <div style="padding:20px 16px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <img src="public/images/pullo-logo.png" alt="PullO Logo" style="height:32px;width:auto;">
+      <span class="sidebar-label" style="font-size:16px;font-weight:700;color:var(--text-hi);letter-spacing:-0.02em;">PullO</span>
+    </div>
+
+  <!-- Workspace -->
+  <div style="padding:0 12px 16px;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.04);border:1px solid var(--border);">
+      <div style="width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">A</div>
+      <span class="sidebar-label" style="font-size:13px;font-weight:500;color:var(--text-hi);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Aryan's workspace</span>
+      <svg class="sidebar-label" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </div>
+
+  <nav style="flex:1;padding:0 8px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;">
+    <div class="section-eyebrow">Infrastructure</div>
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="sidebar-label">Dashboard</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span class="sidebar-label">Models</span>
+    </a>
+    <a href="#" class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      <span class="sidebar-label">API Keys</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="sidebar-label">Team</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      <span class="sidebar-label">Logs</span>
+    </a>
+
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span class="sidebar-label">Analytics</span>
+    </a>
+  </nav>
+
+  <div style="padding:8px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:1px;">
+     <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="sidebar-label">Settings</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span class="sidebar-label">Docs</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:9px;padding:10px;margin-top:4px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">AP</div>
+      <div class="sidebar-label" style="flex:1;overflow:hidden;">
+        <div style="font-size:13px;font-weight:600;color:var(--text-hi);">Aryan Patel</div>
+        <div style="font-size:11px;color:var(--text-lo);">aryan@pullo.ai</div>
+      </div>
+      <button class="sidebar-label" style="background:none;border:none;cursor:pointer;color:var(--text-lo);padding:2px;border-radius:4px;transition:color 0.15s;" onmouseover="this.style.color='#FB7185'" onmouseout="this.style.color='var(--text-lo)'" title="Sign out">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div id="main">
+
+  <!-- Topbar -->
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button id="sidebar-toggle" onclick="toggleSidebar()" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-md);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--border-hi)';this.style.color='var(--text-hi)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-md)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <h1 style="font-size:18px;font-weight:700;color:var(--text-hi);letter-spacing:-0.02em;line-height:1.2;">API Keys</h1>
+        <p style="font-size:12px;color:var(--text-lo);margin-top:1px;">Manage authentication keys for your local AI services and tool integrations</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <!-- Notifications -->
+      <button style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-md);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--border-hi)';this.style.color='var(--text-hi)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-md)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div style="padding:28px 28px 60px;max-width:1400px;">
+
+    <!-- Page header -->
+    <div class="fade-up d1" style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;">
+      
+      <button class="btn-primary" onclick="openModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Create New Key
+      </button>
+    </div>
+
+    <!-- Security banner -->
+    <div class="fade-up d2" style="margin-bottom:24px;padding:16px 20px;border-radius:var(--radius-md);background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.2);border-left:3px solid #14B8A6;display:flex;align-items:flex-start;gap:14px;">
+      <div style="width:34px;height:34px;background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.25);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--text-hi);margin-bottom:3px;">Key Security &amp; Hashing</div>
+        <p style="font-size:12.5px;color:var(--text-md);line-height:1.6;max-width:760px;">For your security, we only show your full API keys immediately after they are created. We do not store the full plaintext keys on our infrastructure — instead, we store a cryptographically secure hash. If you lose a key, revoke it and generate a new one.</p>
+      </div>
+    </div>
+
+    <!-- Keys table -->
+    <div class="card fade-up d3" style="overflow:hidden;margin-bottom:24px;background:rgba(8,12,22,0.75);backdrop-filter:blur(30px) saturate(1.4);-webkit-backdrop-filter:blur(30px) saturate(1.4);box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),0 8px 32px rgba(0,0,0,0.4);">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          <h2 style="font-size:15px;font-weight:700;color:var(--text-hi);letter-spacing:-0.01em;">Your Keys</h2>
+          <span id="keyCountBadge" style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);font-size:11px;font-weight:600;color:#A78BFA;">0 Keys</span>
+        </div>
+        <!-- Search -->
+        <div id="searchWrap" style="position:relative;display:none;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search keys…" style="background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px 7px 30px;font-size:12px;color:var(--text-hi);outline:none;width:200px;font-family:'Inter',sans-serif;transition:border-color 0.15s;" onfocus="this.style.borderColor='rgba(124,58,237,0.5)'" onblur="this.style.borderColor='var(--border)'" placeholder="Search keys…">
+        </div>
+      </div>
+      <!-- Empty state (shown when no keys exist) -->
+      <div id="emptyState" style="padding:64px 20px;text-align:center;">
+        <div style="width:64px;height:64px;border-radius:16px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.8"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;color:var(--text-hi);margin-bottom:6px;letter-spacing:-0.01em;">No API keys yet</h3>
+        <p style="font-size:13px;color:var(--text-md);margin-bottom:24px;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.6;">Create your first key to start using PullO</p>
+        <button class="btn-primary" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Create your first key
+        </button>
+      </div>
+
+      <!-- Table (hidden by default, shown after keys exist) -->
+      <div id="keysTableSection" style="display:none;overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-left:24px;">Name</th>
+              <th style="text-align:left;">Key</th>
+              <th style="text-align:left;">Tools</th>
+              <th style="text-align:left;">Requests</th>
+              <th style="text-align:left;">Expires</th>
+              <th style="text-align:left;">Status</th>
+              <th style="text-align:right;padding-right:24px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 -->
+            <tr class="key-row">
+              <td style="padding-left:24px;">
+                <div style="font-size:14px;font-weight:600;color:var(--text-hi);margin-bottom:4px;">Production-Web-App</div>
+                <div style="font-size:12px;color:var(--text-lo);margin-top:2px;">Created Jun 1, 2026</div>
+              </td>
+              <td>
+                <div class="key-chip">
+                  <div class="key-field-wrap">
+                    <span class="key-display" data-full="sk-local-abcdefgh1a2b">skxxxxxxxxxxxxxxxx1a2b</span>
+                    <button class="icon-btn eye-btn" onclick="toggleKeyVisibility(this)" title="Show key">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="icon-btn" onclick="flashCopy(this,'sk-local-abcdefgh1a2b')" title="Copy key" style="width:24px;height:24px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;">
+                  <div class="tool-ring" title="Web Search">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  </div>
+                  <div class="tool-ring" title="Calculator">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="10" y2="18"/><line x1="14" y1="18" x2="16" y2="18"/></svg>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span style="font-size:13px;color:var(--text-md);font-variant-numeric:tabular-nums;">12.4k</span>
+              </td>
+              <td><span style="font-size:13px;color:var(--text-md);">Never</span></td>
+              <td>
+                <span class="badge badge-active">
+                  <span class="badge-dot dot-active"></span> Active
+                </span>
+              </td>
+              <td style="padding-right:24px;">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;" class="row-actions">
+                  <button class="icon-btn" title="Edit key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <div style="position:relative;display:inline-flex;">
+                    <button class="icon-btn" onclick="toggleModelDropdown(event,this)" title="Available models">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="model-dropdown">
+                      <div class="model-dropdown-item"><span class="model-chip">Llama-3-70B</span></div>
+                    </div>
+                  </div>
+                  <button class="icon-btn danger" onclick="openRevokeModal(this)" title="Revoke key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr class="key-row">
+              <td style="padding-left:24px;">
+                <div style="font-size:14px;font-weight:600;color:var(--text-hi);margin-bottom:4px;">Testing-Environment</div>
+                <div style="font-size:12px;color:var(--text-lo);margin-top:2px;">Created Mar 15, 2026</div>
+              </td>
+              <td>
+                <div class="key-chip">
+                  <div class="key-field-wrap">
+                    <span class="key-display" data-full="sk-local-zyxwvuts9z8y">skxxxxxxxxxxxxxxxx9z8y</span>
+                    <button class="icon-btn eye-btn" onclick="toggleKeyVisibility(this)" title="Show key">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="icon-btn" onclick="flashCopy(this,'sk-local-zyxwvuts9z8y')" title="Copy key" style="width:24px;height:24px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </td>
+              <td><span style="font-size:12px;color:var(--text-lo);font-style:italic;">None</span></td>
+              <td><span style="font-size:13px;color:var(--text-md);font-variant-numeric:tabular-nums;">450</span></td>
+              <td><span style="font-size:13px;color:#FB7185;">Oct 12, 2026</span></td>
+              <td>
+                <span class="badge badge-expired">
+                  <span class="badge-dot dot-expired"></span> Expired
+                </span>
+              </td>
+              <td style="padding-right:24px;">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;" class="row-actions">
+                  <button class="icon-btn" title="Edit key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <div style="position:relative;display:inline-flex;">
+                    <button class="icon-btn" onclick="toggleModelDropdown(event,this)" title="Available models">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="model-dropdown">
+                      <div class="model-dropdown-item"><span class="model-chip" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.22);color:#FCD34D;">Mistral-v0.3</span></div>
+                    </div>
+                  </div>
+                  <button class="icon-btn danger" onclick="openRevokeModal(this)" title="Revoke key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr class="key-row">
+              <td style="padding-left:24px;">
+                <div style="font-size:14px;font-weight:600;color:var(--text-hi);margin-bottom:4px;">Mobile-App-Dev</div>
+                <div style="font-size:12px;color:var(--text-lo);margin-top:2px;">Created Jun 20, 2026</div>
+              </td>
+              <td>
+                <div class="key-chip">
+                  <div class="key-field-wrap">
+                    <span class="key-display" data-full="sk-local-mnopqrst4m3n">skxxxxxxxxxxxxxxxx4m3n</span>
+                    <button class="icon-btn eye-btn" onclick="toggleKeyVisibility(this)" title="Show key">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <button class="icon-btn" onclick="flashCopy(this,'sk-local-mnopqrst4m3n')" title="Copy key" style="width:24px;height:24px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </td>
+              <td>
+                <div style="display:flex;">
+                  <div class="tool-ring" title="DateTime">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="tool-ring" title="File Access">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                </div>
+              </td>
+              <td><span style="font-size:13px;color:var(--text-md);font-variant-numeric:tabular-nums;">88</span></td>
+              <td><span style="font-size:13px;color:var(--text-md);">1 Year</span></td>
+              <td>
+                <span class="badge badge-active">
+                  <span class="badge-dot dot-active"></span> Active
+                </span>
+              </td>
+              <td style="padding-right:24px;">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;" class="row-actions">
+                  <button class="icon-btn" title="Edit key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <div style="position:relative;display:inline-flex;">
+                    <button class="icon-btn" onclick="toggleModelDropdown(event,this)" title="Available models">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="model-dropdown">
+                      <div class="model-dropdown-item"><span class="model-chip" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.22);color:#22D3EE;">Phi-3-Mini</span></div>
+                    </div>
+                  </div>
+                  <button class="icon-btn danger" onclick="openRevokeModal(this)" title="Revoke key">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+<!-- ═══════════ CREATE KEY MODAL ═══════════ -->
+<div class="modal-overlay" id="createModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <!-- Header -->
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </div>
+        <h3 style="font-size:15px;font-weight:700;color:var(--text-hi);">Create New API Key</h3>
+      </div>
+      <button class="icon-btn" onclick="closeModal()" style="width:28px;height:28px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <div style="padding:24px;display:flex;flex-direction:column;gap:18px;">
+      <!-- Name -->
+      <div>
+        <div class="field-label">Key Name</div>
+        <input type="text" class="field-input" id="keyName" placeholder="e.g. Mobile-App-Dev">
+      </div>
+
+      <!-- Models Access -->
+      <div class="models-section">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;">
+          <div class="field-label" style="margin-bottom:0;">Models Access</div>
+          <div style="position:relative;display:flex;align-items:center;">
+            <button type="button" class="tools-info-btn" aria-label="Models Access Information" aria-describedby="modelsTooltip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </button>
+            <div id="modelsTooltip" class="tools-tooltip" role="tooltip" aria-hidden="true">Choose one or more models that this API key can access.</div>
+          </div>
+        </div>
+
+        <div class="models-control-row">
+          <div class="models-dropdown-wrapper" id="modelsDropdownWrapper">
+            <input
+              type="text"
+              id="modelsSearchInput"
+              class="models-search-input"
+              placeholder="Search or select models..."
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Search models"
+            >
+            <span class="models-chevron-wrap" id="modelsChevron" role="button" tabindex="0" aria-label="Toggle model list">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+            <div id="modelsListbox" class="models-listbox" role="listbox" aria-multiselectable="false" hidden>
+            </div>
+          </div>
+          <button type="button" id="addModelBtn" class="btn-add-model">
+            + Add Model
+          </button>
+        </div>
+
+        <div id="modelsValidation" class="models-validation" role="alert" hidden>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#F43F5E" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          Please select at least one model.
+        </div>
+
+        <div id="modelsChipsContainer" class="models-chips-container">
+        </div>
+      </div>
+
+      <!-- Expiry -->
+      <div>
+        <div class="field-label">Expiry</div>
+        <div style="position:relative;">
+          <select class="field-input">
+            <option>Never</option>
+            <option>30 Days</option>
+            <option>90 Days</option>
+            <option>1 Year</option>
+          </select>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <div class="field-label" style="margin-bottom:0;">Enabled Tools</div>
+          <div style="position:relative;display:flex;align-items:center;">
+            <button type="button" class="tools-info-btn" id="toolsInfoBtn" aria-label="Enabled Tools Information" aria-describedby="toolsTooltip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </button>
+            <div id="toolsTooltip" class="tools-tooltip" role="tooltip" aria-hidden="true">tools that your local model can use</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <label class="tool-toggle" id="toggle-websearch">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-md)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span style="font-size:13px;color:var(--text-md);">Web Search</span>
+            </div>
+            <label class="toggle" onclick="event.stopPropagation();toggleTool(this)">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+          </label>
+          <label class="tool-toggle" id="toggle-datetime">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-md)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span style="font-size:13px;color:var(--text-md);">DateTime</span>
+            </div>
+            <label class="toggle" onclick="event.stopPropagation();toggleTool(this)">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+          </label>
+          <label class="tool-toggle checked" id="toggle-calc">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/></svg>
+              <span style="font-size:13px;color:var(--text-hi);">Calculator</span>
+            </div>
+            <label class="toggle" onclick="event.stopPropagation();toggleTool(this)">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+              <span class="toggle-thumb"></span>
+            </label>
+          </label>
+          <button type="button" class="btn-add-model" id="toggle-custom" style="width:100%;justify-content:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+             Custom Tools
+          </button>
+        </div>
+      </div>
+
+      <!-- Budget + RPM -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="field-label">Daily Budget</div>
+            <div style="position:relative;display:flex;align-items:center;margin-top:-2px;">
+              <button type="button" class="tools-info-btn" aria-label="Daily Budget Information" aria-describedby="budgetTooltip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              </button>
+              <div id="budgetTooltip" class="tools-tooltip" role="tooltip" aria-hidden="true">daily requests limit for the api key</div>
+            </div>
+          </div>
+          <input type="number" class="field-input" placeholder="100 reqs" value="10.00" step="0.01" min="0" style="height:52px;color:#000;">
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="field-label">RPM Limit</div>
+            <div style="position:relative;display:flex;align-items:center;margin-top:-2px;">
+              <button type="button" class="tools-info-btn" aria-label="RPM Limit Information" aria-describedby="rpmTooltip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              </button>
+              <div id="rpmTooltip" class="tools-tooltip" role="tooltip" aria-hidden="true">maximum request per minute limit</div>
+            </div>
+          </div>
+          <input type="number" class="field-input" placeholder="60" value="60" min="0" style="height:52px;color:#000;">
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;padding-top:4px;border-top:1px solid var(--border);margin-top:4px;">
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" onclick="generateKey()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          Generate Key
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SUCCESS OVERLAY ═══════════ -->
+<div class="success-overlay" id="successOverlay">
+  <div style="background:rgba(13,17,23,0.99);border:1px solid var(--border-hi);border-radius:var(--radius-xl);width:100%;max-width:480px;padding:36px;text-align:center;box-shadow:0 40px 100px rgba(0,0,0,0.7);">
+    <!-- Icon -->
+    <div style="width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <h3 style="font-size:20px;font-weight:800;color:var(--text-hi);letter-spacing:-0.02em;margin-bottom:6px;">API Key Generated</h3>
+    <p style="font-size:13px;color:var(--text-md);margin-bottom:24px;">Copy this key now — it won't be shown again.</p>
+
+    <!-- Key display -->
+    <div style="position:relative;margin-bottom:16px;">
+      <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(124,58,237,0.35);border-radius:var(--radius-md);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <span id="newKey" style="font-family:'Geist Mono',monospace;font-size:12px;color:#C4B5FD;word-break:break-all;text-align:left;">sk-local-abcdefghij1234567890qwertyuiop</span>
+        <button onclick="copyNewKey(this)" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;color:#C4B5FD;font-size:11px;font-weight:600;letter-spacing:0.04em;font-family:'Inter',sans-serif;white-space:nowrap;transition:all 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(124,58,237,0.25)'" onmouseout="this.style.background='rgba(124,58,237,0.15)'">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <div id="copyNotice" style="position:absolute;top:-34px;left:50%;transform:translateX(-50%);background:var(--violet);color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none;">Copied to clipboard!</div>
+    </div>
+
+    <!-- Warning -->
+    <div style="background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.2);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:center;gap:8px;margin-bottom:22px;text-align:left;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span style="font-size:12px;color:#FB7185;font-weight:500;">Store this key securely. It cannot be recovered after closing this dialog.</span>
+    </div>
+
+    <button onclick="confirmStored()" style="width:100%;padding:13px;background:rgba(255,255,255,0.06);border:1px solid var(--border-hi);border-radius:var(--radius-md);color:var(--text-hi);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+      I've stored the key securely
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════ REVOKE CONFIRMATION MODAL ═══════════ -->
+<div class="modal-overlay" id="revokeModal" onclick="closeRevokeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:440px;">
+    <!-- Header -->
+    <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);display:flex;align-items:center;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </div>
+        <h3 style="font-size:15px;font-weight:700;color:var(--text-hi);">Revoke API Key</h3>
+      </div>
+      <button class="icon-btn" onclick="closeRevokeModal()" style="width:28px;height:28px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Body -->
+    <div style="padding:24px;">
+      <p style="font-size:14px;color:var(--text-md);margin-bottom:16px;line-height:1.6;">
+        Are you sure you want to revoke <strong id="revokeKeyName" style="color:var(--text-hi);"></strong>?
+        Any services using this key will immediately lose access.
+      </p>
+      <div style="background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.2);border-radius:var(--radius-md);padding:12px 14px;display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span style="font-size:12px;color:#FB7185;font-weight:500;">This action cannot be undone.</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;">
+        <button class="btn-ghost" onclick="closeRevokeModal()">Cancel</button>
+        <button onclick="confirmRevoke()" style="background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);border-radius:var(--radius-sm);color:#FB7185;font-size:13px;font-weight:600;padding:10px 18px;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.background='rgba(244,63,94,0.25)'" onmouseout="this.style.background='rgba(244,63,94,0.15)'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+          Yes, Revoke Key
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let sidebarOpen = true;
+  function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+    document.getElementById('main').classList.toggle('expanded', !sidebarOpen);
+  }
+
+  function openModal() {
+    document.getElementById('createModal').classList.add('open');
+  }
+  function closeModal(e) {
+    if (!e || e.target === document.getElementById('createModal')) {
+      document.getElementById('createModal').classList.remove('open');
+    }
+  }
+
+  function showKeysView() {
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('keysTableSection').style.display = 'block';
+    document.getElementById('keyCountBadge').textContent = '3 Keys';
+    document.getElementById('searchWrap').style.display = 'block';
+  }
+
+  function generateKey() {
+    const name = document.getElementById('keyName').value.trim();
+    if (!name) {
+      document.getElementById('keyName').style.borderColor = 'rgba(244,63,94,0.6)';
+      document.getElementById('keyName').focus();
+      return;
+    }
+    if (selectedModels.size === 0) {
+      document.getElementById('modelsValidation').hidden = false;
+      document.getElementById('modelsSearchInput').focus();
+      return;
+    }
+    showKeysView();
+    document.getElementById('createModal').classList.remove('open');
+    document.getElementById('successOverlay').classList.add('open');
+  }
+
+  function confirmStored() {
+    document.getElementById('successOverlay').classList.remove('open');
+    document.getElementById('keyName').value = '';
+    document.getElementById('keyName').style.borderColor = '';
+  }
+
+  function copyNewKey(btn) {
+    const key = document.getElementById('newKey').textContent;
+    navigator.clipboard?.writeText(key).then(() => {
+      const notice = document.getElementById('copyNotice');
+      notice.style.opacity = '1';
+      setTimeout(() => notice.style.opacity = '0', 2000);
+    });
+  }
+
+  function flashCopy(btn, text) {
+    navigator.clipboard?.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
+      btn.style.color = '#34D399';
+      setTimeout(() => { btn.innerHTML = original; btn.style.color = ''; }, 1800);
+    });
+  }
+
+  function toggleTool(labelEl) {
+    const input = labelEl.querySelector('input');
+    // The actual check happens naturally; just update the parent card style
+    const card = labelEl.closest('.tool-toggle');
+    setTimeout(() => {
+      const isChecked = labelEl.querySelector('input').checked;
+      if (isChecked) {
+        card.classList.add('checked');
+      } else {
+        card.classList.remove('checked');
+      }
+    }, 10);
+  }
+
+  function toggleModelDropdown(event, btn) {
+    event.stopPropagation();
+    const dropdown = btn.parentElement.querySelector('.model-dropdown');
+    const isOpen = dropdown.classList.contains('open');
+    document.querySelectorAll('.model-dropdown.open').forEach(d => d.classList.remove('open'));
+    if (!isOpen) dropdown.classList.add('open');
+  }
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.model-dropdown.open').forEach(d => d.classList.remove('open'));
+  });
+
+  function toggleKeyVisibility(btn) {
+    const wrap = btn.closest('.key-field-wrap');
+    const display = wrap.querySelector('.key-display');
+    const fullKey = display.dataset.full;
+    const isHidden = !display.classList.contains('revealed');
+
+    if (isHidden) {
+      display.textContent = fullKey;
+      display.classList.add('revealed');
+      display._autoHideTimer = setTimeout(() => {
+        display.textContent = fullKey.slice(0, 2) + 'x'.repeat(fullKey.length - 6) + fullKey.slice(-4);
+        display.classList.remove('revealed');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+        btn.title = 'Show key';
+      }, 5000);
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+      btn.title = 'Hide key';
+    } else {
+      display.textContent = fullKey.slice(0, 2) + 'x'.repeat(fullKey.length - 6) + fullKey.slice(-4);
+      display.classList.remove('revealed');
+      if (display._autoHideTimer) clearTimeout(display._autoHideTimer);
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+      btn.title = 'Show key';
+    }
+  }
+
+  let revokeTargetRow = null;
+
+  function openRevokeModal(btn) {
+    const row = btn.closest('.key-row');
+    const nameEl = row.querySelector('td:first-child div:first-child');
+    const keyName = nameEl ? nameEl.textContent.trim() : 'this key';
+    document.getElementById('revokeKeyName').textContent = keyName;
+    revokeTargetRow = row;
+    document.getElementById('revokeModal').classList.add('open');
+  }
+
+  function closeRevokeModal(e) {
+    if (!e || e.target === document.getElementById('revokeModal')) {
+      document.getElementById('revokeModal').classList.remove('open');
+    }
+  }
+
+  function confirmRevoke() {
+    if (!revokeTargetRow) return;
+    const badge = revokeTargetRow.querySelector('.badge');
+    if (badge) {
+      badge.className = 'badge badge-revoked';
+      badge.innerHTML = '<span class="badge-dot dot-revoked"></span> Revoked';
+    }
+    const actions = revokeTargetRow.querySelector('.row-actions');
+    if (actions) {
+      actions.style.opacity = '0.35';
+      actions.style.pointerEvents = 'none';
+    }
+    const keyDisplay = revokeTargetRow.querySelector('.key-display');
+    if (keyDisplay) {
+      keyDisplay.style.opacity = '0.5';
+    }
+    document.getElementById('revokeModal').classList.remove('open');
+    revokeTargetRow = null;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.getElementById('createModal').classList.remove('open');
+      document.getElementById('successOverlay').classList.remove('open');
+      document.getElementById('revokeModal').classList.remove('open');
+    }
+  });
+
+  if (window.innerWidth <= 1024) {
+    document.getElementById('sidebar').classList.add('collapsed');
+    document.getElementById('main').classList.add('expanded');
+    sidebarOpen = false;
+  }
+
+  /* ══ Models Access Component ══ */
+  var MODELS_LIST = [
+    'Llama-3-70B', 'Llama-3-8B', 'Mistral-Nemo-12B',
+    'DeepSeek-R1', 'DeepSeek-V3', 'Qwen-72B',
+    'Gemma-3-27B', 'Phi-4'
+  ];
+  var selectedModels = new Set();
+  var modelsListVisible = false;
+
+  function initModelsAccess() {
+    var searchInput = document.getElementById('modelsSearchInput');
+    var addBtn = document.getElementById('addModelBtn');
+    var chevron = document.getElementById('modelsChevron');
+    if (!searchInput || !addBtn || !chevron) return;
+
+    buildDropdown();
+    searchInput.oninput = onSearchInput;
+    searchInput.onkeydown = onSearchKeydown;
+    addBtn.onclick = toggleDropdown;
+    chevron.onclick = toggleDropdown;
+
+    document.onclick = function(e) {
+      var wrapper = document.getElementById('modelsDropdownWrapper');
+      if (wrapper && !wrapper.contains(e.target) && e.target !== addBtn && !addBtn.contains(e.target)) {
+        closeDropdown();
+      }
+    };
+  }
+
+  function buildDropdown() {
+    var listbox = document.getElementById('modelsListbox');
+    if (!listbox) return;
+    listbox.innerHTML = itemsHtml('');
+    attachDropdownClicks(listbox);
+  }
+
+  function itemsHtml(filter) {
+    var f = filter ? filter.toLowerCase() : '';
+    var html = '';
+    var count = 0;
+    for (var i = 0; i < MODELS_LIST.length; i++) {
+      var m = MODELS_LIST[i];
+      if (f && m.toLowerCase().indexOf(f) === -1) continue;
+      var sel = selectedModels.has(m);
+      html += '<div class="models-listbox-item' + (sel ? ' selected' : '') + '" role="option" aria-selected="' + sel + '" data-model="' + m + '">' +
+        '<span class="ck">' + (sel ? '✓' : '') + '</span> ' + m + '</div>';
+      count++;
+    }
+    if (count === 0) {
+      return '<div style="padding:12px;text-align:center;color:#9CA3AF;font-size:13px;">No models found</div>';
+    }
+    return html;
+  }
+
+  function attachDropdownClicks(container) {
+    var items = container.querySelectorAll('.models-listbox-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].onclick = function() {
+        toggleModel(this.getAttribute('data-model'));
+      };
+    }
+  }
+
+  function toggleModel(model) {
+    if (selectedModels.has(model)) selectedModels.delete(model);
+    else selectedModels.add(model);
+    filterDropdown(document.getElementById('modelsSearchInput').value);
+    renderChips();
+    validateModels();
+    document.getElementById('modelsSearchInput').focus();
+  }
+
+  function onSearchInput() {
+    filterDropdown(document.getElementById('modelsSearchInput').value);
+    if (!modelsListVisible) openDropdown();
+  }
+
+  function filterDropdown(filter) {
+    var listbox = document.getElementById('modelsListbox');
+    if (!listbox) return;
+    listbox.innerHTML = itemsHtml(filter);
+    attachDropdownClicks(listbox);
+  }
+
+  function renderChips() {
+    var container = document.getElementById('modelsChipsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    selectedModels.forEach(function(model) {
+      var chip = document.createElement('div');
+      chip.className = 'model-chip';
+      chip.innerHTML = model + '<button class="model-chip-remove" aria-label="Remove ' + model + '">✕</button>';
+      chip.querySelector('.model-chip-remove').onclick = function() {
+        removeModel(model);
+      };
+      container.appendChild(chip);
+    });
+  }
+
+  function removeModel(model) {
+    selectedModels.delete(model);
+    filterDropdown(document.getElementById('modelsSearchInput').value);
+    renderChips();
+    validateModels();
+    document.getElementById('modelsSearchInput').focus();
+  }
+
+  function openDropdown() {
+    var listbox = document.getElementById('modelsListbox');
+    var chevron = document.getElementById('modelsChevron');
+    if (!listbox || !chevron) return;
+    listbox.hidden = false;
+    chevron.classList.add('open');
+    document.getElementById('modelsSearchInput').setAttribute('aria-expanded', 'true');
+    modelsListVisible = true;
+  }
+
+  function closeDropdown() {
+    var listbox = document.getElementById('modelsListbox');
+    var chevron = document.getElementById('modelsChevron');
+    if (!listbox || !chevron) return;
+    listbox.hidden = true;
+    chevron.classList.remove('open');
+    document.getElementById('modelsSearchInput').setAttribute('aria-expanded', 'false');
+    modelsListVisible = false;
+  }
+
+  function toggleDropdown() {
+    if (modelsListVisible) closeDropdown();
+    else { buildDropdown(); openDropdown(); }
+  }
+
+  function validateModels() {
+    var el = document.getElementById('modelsValidation');
+    if (el) el.hidden = selectedModels.size > 0;
+  }
+
+  function onSearchKeydown(e) {
+    var items = document.querySelectorAll('#modelsListbox .models-listbox-item');
+    if (items.length === 0) return;
+
+    var currentIndex = -1;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].classList.contains('focused')) {
+        currentIndex = i;
+        items[i].classList.remove('focused');
+        break;
+      }
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      var next = Math.min(currentIndex + 1, items.length - 1);
+      items[next].classList.add('focused');
+      items[next].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      var prev = Math.max(currentIndex - 1, 0);
+      items[prev].classList.add('focused');
+      items[prev].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      var targetIdx = currentIndex >= 0 ? currentIndex : 0;
+      if (items[targetIdx]) {
+        toggleModel(items[targetIdx].getAttribute('data-model'));
+      }
+    } else if (e.key === 'Escape') {
+      closeDropdown();
+      document.getElementById('modelsSearchInput').blur();
+    }
+  }
+
+  // ── Tooltips ──
+  (function() {
+    var btns = document.querySelectorAll('.tools-info-btn');
+    btns.forEach(function(btn) {
+      var tip = btn.nextElementSibling;
+      if (!tip || !tip.classList.contains('tools-tooltip')) return;
+
+      function show() { tip.classList.add('visible'); tip.setAttribute('aria-hidden', 'false'); }
+      function hide() { tip.classList.remove('visible'); tip.setAttribute('aria-hidden', 'true'); }
+
+      btn.addEventListener('mouseenter', show);
+      btn.addEventListener('mouseleave', hide);
+      btn.addEventListener('focus', show);
+      btn.addEventListener('blur', hide);
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        tip.classList.contains('visible') ? hide() : show();
+      });
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.tools-tooltip.visible').forEach(function(tip) {
+          tip.classList.remove('visible');
+          tip.setAttribute('aria-hidden', 'true');
+        });
+      }
+    });
+  })();
+
+  initModelsAccess();
+</script>
+</body>
+</html>

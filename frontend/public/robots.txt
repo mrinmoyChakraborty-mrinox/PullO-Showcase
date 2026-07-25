@@ -1,0 +1,11 @@
+# PullO — Private AI Network Layer for Local Models
+User-agent: *
+Allow: /
+Disallow: /models/
+Disallow: /api/
+
+# Host
+Host: https://pullo.runtimeco.qzz.io
+
+# Sitemaps
+Sitemap: https://pullo.runtimeco.qzz.io/sitemap.xml

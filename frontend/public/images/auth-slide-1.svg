@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="g1" cx="70%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#040612" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gridGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#040612" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#040612"/>
+  <rect width="100%" height="100%" fill="url(#g1)"/>
+
+  <!-- Perspective Grid lines -->
+  <g stroke="url(#gridGrad)" stroke-width="1">
+    <line x1="100" y1="0" x2="100" y2="1000"/>
+    <line x1="250" y1="0" x2="250" y2="1000"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="550" y1="0" x2="550" y2="1000"/>
+    <line x1="700" y1="0" x2="700" y2="1000"/>
+
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="0" y1="600" x2="800" y2="600"/>
+    <line x1="0" y1="800" x2="800" y2="800"/>
+  </g>
+
+  <!-- Cyan Tech Accents -->
+  <circle cx="550" cy="400" r="6" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)"/>
+  <circle cx="250" cy="600" r="4" fill="#818cf8" filter="drop-shadow(0 0 8px #818cf8)"/>
+</svg>

@@ -1,0 +1,742 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ------------------------------------------------------------------ */
+/*  Theme tokens — ported verbatim from frontend/app/globals.css      */
+/* ------------------------------------------------------------------ */
+
+@theme inline {
+  /* Fonts */
+  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Brand colors */
+  --color-ink-950: #050816;
+  --color-ink-900: #0b1020;
+  --color-ink-800: #111827;
+  --color-brand-deep: #0d0b45;
+  --color-iris-500: #6d5dfe;
+  --color-violet-500: #8b5cf6;
+  --color-cyan-400: #22d3ee;
+  --color-sky-400: #38bdf8;
+  --color-text-soft: #b8c0d4;
+
+  /* Semantic surface tokens */
+  --color-bg-surface: #0d0d14;
+  --color-bg-card: #13131d;
+  --color-bg-elevated: #1a1a26;
+  --color-border-default: #2b2b3a;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0a0b5;
+
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-accent-teal: #2dd4bf;
+
+  /* Radius scale */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
+
+  /* Custom scrollbar — thin, branded */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-default);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-iris-500);
+  }
+
+  a {
+    color: var(--color-iris-500);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .skip-link:focus {
+    left: 8px;
+    top: 8px;
+    width: auto;
+    height: auto;
+    z-index: 9999;
+    padding: 8px 16px;
+    background: var(--color-iris-500);
+    color: #fff;
+    border-radius: var(--radius-md);
+    outline: none;
+  }
+
+  code:not([data-language]) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    color: var(--color-cyan-400);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Gradient text — ported from globals.css                            */
+/* ------------------------------------------------------------------ */
+
+.text-gradient-iris {
+  background: linear-gradient(
+    to right,
+    var(--color-iris-500),
+    var(--color-violet-500),
+    var(--color-cyan-400)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Glow border — conic ring (ported from globals.css)                 */
+/* ------------------------------------------------------------------ */
+
+.glow-border {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(109, 93, 254, 0.4),
+    rgba(139, 92, 246, 0.18),
+    transparent 25%,
+    rgba(34, 211, 238, 0.12) 40%,
+    transparent 55%,
+    rgba(109, 93, 254, 0.3) 75%,
+    transparent 85%,
+    rgba(139, 92, 246, 0.15)
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Glow icon — inner conic ring (ported from globals.css)             */
+/* ------------------------------------------------------------------ */
+
+.glow-icon {
+  position: relative;
+}
+.glow-icon::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    rgba(109, 93, 254, 0.5),
+    rgba(34, 211, 238, 0.2),
+    transparent 40%,
+    rgba(139, 92, 246, 0.3),
+    transparent 70%,
+    rgba(109, 93, 254, 0.5)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Progress glow dot (ported from globals.css)                        */
+/* ------------------------------------------------------------------ */
+
+.progress-glow-dot {
+  position: absolute;
+  top: -3px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.9),
+    rgba(34, 211, 238, 0.4),
+    transparent 70%
+  );
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6), 0 0 24px rgba(34, 211, 238, 0.3);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Docs-specific: Skeuomorphic utilities                              */
+/* ------------------------------------------------------------------ */
+
+/* Inset panel — sidebar panel + code block treatment */
+.inset-panel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Active nav pill — backlit key / toggle switch feel */
+.nav-pill-active {
+  background: rgba(109, 93, 254, 0.12);
+  color: var(--color-iris-500) !important;
+  box-shadow:
+    0 0 0 1px rgba(109, 93, 254, 0.3),
+    0 2px 8px rgba(109, 93, 254, 0.15);
+  transform: none;
+}
+.nav-pill-active:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 0 0 1px rgba(109, 93, 254, 0.2),
+    0 1px 4px rgba(109, 93, 254, 0.1);
+}
+
+/* Embossed icon button — copy to clipboard */
+.emboss-btn {
+  position: relative;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset,
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 80ms ease;
+}
+.emboss-btn:hover {
+  background: #222232;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset,
+    0 3px 6px rgba(0, 0, 0, 0.4);
+}
+.emboss-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset,
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* HTTP method badge — embossed plate */
+.method-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset,
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.method-badge-get {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.25);
+}
+.method-badge-post {
+  background: rgba(109, 93, 254, 0.12);
+  color: #a78bfa;
+  border-color: rgba(109, 93, 254, 0.25);
+}
+.method-badge-delete {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+.method-badge-put {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* Etched / engraved section rule */
+.etched-rule {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+  margin: 32px 0;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Run Guide Panel — Component Utilities                              */
+/* ------------------------------------------------------------------ */
+
+/* Branded header icon tile */
+.run-guide-header-glyph {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(109, 93, 254, 0.2), rgba(34, 211, 238, 0.1));
+  border: 1px solid rgba(109, 93, 254, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-iris-500);
+  flex-shrink: 0;
+}
+
+/* Troubleshooting section support drawer identity */
+.troubleshooting-drawer {
+  background: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.troubleshooting-drawer:hover {
+  border-color: rgba(245, 158, 11, 0.32);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+/* Troubleshooting entry card with red error left accent */
+.troubleshooting-entry-card {
+  background: rgba(5, 8, 22, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+
+/* ------------------------------------------------------------------ */
+/*  Grid background (subtle, docs-appropriate)                         */
+/* ------------------------------------------------------------------ */
+
+.pullo-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(109, 93, 254, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(109, 93, 254, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Animated gradient text                                              */
+/* ------------------------------------------------------------------ */
+
+@keyframes gradient-drift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-drift {
+  background-size: 200% 200%;
+  animation: gradient-drift 10s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Shimmer                                                             */
+/* ------------------------------------------------------------------ */
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/*  rehype-pretty-code — code block styling                            */
+/* ------------------------------------------------------------------ */
+
+[data-rehype-pretty-code-figure] {
+  margin: 0;
+}
+
+[data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  background: transparent !important;
+  tab-size: 2;
+}
+
+[data-rehype-pretty-code-figure] code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: inherit;
+  font-size: inherit;
+}
+
+[data-line] {
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+[data-highlighted-line] {
+  background: rgba(109, 93, 254, 0.1);
+  border-left: 2px solid var(--color-iris-500);
+  padding-left: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  MDX prose styles                                                    */
+/* ------------------------------------------------------------------ */
+
+.prose-docs {
+  color: var(--color-text-secondary);
+  max-width: 740px;
+  overflow: visible; /* allow bleed children like .code-run-guide-grid to exceed prose width */
+}
+
+.prose-docs h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.prose-docs h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 48px 0 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-default);
+  scroll-margin-top: 80px;
+}
+
+.prose-docs h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 32px 0 12px;
+  scroll-margin-top: 80px;
+}
+
+.prose-docs h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  margin: 24px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  scroll-margin-top: 80px;
+}
+
+.prose-docs p {
+  margin: 0 0 16px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+.prose-docs ul, .prose-docs ol {
+  margin: 0 0 16px 24px;
+  line-height: 1.7;
+}
+
+.prose-docs li {
+  margin: 4px 0;
+  color: var(--color-text-secondary);
+}
+
+.prose-docs a {
+  color: var(--color-iris-500);
+  text-decoration: none;
+}
+.prose-docs a:hover {
+  text-decoration: underline;
+}
+
+.prose-docs blockquote {
+  border-left: 3px solid var(--color-iris-500);
+  padding: 8px 16px;
+  margin: 16px 0;
+  background: rgba(109, 93, 254, 0.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-text-soft);
+  font-style: italic;
+}
+
+.prose-docs table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 24px;
+  font-size: 0.875rem;
+}
+.prose-docs th {
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.prose-docs td {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+}
+.prose-docs tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.prose-docs hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+  margin: 32px 0;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Topbar height token                                                 */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --topbar-height: 56px;
+  --sidebar-width: 260px;
+  --toc-width: 220px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Landing Page CSS Hovers                                           */
+/* ------------------------------------------------------------------ */
+
+#hero-cta-quickstart:hover {
+  opacity: 0.88;
+}
+
+#hero-cta-api:hover {
+  border-color: rgba(109, 93, 254, 0.4) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[id^="card-"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Topbar CSS Hovers                                                 */
+/* ------------------------------------------------------------------ */
+
+.topbar-link-pullo {
+  transition: color 120ms ease;
+}
+.topbar-link-pullo:hover {
+  color: var(--color-text-primary) !important;
+}
+
+.topbar-link-github {
+  transition: border-color 120ms ease, color 120ms ease;
+}
+.topbar-link-github:hover {
+  border-color: rgba(109, 93, 254, 0.4) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Code + Run Guide side-by-side grid layout                          */
+/* ------------------------------------------------------------------ */
+
+.code-run-guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+  height: 500px;    /* shared cap — tuned to Python snippet height */
+  margin: 24px 0;
+}
+
+/* On large screens bleed the grid into the right TOC rail (240px + 24px padding) */
+@media (min-width: 1280px) {
+  .code-run-guide-grid {
+    width: calc(100% + 240px + 24px);
+    /* give both columns slightly better proportions at this wider width */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* Each cell fills the fixed row height; overflow is hidden so content cannot push it taller */
+.code-run-guide-cell {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Direct children fill the cell */
+.code-run-guide-cell > * {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Internal scrollable body for the run guide panel */
+.run-guide-scroll-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px 18px;
+}
+
+/* Mobile: stack vertically, drop shared fixed height, each panel keeps its own cap */
+@media (max-width: 768px) {
+  .code-run-guide-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    width: 100%;
+  }
+  .code-run-guide-cell {
+    height: 480px;
+  }
+}
+
+/* Tablet: full prose width, no bleed */
+@media (min-width: 769px) and (max-width: 1279px) {
+  .code-run-guide-grid {
+    width: 100%;
+  }
+}
+
+/* When MdxCodeBlock sits inside a grid cell, it must fill the cell height and scroll internally */
+.code-run-guide-cell .inset-panel {
+  height: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.code-run-guide-cell .inset-panel pre {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  /* keep consistent padding */
+  padding: 16px 20px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Placeholder token highlights in code blocks                        */
+/* ------------------------------------------------------------------ */
+
+/* .code-placeholder is injected by highlightPlaceholders() in code-block.tsx */
+mark.code-placeholder {
+  background: transparent;
+  color: inherit;
+  /* glowing amber underline + subtle text tint */
+  border-bottom: 2px solid rgba(245, 158, 11, 0.75);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border-radius: 2px;
+  font-style: normal;
+  cursor: help;
+  transition: background 120ms ease;
+}
+
+mark.code-placeholder:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+/* ------------------------------------------------------------------ */
+/*  API Reference Page specific overrides                             */
+/* ------------------------------------------------------------------ */
+
+/* Strip default syntax highlighting colors in API Reference code blocks so ONLY placeholders stand out */
+.api-reference-page pre[data-language] code span[style],
+.api-reference-page [data-rehype-pretty-code-figure] code span[style] {
+  color: var(--color-text-secondary) !important;
+}
+
+/* Ensure placeholder colors aren't overridden */
+.api-reference-page mark.code-placeholder {
+  color: #fbbf24 !important;
+}
+
+/* Style for sk-local- prefix in blue */
+.api-reference-page mark.code-prefix-blue,
+mark.code-prefix-blue {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  color: #60a5fa !important;
+  font-style: normal !important;
+  text-decoration: none !important;
+}

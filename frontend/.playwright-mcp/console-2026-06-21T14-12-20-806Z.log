@@ -1,0 +1,42 @@
+[     163ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[     164ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[     219ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[     250ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  162773ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  162773ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  162829ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  162869ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  194776ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  194776ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  194806ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  194825ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  304514ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  304536ms] [LOG] [Fast Refresh] done in 70ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  314779ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  314811ms] [LOG] [Fast Refresh] done in 60ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  320546ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  320546ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  320597ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  320626ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  353010ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  353010ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[  353052ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  353069ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  438511ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  438547ms] [LOG] [Fast Refresh] done in 44ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  452233ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  452260ms] [LOG] [Fast Refresh] done in 48ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  474482ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  474512ms] [LOG] [Fast Refresh] done in 47ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  475753ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  475788ms] [LOG] [Fast Refresh] done in 46ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  476829ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  476844ms] [LOG] [Fast Refresh] done in 62ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  483374ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  483404ms] [LOG] [Fast Refresh] done in 58ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  484198ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  484219ms] [LOG] [Fast Refresh] done in 69ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  837125ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://accounts.google.com/v3/signin/identifier?opparams=%253Fredirect_to%253Dhttp%25253A%25252F%25252Flocalhost%25253A3000%25252Fdashboard&dsh=S-786029761%3A1782051977269413&client_id=325867955094-2shctuls4df16fk7p6u2ov7mjr47rfb5.apps.googleusercontent.com&o2v=2&redirect_uri=https%3A%2F%2Fvjrnfibnckyqpqdkaihp.supabase.co%2Fauth%2Fv1%2Fcallback&response_type=code&scope=email+profile&service=lso&state=251c86fa-da45-4bef-a1d2-04b8ee85ac4f&flowName=GeneralOAuthFlow&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPOljT_7JTzUU1C_FEQCK5y_PEdomKnxc_zBi92bYMS-tLUZRaEet_wyydKyreQfupFwJ5mp8HXhy97GtTNkYtayKxVIIn2vXsPARvh73J694OTeyAtZmOc1LGY6HeoeP4oJXVZwT9Ovekh52hrq06unpMl003hrQH8l6FRVGxmW37TfC53B2CDL1cjMyGElTS3SDBoGSfePF0-ftfjGhrbK-2Cau9YY5mNRPrjsBG4jGpJzK87HNcXMWQazFudGPOCCeYuVi-qqNstf1i0c8gSAC0AzvQ-s9Ok80urqaJR4ztVgBKmUt3X_ScoTaUS0YeQ8hEHgss7BcXjixafjeUZ6qfzHo07uTbHDJjMZwoMv8ZILjqoZKc6JXomehRLChZq_LghO3ptwkVLUOfHQv3zjInx2JLTy6zKI-UVZm0KgVgT7hGzDcwA6fD8SpbQdI-z9wY-jqcwEbfs9l_XzJQ_ETiOAKmvbuISQ_8oQbCEd9I29Fc%26flowName%3DGeneralOAuthFlow%26as%3DS-786029761%253A1782051977269413%26client_id%3D325867955094-2shctuls4df16fk7p6u2ov7mjr47rfb5.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&app_domain=https%3A%2F%2Fvjrnfibnckyqpqdkaihp.supabase.co&rart=ANgoxcf6LyA3OAj_AJvPoKEoAJJNmSoapB767QgEuKElsqPGoGjrreJ7JPQbdQsggMVmC-_6Qf5yjQF2sigas7lLrpxMW3eAbAxwD9xzpqxzv66MFBf_g5s:0
+[  837134ms] [LOG] %c%s color: red; background: yellow; font-size: 24px; WARNING! @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.6ScBlw9gOxw.es5.O/am=EQ0AAAAwULyQAcD-_28AAAIIsh3wPQugCRAyAAAAAAAAAABgAQAAGgE/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlFR7jA1a5YjVK0k0tz0FLQ_AyHRAQ/dti=1/m=_b,_tp:552
+[  837135ms] [LOG] %c%s font-size: 18px; Using this console may allow attackers to impersonate you and steal your information using an attack called Self-XSS.
+Do not enter or paste code that you do not understand. @ https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.en_US.6ScBlw9gOxw.es5.O/am=EQ0AAAAwULyQAcD-_28AAAIIsh3wPQugCRAyAAAAAAAAAABgAQAAGgE/d=1/excm=_b,_tp,identifierview/ed=1/dg=0/wt=2/ujg=1/rs=AOaEmlFR7jA1a5YjVK0k0tz0FLQ_AyHRAQ/dti=1/m=_b,_tp:552

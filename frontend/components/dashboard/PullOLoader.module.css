@@ -1,0 +1,141 @@
+.stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.camera {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: camDrift 13s ease-in-out infinite;
+}
+
+@keyframes camDrift {
+  0%, 100% { transform: scale(0.998); }
+  50% { transform: scale(1.004); }
+}
+
+.aurora {
+  position: absolute;
+  inset: -120px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba(0,229,255,.13), rgba(124,58,237,.13), rgba(91,140,255,.10),
+    rgba(0,229,255,.13));
+  filter: blur(70px);
+  opacity: 0;
+  transform: rotate(-6deg);
+  animation: auroraIn 1.8s ease-out 0.1s forwards, auroraSway 8s ease-in-out 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes auroraIn {
+  0% { opacity: 0; }
+  100% { opacity: 0.35; }
+}
+
+@keyframes auroraSway {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.backdrop {
+  position: absolute;
+  inset: -40px;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 26px 26px, 26px 26px;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 72%);
+  mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 72%);
+  opacity: 0;
+  animation: gridIn 1.4s ease-out 0.1s forwards;
+  pointer-events: none;
+}
+
+@keyframes gridIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.grain {
+  position: absolute;
+  inset: -60px;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.packet {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #8fefff;
+  box-shadow: 0 0 8px 2px rgba(127,233,255,.85);
+  opacity: 0;
+  pointer-events: none;
+  left: 50%;
+  top: 50%;
+}
+
+.ripple {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(180,230,255,.9);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.igniteFlash {
+  position: absolute;
+  inset: -60px;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(130,230,255,.55), rgba(0,229,255,.18) 45%, transparent 75%);
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.tiltWrap {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.logoWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: scale(.97);
+  filter: blur(12px);
+}
+
+.logoSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.bloomBehind {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  filter: blur(30px);
+  opacity: 0;
+  mix-blend-mode: screen;
+}

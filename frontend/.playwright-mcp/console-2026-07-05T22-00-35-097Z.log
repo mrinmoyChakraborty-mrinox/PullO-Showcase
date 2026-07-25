@@ -1,0 +1,328 @@
+[     182ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[     533ms] [LOG] [Fast Refresh] done in 467ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[     730ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[     877ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1743ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1833ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1833ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1834ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1834ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1855ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1856ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1856ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    1857ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2019ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2020ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2020ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2020ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2094ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2094ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2095ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2095ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2100ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2101ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2101ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2101ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    2726ms] [LOG] THREE.WebGLRenderer: Context Lost. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3748ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3793ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3793ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3794ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3794ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3798ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3799ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3799ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    3799ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4699ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4700ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4701ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4702ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4703ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4703ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4703ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4703ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[    4704ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   14401ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   14403ms] [LOG] [Fast Refresh] done in 103ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   14493ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   14516ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   14706ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15046ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15047ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15047ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15047ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15068ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15068ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15068ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15068ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15118ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15119ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15119ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15119ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15126ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15126ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15126ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15126ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15225ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15225ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15225ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15226ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15227ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15228ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15432ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15432ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15432ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15432ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15435ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15435ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15435ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15435ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15443ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15443ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15444ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15445ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   15910ms] [LOG] THREE.WebGLRenderer: Context Lost. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16380ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16559ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16559ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16559ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16560ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16562ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16562ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16562ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16562ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16577ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16577ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16577ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16579ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16579ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16579ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16579ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16579ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16580ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16581ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16582ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16583ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16583ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[   16583ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  100500ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  100526ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  100685ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101022ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101022ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101022ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101022ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101068ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101068ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101068ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101068ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101070ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101071ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101071ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101071ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101206ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101206ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101207ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101208ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101209ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101210ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101210ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101210ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101408ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101409ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101409ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101409ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101412ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101412ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101413ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101413ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101424ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101425ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101426ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101426ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  101956ms] [LOG] THREE.WebGLRenderer: Context Lost. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102425ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102595ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102596ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102596ms] [LOG] [Laptop] GLB world bbox size: 1.320 0.888 1.296 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102596ms] [LOG] [Laptop] GLB world bbox center: -2.498 0.412 0.010 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102599ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102599ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102599ms] [LOG] [Hardware] GLB size: 0.145 0.138 0.005 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102599ms] [LOG] [Hardware] scaleFactor: 17.260 @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Group        | "Scene" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Group        | "DECK" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube_2" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Group        | "keys_phy" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube004" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102615ms] [LOG]   Mesh         | "Cube004_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "mold_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "mold_3" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "mold_3001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "notification_led" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "powerbutton001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "powerbutton" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "tufLogo" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "W" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "A" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "D" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Mesh         | "S" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102616ms] [LOG]   Group        | "laptop_display" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "Cube001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "Cube001_1" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "Cylinder" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "Cylinder001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "Plane" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "tufLogo001" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "wallpaper" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102617ms] [LOG]   Mesh         | "backlight" @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102618ms] [LOG] [Laptop] Screen texture wired to: wallpaper @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  102618ms] [LOG] [Laptop] Mirror fix applied via texture repeat/offset mapping @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  407131ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  407478ms] [LOG] [Fast Refresh] done in 423ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  425692ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477
+[  425765ms] [LOG] [Fast Refresh] done in 179ms @ http://localhost:3000/_next/static/chunks/0loi_next_dist_125_q28._.js:2477

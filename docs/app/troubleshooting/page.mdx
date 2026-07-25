@@ -1,0 +1,23 @@
+export const metadata = {
+  title: "Troubleshooting",
+  description: "Common PullO errors and fixes — 503, model offline, timeout, and Chrome suspension behavior.",
+};
+
+import { Callout } from "@/components/callout";
+
+# Troubleshooting
+
+<Callout variant="info" title="Coming soon">
+  This section is under active development. Content will cover common errors, their causes, and step-by-step fixes.
+</Callout>
+
+Topics that will be covered here:
+
+- `503 host_disconnected` — Extension disconnected, how to reconnect
+- `422 model_offline` — Model not found or Ollama not running
+- `504 inference_timeout` — Model taking too long, hardware tips
+- `429 rate_limit_exceeded` — Rate limiting and backoff strategies
+- Chrome background suspension and how to prevent it
+- Extension not connecting after browser restart
+- Firewall or antivirus blocking Ollama port 11434
+- Debug mode and how to read extension logs

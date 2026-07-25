@@ -1,0 +1,124 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - banner [ref=f3e4]:
+      - navigation [ref=f3e5]:
+        - link "PullO PullO" [ref=f3e6]:
+          - /url: "#top"
+          - img "PullO" [ref=f3e7]
+          - generic [ref=f3e8]: PullO
+        - generic [ref=f3e9]:
+          - link "How It Works" [ref=f3e10]:
+            - /url: "#how"
+          - link "Features" [ref=f3e11]:
+            - /url: "#features"
+          - link "Hardware" [ref=f3e12]:
+            - /url: "#hardware"
+          - link "Network" [ref=f3e13]:
+            - /url: "#network"
+          - link "Downloads" [ref=f3e14]:
+            - /url: "#get"
+          - link "Sign In" [ref=f3e163]:
+            - /url: /login
+        - link "Get Started" [ref=f3e165]:
+          - /url: "#get"
+    - generic:
+      - generic:
+        - generic: The browser extension that turns local AI into a team API
+        - heading "If Ollama runs it, PullO shares it" [level=1]:
+          - text: If Ollama runs it,
+          - generic: PullO
+          - text: shares
+          - generic: it
+        - paragraph: Expose local AI as a secure OpenAI-compatible API. No tunnels. No port forwarding. No cloud inference.
+        - generic:
+          - generic:
+            - link "Install PullO":
+              - /url: "#get"
+          - generic: scroll to descend ↓
+    - generic [ref=f3e18]:
+      - generic [ref=f3e19]:
+        - generic [ref=f3e20]:
+          - generic [ref=f3e21]:
+            - generic [ref=f3e22]: Everything included
+            - heading "Built for people who want to own their AI" [level=2] [ref=f3e23]
+          - paragraph [ref=f3e24]: Everything you need to turn local models into a team-ready API — no servers, no setup, no surprises.
+        - generic [ref=f3e25]:
+          - generic [ref=f3e27]:
+            - img [ref=f3e29]
+            - heading "Private by default" [level=3] [ref=f3e32]
+            - paragraph [ref=f3e33]: No public ports. No incoming connections. Access local AI through a pull-based architecture that works behind any firewall.
+          - generic [ref=f3e35]:
+            - img [ref=f3e37]
+            - heading "Sub-millisecond latency" [level=3] [ref=f3e39]
+            - paragraph [ref=f3e40]: Direct local connections with negligible overhead. PullO adds no meaningful delay between your team and the model.
+          - generic [ref=f3e42]:
+            - img [ref=f3e44]
+            - heading "Any open model" [level=3] [ref=f3e54]
+            - paragraph [ref=f3e55]: Llama, Mistral, Qwen, Gemma, Phi and more — use any model with Ollama.
+          - generic [ref=f3e57]:
+            - img [ref=f3e59]
+            - heading "Full silicon support" [level=3] [ref=f3e62]
+            - paragraph [ref=f3e63]: Apple Silicon, NVIDIA, AMD and Intel. Ollama handles the acceleration. PullO handles the access.
+          - generic [ref=f3e65]:
+            - img [ref=f3e67]
+            - heading "OpenAI-compatible API" [level=3] [ref=f3e69]
+            - paragraph [ref=f3e70]: Point existing apps at localhost. A drop-in endpoint that just works.
+          - generic [ref=f3e72]:
+            - img [ref=f3e74]
+            - heading "Encrypted team sharing" [level=3] [ref=f3e79]
+            - paragraph [ref=f3e80]: Share local models with teammates through a private, encrypted peer-to-peer connection.
+          - generic [ref=f3e83]: PullO
+      - generic [ref=f3e85]:
+        - generic [ref=f3e86]:
+          - generic [ref=f3e87]: 0ms
+          - generic [ref=f3e88]: Network latency
+        - generic [ref=f3e89]:
+          - generic [ref=f3e90]: 100%
+          - generic [ref=f3e91]: On-device
+        - generic [ref=f3e92]:
+          - generic [ref=f3e93]: 40+
+          - generic [ref=f3e94]: Models supported
+        - generic [ref=f3e95]:
+          - generic [ref=f3e96]: $0
+          - generic [ref=f3e97]: Per-token cost
+      - generic [ref=f3e98]:
+        - heading "Go from Ollama to team API in minutes." [level=2] [ref=f3e99]
+        - paragraph [ref=f3e100]: Install the extension, connect your model, and start sharing local AI through a secure OpenAI-compatible endpoint.
+        - generic [ref=f3e102]:
+          - generic [ref=f3e103]:
+            - img [ref=f3e105]
+            - generic [ref=f3e107]:
+              - generic [ref=f3e108]: Chrome Extension
+              - generic [ref=f3e109]: Install in one click
+          - generic [ref=f3e110]:
+            - link "Add to Chrome" [ref=f3e167]:
+              - /url: "#top"
+            - link "View Source" [ref=f3e112]:
+              - /url: "#top"
+        - generic [ref=f3e114]:
+          - generic [ref=f3e116]:
+            - img [ref=f3e118]
+            - generic [ref=f3e120]: Install PullO Extension
+            - generic [ref=f3e121]: Step 1
+          - generic [ref=f3e123]:
+            - img [ref=f3e125]
+            - generic [ref=f3e127]: Install Ollama
+            - generic [ref=f3e128]: Step 2
+          - generic [ref=f3e130]:
+            - img [ref=f3e132]
+            - generic [ref=f3e134]: Download a Model
+            - generic [ref=f3e135]: Gemma · Qwen · Llama · Mistral
+          - generic [ref=f3e137]:
+            - img [ref=f3e139]
+            - generic [ref=f3e141]: Start Browsing
+            - generic [ref=f3e142]: Step 4
+      - contentinfo [ref=f3e143]:
+        - generic [ref=f3e144]:
+          - generic [ref=f3e145]:
+            - img "PullO" [ref=f3e146]
+            - generic [ref=f3e147]: PullO
+          - paragraph [ref=f3e148]: Ollama runs the model. PullO makes it accessible.
+          - paragraph [ref=f3e149]: © 2026 PullO. All rights reserved.
+  - button "Open Next.js Dev Tools" [ref=f3e155] [cursor=pointer]:
+    - img [ref=f3e156]
+  - alert [ref=f3e168]

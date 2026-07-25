@@ -1,0 +1,68 @@
+export const metadata = {
+  title: "FAQ",
+  description: "Frequently asked questions about PullO — privacy, latency, supported models, and how it compares to ngrok and Cloudflare Tunnel.",
+};
+
+import { AccordionFaq } from "@/components/accordion-faq";
+
+# FAQ
+
+<AccordionFaq items={[
+  {
+    question: "What is PullO?",
+    answer: "PullO is a pull-based tunnel that exposes your locally running Ollama models as secure, OpenAI-compatible REST APIs — without port forwarding, ngrok, or Cloudflare Tunnel. The key insight is that instead of pushing traffic inward from the internet (which requires your machine to be reachable), the PullO Chrome Extension continuously pulls pending requests from the PullO Cloud queue and forwards them to your local Ollama instance."
+  },
+  {
+    question: "Do I need a public IP or any firewall changes?",
+    answer: "No. PullO uses a pull model: the Chrome Extension running on your machine initiates an outbound connection to PullO Cloud, then polls for requests. All traffic flows outbound from your machine — exactly like a browser loading a website — so no inbound ports, no router configuration, and no public IP address are required."
+  },
+  {
+    question: "Is my data private? Are my prompts stored?",
+    answer: "Prompts are never stored by PullO. The Cloud layer acts as a stateless relay: it holds a request in a queue just long enough for the Extension to pick it up (milliseconds to seconds), then discards it immediately. The request payload is never persisted to disk or any database on the PullO infrastructure. Model weights always remain on your machine — PullO never has access to them."
+  },
+  {
+    question: "Can my team use this?",
+    answer: "Yes. You can invite teammates to your workspace from the Team page in the dashboard. Each teammate can share the same pool of connected models using their own API key with per-key permission scopes. Teams support Owner, Admin, and Member roles."
+  },
+  {
+    question: "Does Chrome need to stay open?",
+    answer: "Yes — the Chrome Extension must be running to relay requests. Chrome can be in the background (minimized or behind other windows) and the extension will continue polling. However, if Chrome is fully quit, or if Chrome suspends the extension due to inactivity (rare, but possible on older Chrome versions), requests will queue until the extension reconnects. A desktop-native agent (currently in development) will eliminate this dependency."
+  },
+  {
+    question: "What models can I use?",
+    answer: "Any model supported by Ollama. PullO acts as a pass-through: it routes the request to your local Ollama instance, which handles model selection. Popular choices include llama3.2, mistral, gemma2, qwen2.5-coder, codellama, deepseek-coder, and nomic-embed-text for embeddings. Run `ollama list` to see what you have available."
+  },
+  {
+    question: "How is this different from ngrok / Cloudflare Tunnel?",
+    answer: "ngrok and Cloudflare Tunnel expose a port from your machine to the internet — they create an inbound tunnel that anyone with the URL can reach (subject to auth you configure). PullO is fundamentally different: there is no inbound tunnel and no public port. Requests flow through PullO's API surface using your API key; the extension polls the PullO queue rather than accepting inbound connections. This means no public-facing port on your machine, tighter access control, and no need to manage TLS or firewall rules."
+  },
+  {
+    question: "What happens if my machine goes to sleep or the extension crashes mid-request?",
+    answer: "The PullO Cloud queue holds the request for up to 30 seconds (configurable per workspace). If the Extension does not acknowledge the request within that window, the API returns a 503 Service Unavailable to the caller. No partial data is returned; the request is cleanly failed. When the Extension reconnects, it resumes processing the queue from where it left off — any new requests will be processed normally."
+  },
+  {
+    question: "Is there a request size or context length limit?",
+    answer: "PullO imposes a 16 MB limit per request payload. Context length is determined entirely by your local model and the available VRAM/RAM on your machine — PullO does not truncate or modify the messages array. If Ollama rejects a request due to context overflow, the error is forwarded verbatim to the API caller."
+  },
+  {
+    question: "What is the latency overhead compared to calling Ollama directly?",
+    answer: "The pull-based relay adds approximately 20–80 ms of network round-trip overhead versus a direct localhost call. The dominant latency factor is almost always model inference time (hundreds of milliseconds to seconds, depending on model size and hardware). For most use cases — especially streaming — the relay overhead is imperceptible."
+  },
+  {
+    question: "Is PullO open source?",
+    answer: "The Chrome Extension and SDK clients are open source under the MIT license. The backend infrastructure is proprietary. You can find the extension source at github.com/mrinmoyChakraborty-mrinox/PullO."
+  },
+  {
+    question: "What are the rate limits?",
+    answer: "The free tier allows up to 100 requests per minute per API key. Pro and Team plans increase this significantly. Rate limit headers (X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset) are included on every API response."
+  }
+]} />
+
+## Related guides
+
+- [Quick Start](/quickstart) — set up PullO in under 5 minutes
+- [API Reference](/api-reference) — complete endpoint documentation
+- [Extension Guide](/extension) — Chrome extension setup and configuration
+- [Teams](/teams) — invite teammates and manage workspace access
+- [Troubleshooting](/troubleshooting) — common issues and solutions
+- [Architecture](/architecture) — data flow, security model, and design decisions

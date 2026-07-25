@@ -1,0 +1,39 @@
+/* Custom scrollbars - matches model.html */
+.model-detail-page ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.model-detail-page ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.model-detail-page ::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 9999px;
+}
+.model-detail-page ::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Glass effect from model.html */
+.model-detail-page .glass-effect {
+  background: rgba(9, 9, 11, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+/* Focus styles from model.html */
+.model-detail-page input:focus,
+.model-detail-page textarea:focus,
+.model-detail-page select:focus {
+  outline: none;
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.15) !important;
+}
+
+/* Toast animation */
+@keyframes toast-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+.md-toast-visible {
+  animation: toast-bounce 1s ease;
+}

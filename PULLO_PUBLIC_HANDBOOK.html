@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PullO — AI Runtime Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #050816; color: #e2e8f0; line-height: 1.7; overflow-x: hidden; }
+  .bg-grid { background-image: linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+  
+  /* Hero */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; position: relative; }
+  .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at center, rgba(124,58,237,0.08) 0%, transparent 60%); pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 99px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); font-size: 0.8rem; color: #a78bfa; font-weight: 500; margin-bottom: 24px; }
+  .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 20px; background: linear-gradient(135deg, #e2e8f0 0%, #a78bfa 50%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: clamp(1rem, 2vw, 1.25rem); color: #94a3b8; max-width: 640px; margin-bottom: 32px; }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: #fff; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(124,58,237,0.3); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.4); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 10px; background: rgba(255,255,255,0.05); color: #e2e8f0; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s; }
+  .btn-secondary:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+
+  /* Sections */
+  section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+  section h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; text-align: center; margin-bottom: 12px; }
+  section h2 span { background: linear-gradient(135deg, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  section > p { text-align: center; color: #94a3b8; font-size: 1.05rem; max-width: 600px; margin: 0 auto 48px; }
+  .section-divider { width: 60px; height: 3px; background: linear-gradient(90deg, #7c3aed, #a78bfa); border-radius: 2px; margin: 0 auto 32px; }
+
+  /* Features Grid */
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .feature-card { background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px; transition: all 0.3s; }
+  .feature-card:hover { border-color: rgba(124,58,237,0.2); background: rgba(124,58,237,0.03); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .feature-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 1.3rem; }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; }
+
+  /* Architecture */
+  .arch-flow { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 40px 0; }
+  .arch-node { background: linear-gradient(180deg, rgba(124,58,237,0.08), rgba(124,58,237,0.03)); border: 1px solid rgba(124,58,237,0.15); border-radius: 14px; padding: 20px 24px; text-align: center; min-width: 140px; }
+  .arch-node h4 { font-size: 0.85rem; font-weight: 700; color: #a78bfa; margin-bottom: 4px; }
+  .arch-node p { font-size: 0.75rem; color: #64748b; }
+  .arch-arrow { color: #7c3aed; font-size: 1.2rem; opacity: 0.5; }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin: 40px 0; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #a78bfa, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-label { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 24px; max-width: 700px; margin: 0 auto; }
+  .step { display: flex; gap: 20px; align-items: flex-start; }
+  .step-num { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #7c3aed, #6d28d9); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; flex-shrink: 0; }
+  .step h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .step p { font-size: 0.9rem; color: #94a3b8; }
+
+  /* Team */
+  .team-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 32px; }
+  .team-member { text-align: center; }
+  .team-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #a78bfa); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: #fff; }
+  .team-member h4 { font-size: 1rem; font-weight: 700; }
+  .team-member p { font-size: 0.8rem; color: #64748b; }
+
+  /* Footer */
+  footer { text-align: center; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06); color: #475569; font-size: 0.85rem; }
+  footer a { color: #a78bfa; text-decoration: none; }
+
+  @media (max-width: 640px) { .arch-flow { flex-direction: column; } .arch-arrow { transform: rotate(90deg); } }
+</style>
+</head>
+<body class="bg-grid">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">🚀 Now in Public Beta</div>
+  <h1>Run local AI.<br>Share globally.</h1>
+  <p>PullO turns your local AI models — Ollama, LM Studio, and more — into secure, shareable OpenAI-compatible APIs. No data leaves your machine. No cloud inference costs.</p>
+  <div class="hero-cta">
+    <a href="https://pullo.runtimeco.qzz.io" class="btn-primary">Get Started Free →</a>
+    <a href="https://pullo-docs.vercel.app" class="btn-secondary">Read the Docs</a>
+  </div>
+</div>
+
+<!-- What is PullO -->
+<section>
+  <h2>What is <span>PullO</span>?</h2>
+  <div class="section-divider"></div>
+  <p style="max-width:700px">PullO is a private AI runtime layer that connects your locally-running models to your team through a secure cloud gateway. Think of it as a reverse proxy for your local AI infrastructure — purpose-built for teams that care about data privacy and latency.</p>
+  
+  <div class="arch-flow">
+    <div class="arch-node"><h4>👤 Developer</h4><p>OpenAI-compatible API calls</p></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node"><h4>☁️ PullO Cloud</h4><p>Auth + routing + tools</p></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node"><h4>🔌 PullO Agent</h4><p>Your machine, your models</p></div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-node"><h4>🤖 Local AI</h4><p>Ollama · LM Studio · Custom</p></div>
+  </div>
+</section>
+
+<!-- Stats / Social Proof -->
+<section style="padding-top:0">
+  <div class="stats">
+    <div class="stat"><div class="stat-num">Zero</div><div class="stat-label">Data leaves your machine</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">OpenAI API compatible</div></div>
+    <div class="stat"><div class="stat-num">5 min</div><div class="stat-label">Setup time</div></div>
+    <div class="stat"><div class="stat-num">1-Click</div><div class="stat-label">Chrome extension install</div></div>
+  </div>
+</section>
+
+<!-- Features -->
+<section style="padding-top:0">
+  <h2>Everything you need, <span>nothing you don't</span></h2>
+  <div class="section-divider"></div>
+  <p>Built for modern AI teams who want control, privacy, and flexibility.</p>
+  
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(124,58,237,0.15);color:#a78bfa">🔒</div>
+      <h3>Privacy by Design</h3>
+      <p>Your prompts and model weights never leave your machine. The cloud only relays messages — we never store your data. Enterprise-grade security without the enterprise overhead.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(52,211,153,0.15);color:#34d399">🔌</div>
+      <h3>Drop-in OpenAI Replacement</h3>
+      <p>Works with any OpenAI-compatible client. Just change the base URL and API key. Use your existing tools, SDKs, and frameworks — no code changes needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(251,191,36,0.15);color:#fbbf24">👥</div>
+      <h3>Team Access Controls</h3>
+      <p>Invite teammates, assign roles (owner, admin, member), create scoped API keys with per-model permissions and daily budgets. Full workspace isolation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(34,211,238,0.15);color:#22d3ee">⚡</div>
+      <h3>Built-in Intelligence Layer</h3>
+      <p>Web search, URL fetching, and custom tool integrations via webhooks. Extend your models with MCP (Model Context Protocol) and Corsair plugin marketplace.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(251,146,60,0.15);color:#fb923c">📊</div>
+      <h3>Real-time Analytics</h3>
+      <p>Monitor request volumes, latency, error rates, and token usage across your workspace. Export logs, track trends, and keep your team accountable.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(244,114,182,0.15);color:#f472b6">🌐</div>
+      <h3>Works Everywhere</h3>
+      <p>Behind corporate firewalls, on VPNs, in air-gapped environments. If your machine can reach the internet, your team can reach your models.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section style="padding-top:0">
+  <h2>Get started in <span>5 minutes</span></h2>
+  <div class="section-divider"></div>
+  
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h4>Install Ollama</h4>
+        <p>Download and run Ollama on your machine. Pull any open-source model — Llama 3, Mistral, DeepSeek, CodeGemma, or your own fine-tuned models.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h4>Install PullO Desktop Agent</h4>
+        <p>Install the PullO Chrome Extension. Log in with your account, and it automatically discovers your local Ollama instances.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h4>Create API Keys</h4>
+        <p>In the PullO dashboard, generate API keys for your team. Set rate limits, model access, and daily budgets. Share keys instantly.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h4>Start Building</h4>
+        <p>Use any OpenAI-compatible client with your new endpoint. Build AI features, automate workflows, or create internal tools — all powered by your local hardware.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- For Teams -->
+<section style="padding-top:0">
+  <h2>Built for <span>teams like yours</span></h2>
+  <div class="section-divider"></div>
+  
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(99,102,241,0.15);color:#818cf8">🏢</div>
+      <h3>Enterprise AI Teams</h3>
+      <p>Deploy private AI infrastructure without exposing data to third-party APIs. Meet compliance requirements while giving your team access to cutting-edge models.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b">🎓</div>
+      <h3>Research Labs</h3>
+      <p>Share experimental models across your lab without complex infrastructure. Fine-tune locally, serve globally to your team.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(16,185,129,0.15);color:#10b981">🛠️</div>
+      <h3>Dev Tools &amp; Startups</h3>
+      <p>Build AI-powered features during development without cloud costs. Test with real models locally, deploy with confidence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- The Team -->
+<section style="padding-top:0">
+  <h2>Meet the <span>team</span></h2>
+  <div class="section-divider"></div>
+  <p>PullO is built by a small, focused team passionate about making AI infrastructure accessible and private.</p>
+  
+  <div class="team-list">
+    <div class="team-member">
+      <div class="team-avatar">MC</div>
+      <h4>Mrinmoy Chakraborty</h4>
+      <p>Founder &amp; Lead Developer</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="text-align:center;padding-bottom:60px">
+  <h2>Ready to <span>deploy</span>?</h2>
+  <div class="section-divider"></div>
+  <p style="margin-bottom:28px">Join the beta. It's free. Your data stays yours.</p>
+  <div class="hero-cta">
+    <a href="https://pullo.runtimeco.qzz.io" class="btn-primary">Get Started</a>
+    <a href="https://github.com/anomalyco/pullo" class="btn-secondary">GitHub →</a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 PullO. All rights reserved. &nbsp;·&nbsp; <a href="https://pullo.runtimeco.qzz.io">Website</a> &nbsp;·&nbsp; <a href="https://pullo-docs.vercel.app">Docs</a> &nbsp;·&nbsp; <a href="https://github.com/anomalyco/pullo">GitHub</a> &nbsp;·&nbsp; <a href="https://pullo.runtimeco.qzz.io/privacy">Privacy</a> &nbsp;·&nbsp; <a href="https://pullo.runtimeco.qzz.io/terms">Terms</a></p>
+  <p style="margin-top:8px;font-size:0.75rem">"Local Intelligence → Global Access"</p>
+</footer>
+
+</body>
+</html>

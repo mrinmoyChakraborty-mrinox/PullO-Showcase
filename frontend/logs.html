@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logs | PullO Infrastructure</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --void:        #080B14;
+      --surface-1:   #0D1117;
+      --surface-2:   #111827;
+      --surface-3:   #1A2234;
+      --border:      rgba(255,255,255,0.06);
+      --border-hi:   rgba(255,255,255,0.12);
+      --violet:      #7C3AED;
+      --violet-hi:   #9D5CF6;
+      --violet-glow: rgba(124,58,237,0.25);
+      --indigo:      #4F46E5;
+      --cyan:        #06B6D4;
+      --emerald:     #10B981;
+      --amber:       #F59E0B;
+      --rose:        #F43F5E;
+      --teal:        #14B8A6;
+      --blue:        #3B82F6;
+      --orange:      #F97316;
+      --text-hi:     #F1F5F9;
+      --text-md:     #94A3B8;
+      --text-lo:     #475569;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-xl:   20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--void);
+      color: var(--text-hi);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+    /* ── Ambient purple-glow background ── */
+    .bg-ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.15;
+      animation: orb-drift 20s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 600px; height: 600px; background: var(--violet); top: -200px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: var(--indigo); bottom: -100px; left: 200px; animation-delay: -7s; }
+    .orb-3 { width: 300px; height: 300px; background: var(--teal); top: 40%; right: 20%; animation-delay: -14s; opacity: 0.07; }
+    @keyframes orb-drift {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(30px,20px) scale(1.05); }
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      position: fixed; left: 0; top: 0; height: 100vh; width: 240px;
+      background: rgba(13,17,23,0.88);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      z-index: 50;
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    #sidebar.collapsed { width: 0; transform: translateX(-100%); }
+    #main { margin-left: 240px; transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; z-index: 1; }
+    #main.expanded { margin-left: 0; }
+    .sidebar-label { white-space: nowrap; transition: opacity 0.15s ease; }
+    #sidebar.collapsed .sidebar-label { opacity: 0; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 14px; border-radius: 10px;
+      font-size: 13.5px; font-weight: 500; color: var(--text-md);
+      cursor: pointer; position: relative; text-decoration: none;
+      transition:
+        color 220ms ease,
+        background-color 220ms ease;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: var(--text-hi); }
+    .nav-item.active { background: rgba(124,58,237,0.15); color: #C4B5FD; }
+    .nav-item svg {
+      flex-shrink: 0;
+    }
+    .dashboard-nav svg rect {
+      transition: transform 220ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .dashboard-nav:hover svg rect:nth-child(1) { transform: translate(-1.5px, -1.5px); }
+    .dashboard-nav:hover svg rect:nth-child(2) { transform: translate(1.5px, -1.5px); }
+    .dashboard-nav:hover svg rect:nth-child(3) { transform: translate(-1.5px, 1.5px); }
+    .dashboard-nav:hover svg rect:nth-child(4) { transform: translate(1.5px, 1.5px); }
+    .models-nav svg path {
+      transition: transform 220ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .models-nav:hover svg path:nth-child(1) { transform: translateY(-1.8px); }
+    .models-nav:hover svg path:nth-child(2) { transform: translateY(1.8px); }
+    .models-nav:hover svg path:nth-child(3) { transform: translateY(0.5px); }
+    .apikeys-nav svg {
+      transition: clip-path 220ms cubic-bezier(0.22,1,0.36,1);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .apikeys-nav:hover svg {
+      clip-path: polygon(0 0, 65% 0, 65% 100%, 0 100%);
+    }
+    .analytics-nav .analytics-bar {
+      animation-play-state: paused;
+      transform-box: fill-box;
+      transform-origin: bottom;
+    }
+    .analytics-nav:hover .analytics-bar {
+      animation-play-state: running;
+    }
+    .analytics-nav:hover .bar-1 {
+      animation: barWave1 1.4s ease-in-out infinite;
+    }
+    .analytics-nav:hover .bar-2 {
+      animation: barWave2 1.0s ease-in-out infinite;
+    }
+    .analytics-nav:hover .bar-3 {
+      animation: barWave3 1.8s ease-in-out infinite;
+    }
+    @keyframes barWave1 {
+      0%, 100% { transform: scaleY(0.85); }
+      50% { transform: scaleY(1.2); }
+    }
+    @keyframes barWave2 {
+      0%, 100% { transform: scaleY(1.05); }
+      50% { transform: scaleY(0.75); }
+    }
+    @keyframes barWave3 {
+      0%, 100% { transform: scaleY(0.9); }
+      50% { transform: scaleY(1.3); }
+    }
+    .team-nav .front-person,
+    .team-nav .back-person {
+      transition: transform 220ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .team-nav .back-torso-left {
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+    .team-nav:hover .front-person {
+      transform: translateX(-2px);
+    }
+    .team-nav:hover .back-person {
+      transform: translateX(5px);
+    }
+    .team-nav:hover .back-torso-left {
+      opacity: 1;
+    }
+    .logs-nav .logs-arrow {
+      transition: transform 220ms cubic-bezier(0.22,1,0.36,1);
+      transform-box: fill-box;
+      transform-origin: 10px 11px;
+    }
+    .logs-nav:hover .logs-arrow {
+      transform: rotate(14deg);
+    }
+    .settings-nav .settings-icon {
+      animation: spin 2.5s linear infinite;
+      animation-play-state: paused;
+    }
+    .settings-nav:hover .settings-icon {
+      animation-play-state: running;
+    }
+    .docs-nav .doc-body-folded,
+    .docs-nav .doc-fold {
+      transition: opacity 220ms ease;
+    }
+    .docs-nav .doc-body-flat {
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+    .docs-nav:hover .doc-body-folded,
+    .docs-nav:hover .doc-fold {
+      opacity: 0;
+    }
+    .docs-nav:hover .doc-body-flat {
+      opacity: 1;
+    }
+    .docs-nav .doc-line {
+      transform: scaleX(0);
+      transform-origin: left center;
+      transform-box: fill-box;
+      transition: transform 280ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .docs-nav:hover .doc-line {
+      transform: scaleX(1);
+    }
+    .docs-nav:hover .line-2 {
+      transition-delay: 70ms;
+    }
+    .docs-nav:hover .line-3 {
+      transition-delay: 140ms;
+    }
+    .signout-btn .signout-arrow {
+      transition: transform 220ms cubic-bezier(0.22,1,0.36,1);
+    }
+    .signout-btn:hover .signout-arrow {
+      animation: signoutWiggle 0.7s ease-in-out infinite;
+    }
+    @keyframes signoutWiggle {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(0.5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; background: var(--violet-hi);
+      border-radius: 0 4px 4px 0;
+    }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-lo);
+      padding: 6px 12px 4px;
+    }
+
+    /* ── Glass card ── */
+    .card {
+      background: rgba(10,14,26,0.72);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-lg);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.35);
+      transition: border-color 0.25s, box-shadow 0.3s, transform 0.25s;
+    }
+    .card:hover {
+      border-color: rgba(255,255,255,0.11);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    /* ── Topbar ── */
+    #topbar {
+      height: 60px; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(8,11,20,0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 40;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, var(--violet) 0%, var(--indigo) 100%);
+      color: #fff; border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      padding: 10px 18px; cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.25), 0 0 22px rgba(124,58,237,0.45), 0 4px 16px rgba(0,0,0,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border-hi);
+      color: var(--text-md);
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 500;
+      padding: 9px 14px; cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.05); color: var(--text-hi); border-color: rgba(255,255,255,0.18); }
+    .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-ghost:disabled:hover { background: transparent; color: var(--text-md); border-color: var(--border-hi); }
+
+    /* ── Table ── */
+    .data-table { width: 100%; border-collapse: collapse; min-width: 980px; }
+    .data-table thead th {
+      padding: 11px 18px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-lo);
+      background: rgba(0,0,0,0.22);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .data-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s ease; }
+    .data-table tbody tr:last-child { border-bottom: none; }
+    .data-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+    .data-table tbody td { padding: 13px 18px; font-size: 13px; vertical-align: middle; white-space: nowrap; }
+
+    /* ── Status badges ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: 99px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.03em; font-family: 'Geist Mono', monospace;
+    }
+    .badge-200, .badge-201 { background: rgba(16,185,129,0.12); color: #34D399; border: 1px solid rgba(16,185,129,0.22); }
+    .badge-400, .badge-404 { background: rgba(249,115,22,0.12); color: #FB923C; border: 1px solid rgba(249,115,22,0.24); }
+    .badge-401, .badge-403 { background: rgba(245,158,11,0.12); color: #FCD34D; border: 1px solid rgba(245,158,11,0.24); }
+    .badge-429 { background: rgba(234,179,8,0.12); color: #FDE047; border: 1px solid rgba(234,179,8,0.24); }
+    .badge-500 { background: rgba(244,63,94,0.12); color: #FB7185; border: 1px solid rgba(244,63,94,0.24); }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; background: currentColor; box-shadow: 0 0 5px currentColor; }
+
+    /* ── Method badges ── */
+    .method-badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: 6px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; font-family: 'Geist Mono', monospace;
+    }
+    .method-get    { background: rgba(59,130,246,0.12); color: #60A5FA; border: 1px solid rgba(59,130,246,0.24); }
+    .method-post   { background: rgba(124,58,237,0.12); color: #C4B5FD; border: 1px solid rgba(124,58,237,0.24); }
+    .method-delete { background: rgba(244,63,94,0.12); color: #FB7185; border: 1px solid rgba(244,63,94,0.24); }
+
+    /* ── Icon btn ── */
+    .icon-btn {
+      width: 30px; height: 30px;
+      background: transparent; border: 1px solid transparent;
+      border-radius: 7px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--text-lo);
+      transition: all 0.15s ease; flex-shrink: 0;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.06); border-color: var(--border-hi); color: var(--text-hi); }
+    .icon-btn.danger:hover { background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3); color: #FB7185; }
+
+    /* ── Notif dot ── */
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--violet-hi); border: 2px solid var(--void);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow:0 0 4px currentColor; }
+      50%      { box-shadow:0 0 10px currentColor,0 0 20px rgba(124,58,237,0.35); }
+    }
+
+    /* ── Filter controls ── */
+    .field-input {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-hi); border-radius: var(--radius-sm);
+      padding: 9px 12px; font-size: 12.5px; color: var(--text-hi);
+      font-family: 'Inter', sans-serif; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field-input:focus { border-color: rgba(124,58,237,0.6); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+    .cursor-i-black { cursor: url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%278%27 height=%2720%27 viewBox=%270 0 8 20%27%3E%3Crect x=%273%27 y=%271%27 width=%272%27 height=%2718%27 fill=%27%23000%27/%3E%3C/svg%3E') 4 10, text; }
+    .field-input::placeholder { color: var(--text-lo); }
+    select.field-input { appearance: none; cursor: pointer; padding-right: 30px; }
+    .select-wrap { position: relative; }
+    .select-wrap svg.chev { position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; }
+
+    /* ── Custom select dropdown (like date dropdown) ── */
+    .custom-select { position: relative; }
+    .custom-select-trigger {
+      display:flex; align-items:center; gap:7px; cursor:pointer; white-space:nowrap;
+      background:rgba(0,0,0,0.3); border:1px solid var(--border-hi); border-radius:var(--radius-sm);
+      padding:9px 12px; font-size:12.5px; color:var(--text-hi);
+      font-family:'Inter',sans-serif; outline:none;
+      transition:border-color 0.15s, box-shadow 0.15s;
+      justify-content:space-between; min-width:0;
+    }
+    .custom-select-trigger:hover { border-color:rgba(255,255,255,0.18); }
+    .custom-select-dropdown {
+      display:none; position:absolute; top:calc(100% + 6px); left:0;
+      background:rgba(10,14,26,0.98); backdrop-filter:blur(20px);
+      border:1px solid var(--border-hi); border-radius:var(--radius-md);
+      padding:6px; min-width:170px;
+      box-shadow:0 16px 50px rgba(0,0,0,0.6); z-index:200;
+    }
+    .custom-select-dropdown.open { display:block; animation:ddOpen 0.18s ease; }
+    .custom-select-option {
+      padding:8px 10px; border-radius:7px;
+      font-size:12.5px; color:var(--text-md);
+      cursor:pointer; transition:all 0.12s;
+    }
+    .custom-select-option:hover { background:rgba(124,58,237,0.1); color:var(--text-hi); }
+    .custom-select-option.active { background:rgba(124,58,237,0.18); color:#C4B5FD; }
+    .custom-select-trigger svg:last-child { transition: transform 0.25s ease; }
+    .custom-select.open .custom-select-trigger svg:last-child { transform: rotate(180deg); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .reset-spinning { animation: spin 0.6s linear infinite; }
+
+    /* ── Date preset dropdown ── */
+    .date-dropdown {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      background: rgba(10,14,26,0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-md);
+      padding: 6px; min-width: 170px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.6);
+      z-index: 200;
+    }
+    .date-dropdown.open { display: block; animation: ddOpen 0.18s ease; }
+    @keyframes ddOpen { from { opacity:0; transform:translateY(-6px);} to {opacity:1; transform:translateY(0);} }
+    .date-item {
+      padding: 8px 10px; border-radius: 7px;
+      font-size: 12.5px; color: var(--text-md);
+      cursor: pointer; transition: all 0.12s;
+    }
+    .date-item:hover { background: rgba(124,58,237,0.1); color: var(--text-hi); }
+    .date-item.active { background: rgba(124,58,237,0.18); color: #C4B5FD; }
+
+    /* ── Modal / Drawer overlay ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    /* ── Right-side drawer (Sheet) ── */
+    #drawer {
+      position: fixed; right: 0; top: 0; height: 100vh; width: 460px; max-width: 92vw;
+      background: rgba(10,13,24,0.98);
+      backdrop-filter: blur(30px) saturate(1.4);
+      -webkit-backdrop-filter: blur(30px) saturate(1.4);
+      border-left: 1px solid var(--border-hi);
+      box-shadow: -20px 0 60px rgba(0,0,0,0.6);
+      z-index: 101;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    #drawer.open { transform: translateX(0); }
+    .drawer-section { padding: 18px 24px; border-bottom: 1px solid var(--border); }
+    .drawer-eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-lo); margin-bottom: 12px; display:flex; align-items:center; gap:7px; }
+    .drawer-row { display:flex; align-items:center; justify-content:space-between; padding: 6px 0; font-size: 12.5px; }
+    .drawer-row-label { color: var(--text-lo); }
+    .drawer-row-value { color: var(--text-hi); font-family:'Geist Mono',monospace; font-size:12px; text-align:right; max-width: 260px; overflow-wrap: anywhere; }
+    .code-block {
+      background: rgba(0,0,0,0.35); border: 1px solid var(--border-hi); border-radius: var(--radius-sm);
+      padding: 12px 14px; font-family:'Geist Mono',monospace; font-size: 11.5px; color: #A5B4D0;
+      max-height: 180px; overflow-y: auto; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
+    }
+
+    /* ── Fade up ── */
+    .fade-up { opacity: 0; transform: translateY(10px); animation: fade-up-in 0.45s ease forwards; }
+    @keyframes fade-up-in { to { opacity: 1; transform: translateY(0); } }
+    .d1{animation-delay:0.04s;} .d2{animation-delay:0.08s;} .d3{animation-delay:0.12s;}
+    .d4{animation-delay:0.16s;} .d5{animation-delay:0.20s;}
+
+    /* ── Empty / error / skeleton ── */
+    #emptyState, #errorState { display: none; }
+    .skeleton { position: relative; overflow: hidden; background: rgba(255,255,255,0.045); border-radius: 6px; }
+    .skeleton::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      animation: shimmer 1.6s infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+    /* ── Row-actions dropdown ── */
+    .row-menu {
+      position: absolute; right: 0; top: calc(100% + 4px);
+      background: rgba(10,14,26,0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-hi);
+      border-radius: var(--radius-md);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.6);
+      z-index: 80; min-width: 170px; overflow: hidden;
+      opacity: 0; pointer-events: none; transform: scale(0.95) translateY(-4px);
+      transition: all 0.15s ease; transform-origin: top right;
+    }
+    .row-menu.open { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
+    .row-menu-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 9px 14px; font-size: 12.5px; color: var(--text-md);
+      cursor: pointer; transition: all 0.1s;
+    }
+    .row-menu-item:hover { background: rgba(124,58,237,0.1); color: var(--text-hi); }
+
+    /* ── Page btn ── */
+    .page-btn {
+      width: 30px; height: 30px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      background: transparent; border: 1px solid var(--border-hi);
+      color: var(--text-md); transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+    .page-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-hi); }
+    .page-btn.active { background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.4); color: #C4B5FD; }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
+    @media (max-width: 1024px) {
+      #sidebar { width: 0; transform: translateX(-100%); }
+      #main { margin-left: 0 !important; }
+    }
+    @media (max-width: 900px) {
+      .logs-table-wrap { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient purple-glow background -->
+<div class="bg-ambient">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+</div>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside id="sidebar">
+  <!-- Logo -->
+  <div style="padding: 20px 16px 16px; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+    <img src="public/images/pullo-logo.png" alt="PullO Logo" style="height:32px;width:auto;">
+    <span class="sidebar-label" style="font-size:16px;font-weight:700;color:var(--text-hi);letter-spacing:-0.02em;">PullO</span>
+  </div>
+
+  <!-- Workspace switcher -->
+  <div style="padding:0 12px 16px;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.04);border:1px solid var(--border);cursor:pointer;">
+      <div style="width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">A</div>
+      <span class="sidebar-label" style="font-size:13px;font-weight:500;color:var(--text-hi);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Aryan's workspace</span>
+      <svg class="sidebar-label" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav style="flex:1;padding:0 8px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;">
+    <div class="section-eyebrow">Infrastructure</div>
+    <a href="#" class="nav-item dashboard-nav">
+      <svg class="dash-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="sidebar-label">Dashboard</span>
+    </a>
+    <a href="#" class="nav-item models-nav">
+      <svg class="models-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <span class="sidebar-label">Models</span>
+    </a>
+    <a href="#" class="nav-item apikeys-nav">
+      <svg class="apikeys-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      <span class="sidebar-label">API Keys</span>
+    </a>
+    <a href="#" class="nav-item team-nav">
+      <svg class="team-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+        <g class="front-person">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </g>
+        <g class="back-person">
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path class="back-torso-left" d="M15 15a4 4 0 0 0-3 4v2"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </g>
+      </svg>
+      <span class="sidebar-label">Team</span>
+    </a>
+    <a href="#" class="nav-item active logs-nav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+        <g class="logs-arrow"><polyline points="4 17 10 11 4 5"/></g>
+        <line x1="12" y1="19" x2="20" y2="19"/>
+      </svg>
+      <span class="sidebar-label">Logs</span>
+    </a>
+    <a href="#" class="nav-item analytics-nav">
+      <svg class="analytics-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+        <g class="analytics-bar bar-1"><line x1="18" y1="20" x2="18" y2="10" stroke-linecap="round"/></g>
+        <g class="analytics-bar bar-2"><line x1="12" y1="20" x2="12" y2="4" stroke-linecap="round"/></g>
+        <g class="analytics-bar bar-3"><line x1="6" y1="20" x2="6" y2="14" stroke-linecap="round"/></g>
+      </svg>
+      <span class="sidebar-label">Analytics</span>
+    </a>
+  </nav>
+
+  <!-- Bottom -->
+  <div style="padding:8px;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:1px;">
+    <a href="#" class="nav-item settings-nav">
+      <svg class="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="sidebar-label">Settings</span>
+    </a>
+    <a href="#" class="nav-item docs-nav">
+      <svg class="docs-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17">
+        <path class="doc-body doc-body-folded" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <path class="doc-body doc-body-flat" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2z"/>
+        <polyline class="doc-fold" points="14 2 14 8 20 8"/>
+        <g class="doc-line line-1"><line x1="7" y1="8" x2="16" y2="8" stroke-linecap="round"/></g>
+        <g class="doc-line line-2"><line x1="7" y1="11" x2="13" y2="11" stroke-linecap="round"/></g>
+        <g class="doc-line line-3"><line x1="7" y1="14" x2="15" y2="14" stroke-linecap="round"/></g>
+      </svg>
+      <span class="sidebar-label">Docs</span>
+    </a>
+    <!-- User footer -->
+    <div style="display:flex;align-items:center;gap:9px;padding:10px;margin-top:4px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,255,255,0.02);">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#7C3AED,#4F46E5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;">AP</div>
+      <div class="sidebar-label" style="flex:1;overflow:hidden;">
+        <div style="font-size:13px;font-weight:600;color:var(--text-hi);">Aryan Patel</div>
+        <div style="font-size:11px;color:var(--text-lo);">aryan@pullo.ai</div>
+      </div>
+      <button class="sidebar-label signout-btn" style="background:none;border:none;cursor:pointer;color:var(--text-lo);padding:2px;border-radius:4px;transition:color 0.15s;" onmouseover="this.style.color='#FB7185'" onmouseout="this.style.color='var(--text-lo)'" title="Sign out">
+        <svg class="signout-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <g class="signout-arrow">
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </g>
+        </svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div id="main">
+
+  <!-- Topbar -->
+  <div id="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button onclick="toggleSidebar()" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-md);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--border-hi)';this.style.color='var(--text-hi)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-md)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div>
+        <h1 style="font-size:18px;font-weight:700;color:var(--text-hi);letter-spacing:-0.02em;line-height:1.2;">Logs</h1>
+        <p style="font-size:12px;color:var(--text-lo);margin-top:1px;">Monitor every request processed through your local AI models</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="btn-primary" onclick="exportCsv(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-md);transition:all 0.15s;" onmouseover="this.style.borderColor='var(--border-hi)';this.style.color='var(--text-hi)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-md)'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div style="padding:28px 28px 60px;max-width:1500px;">
+
+    <!-- Retention info banner -->
+    <div class="fade-up d1" id="retentionBanner" style="margin-bottom:22px;padding:14px 18px;border-radius:var(--radius-md);background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:space-between;gap:14px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;background:rgba(124,58,237,0.14);border:1px solid rgba(124,58,237,0.28);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <p style="font-size:12.5px;color:var(--text-md);line-height:1.5;">
+          Logs are retained for <strong style="color:var(--text-hi);font-weight:600;">30 days</strong> based on your current plan.
+          <a href="#" style="color:#C4B5FD;font-weight:600;text-decoration:none;margin-left:4px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Upgrade Plan &rarr;</a>
+        </p>
+      </div>
+      <button class="icon-btn" onclick="dismissBanner()" title="Dismiss" style="flex-shrink:0;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="card fade-up d2" style="padding:16px 18px;margin-bottom:20px;position:relative;z-index:10;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;">
+
+        <!-- Search -->
+        <div style="position:relative;flex:1;min-width:220px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Search request ID, model, endpoint…" class="field-input cursor-i-black" style="width:100%;padding-left:32px;color:#000;background:#fff;caret-color:#000;">
+        </div>
+
+        <!-- Status code -->
+        <div class="custom-select" data-filter="statusFilter">
+          <button class="custom-select-trigger" onclick="toggleCustomSelect(this)">
+            <span class="custom-select-label">Status: All</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option active" data-value="">Status: All</div>
+            <div class="custom-select-option" data-value="200">200</div>
+            <div class="custom-select-option" data-value="201">201</div>
+            <div class="custom-select-option" data-value="400">400</div>
+            <div class="custom-select-option" data-value="401">401</div>
+            <div class="custom-select-option" data-value="403">403</div>
+            <div class="custom-select-option" data-value="404">404</div>
+            <div class="custom-select-option" data-value="429">429</div>
+            <div class="custom-select-option" data-value="500">500</div>
+          </div>
+        </div>
+
+        <!-- Date range -->
+        <div style="position:relative;">
+          <button class="field-input" id="dateBtn" onclick="toggleDateDropdown(event)" style="display:flex;align-items:center;gap:7px;cursor:pointer;white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-md)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span id="dateLabel">Last 7 Days</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="date-dropdown" id="dateDropdown">
+            <div class="date-item" onclick="setDateRange('Today', this)">Today</div>
+            <div class="date-item active" onclick="setDateRange('Last 7 Days', this)">Last 7 Days</div>
+            <div class="date-item" onclick="setDateRange('Last 30 Days', this)">Last 30 Days</div>
+          </div>
+        </div>
+
+        <!-- Model -->
+        <div class="custom-select" data-filter="modelFilter">
+          <button class="custom-select-trigger" onclick="toggleCustomSelect(this)">
+            <span class="custom-select-label">All Models</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option active" data-value="">All Models</div>
+            <div class="custom-select-option" data-value="Llama-3-70B">Llama-3-70B</div>
+            <div class="custom-select-option" data-value="Mistral-Nemo-12B">Mistral-Nemo-12B</div>
+            <div class="custom-select-option" data-value="DeepSeek-R1">DeepSeek-R1</div>
+            <div class="custom-select-option" data-value="Qwen-72B">Qwen-72B</div>
+            <div class="custom-select-option" data-value="Phi-4">Phi-4</div>
+          </div>
+        </div>
+
+        <!-- User -->
+        <div class="custom-select" data-filter="userFilter">
+          <button class="custom-select-trigger" onclick="toggleCustomSelect(this)">
+            <span class="custom-select-label">All Members</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option active" data-value="">All Members</div>
+            <div class="custom-select-option" data-value="Sarah Connor">Sarah Connor</div>
+            <div class="custom-select-option" data-value="Marcus Vance">Marcus Vance</div>
+            <div class="custom-select-option" data-value="Elena Rodriguez">Elena Rodriguez</div>
+            <div class="custom-select-option" data-value="James Kim">James Kim</div>
+          </div>
+        </div>
+
+        <!-- Sort -->
+        <div class="custom-select" data-filter="sortFilter">
+          <button class="custom-select-trigger" onclick="toggleCustomSelect(this)">
+            <span class="custom-select-label">Newest first</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="custom-select-dropdown">
+            <div class="custom-select-option active" data-value="newest">Newest first</div>
+            <div class="custom-select-option" data-value="oldest">Oldest first</div>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <button class="btn-ghost" onclick="resetFilters(this)">
+          <svg id="resetIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Loading skeleton (hidden by default) ── -->
+    <div id="loadingState" style="display:none;">
+      <div class="card" style="padding:16px 18px;margin-bottom:20px;">
+        <div class="skeleton" style="height:38px;border-radius:8px;"></div>
+      </div>
+      <div class="card" style="overflow:hidden;">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);">
+          <div class="skeleton" style="height:16px;width:160px;border-radius:5px;"></div>
+        </div>
+        <div style="padding:8px 20px;">
+          <div class="skeleton" style="height:44px;border-radius:6px;margin:8px 0;"></div>
+          <div class="skeleton" style="height:44px;border-radius:6px;margin:8px 0;"></div>
+          <div class="skeleton" style="height:44px;border-radius:6px;margin:8px 0;"></div>
+          <div class="skeleton" style="height:44px;border-radius:6px;margin:8px 0;"></div>
+          <div class="skeleton" style="height:44px;border-radius:6px;margin:8px 0;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Error state (hidden by default) ── -->
+    <div class="card" id="errorState" style="padding:60px 20px;text-align:center;">
+      <div style="width:60px;height:60px;border-radius:16px;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3 style="font-size:16px;font-weight:700;color:var(--text-hi);margin-bottom:6px;">Unable to load logs</h3>
+      <p style="font-size:13px;color:var(--text-md);margin-bottom:20px;">Something went wrong while fetching request logs. Please try again.</p>
+      <button class="btn-primary" style="margin:0 auto;" onclick="retryLoad()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Retry
+      </button>
+    </div>
+
+    <!-- ── Logs table card ── -->
+    <div class="card fade-up d3" id="logsCard" style="overflow:hidden;margin-bottom:20px;background:rgba(8,12,22,0.76);backdrop-filter:blur(30px) saturate(1.4);-webkit-backdrop-filter:blur(30px) saturate(1.4);">
+
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <span style="font-size:14px;font-weight:700;color:var(--text-hi);">Request Log</span>
+        <span id="resultCountBadge" style="display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);font-size:11px;font-weight:600;color:#A78BFA;">534 requests</span>
+      </div>
+
+      <!-- Table -->
+      <div class="logs-table-wrap" style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-left:24px;">Request ID</th>
+              <th style="text-align:left;">Time</th>
+              <th style="text-align:left;">User</th>
+              <th style="text-align:left;">Model</th>
+              <th style="text-align:left;">Endpoint</th>
+              <th style="text-align:left;">Method</th>
+              <th style="text-align:left;">Status</th>
+              <th style="text-align:left;">Latency</th>
+              <th style="text-align:left;">Tokens</th>
+              <th style="text-align:right;padding-right:24px;"></th>
+            </tr>
+          </thead>
+          <tbody id="logsTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Empty state (shown when filters return nothing) -->
+      <div id="emptyState" style="padding:64px 20px;text-align:center;">
+        <div style="width:64px;height:64px;border-radius:16px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.8"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;color:var(--text-hi);margin-bottom:6px;letter-spacing:-0.01em;">No logs found</h3>
+        <p style="font-size:13px;color:var(--text-md);margin-bottom:24px;max-width:340px;margin-left:auto;margin-right:auto;line-height:1.6;">No requests match your current filters.</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <button class="btn-ghost" onclick="resetFilters()">Clear Filters</button>
+          <button class="btn-primary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Go to Playground
+          </button>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div id="paginationBar" style="padding:14px 20px;border-top:1px solid var(--border);background:rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <span id="showingText" style="font-size:12px;color:var(--text-lo);">Showing 1–10 of 534 logs</span>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;color:var(--text-lo);">Rows per page</span>
+            <div class="custom-select" data-filter="rowsPerPage" style="min-width:70px;">
+              <button class="custom-select-trigger" onclick="toggleCustomSelect(this)" style="padding:6px 10px;font-size:12px;">
+                <span class="custom-select-label">10</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="custom-select-dropdown" style="min-width:80px;">
+                <div class="custom-select-option active" data-value="10">10</div>
+                <div class="custom-select-option" data-value="25">25</div>
+                <div class="custom-select-option" data-value="50">50</div>
+                <div class="custom-select-option" data-value="100">100</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;" id="pageButtons">
+            <button class="page-btn" onclick="prevPage()" id="prevBtn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="page-btn active" data-page="1" onclick="gotoPage(1)">1</button>
+            <button class="page-btn" data-page="2" onclick="gotoPage(2)">2</button>
+            <button class="page-btn" data-page="3" onclick="gotoPage(3)">3</button>
+            <button class="page-btn" data-page="4" onclick="gotoPage(4)">4</button>
+            <button class="page-btn" onclick="nextPage()" id="nextBtn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ LOG DETAILS DRAWER ═══════════ -->
+<div class="modal-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <!-- Drawer header -->
+  <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));border:1px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div>
+        <h3 style="font-size:14.5px;font-weight:700;color:var(--text-hi);">Request Details</h3>
+        <p id="drawerReqId" style="font-size:11px;color:var(--text-lo);font-family:'Geist Mono',monospace;margin-top:1px;">req_8a2f1c9b</p>
+      </div>
+    </div>
+    <button class="icon-btn" onclick="closeDrawer()" style="width:28px;height:28px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;">
+    <!-- Request Information -->
+    <div class="drawer-section">
+      <div class="drawer-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Request Information
+      </div>
+      <div class="drawer-row"><span class="drawer-row-label">Request ID</span><span class="drawer-row-value" id="d-reqid">req_8a2f1c9b</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Timestamp</span><span class="drawer-row-value" id="d-time">Jul 11, 2026, 14:32:09</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Workspace</span><span class="drawer-row-value">Aryan's workspace</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">User</span><span class="drawer-row-value" id="d-user">Sarah Connor</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Device</span><span class="drawer-row-value">macOS · Chrome 126</span></div>
+    </div>
+
+    <!-- Request -->
+    <div class="drawer-section">
+      <div class="drawer-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Request
+      </div>
+      <div class="drawer-row"><span class="drawer-row-label">Endpoint</span><span class="drawer-row-value" id="d-endpoint">/v1/chat/completions</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Method</span><span class="drawer-row-value" id="d-method">POST</span></div>
+      <div style="margin-top:10px;">
+        <div style="font-size:11px;color:var(--text-lo);margin-bottom:6px;">Headers</div>
+        <div class="code-block">Authorization: Bearer skxxxxxxxxxxxxxxxx1a2b
+Content-Type: application/json
+X-Workspace-Id: ws_aryan_01</div>
+      </div>
+      <div style="margin-top:10px;">
+        <div style="font-size:11px;color:var(--text-lo);margin-bottom:6px;">Payload</div>
+        <div class="code-block" id="d-payload">{
+  "model": "Llama-3-70B",
+  "messages": [{ "role": "user", "content": "Summarize this document…" }],
+  "temperature": 0.7
+}</div>
+      </div>
+    </div>
+
+    <!-- Response -->
+    <div class="drawer-section">
+      <div class="drawer-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Response
+      </div>
+      <div class="drawer-row"><span class="drawer-row-label">Status</span><span class="drawer-row-value" id="d-status"><span class="badge badge-200"><span class="badge-dot"></span>200</span></span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Latency</span><span class="drawer-row-value" id="d-latency">842 ms</span></div>
+      <div class="drawer-row"><span class="drawer-row-label">Token Usage</span><span class="drawer-row-value" id="d-tokens">1,204 tokens</span></div>
+    </div>
+
+    <!-- Raw JSON -->
+    <div class="drawer-section" style="border-bottom:none;">
+      <div class="drawer-eyebrow" style="justify-content:space-between;">
+        <span style="display:flex;align-items:center;gap:7px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-lo)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Raw JSON
+        </span>
+        <button onclick="copyRawJson(this)" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:6px;padding:4px 10px;font-size:10.5px;font-weight:600;color:#A78BFA;cursor:pointer;font-family:'Inter',sans-serif;text-transform:none;letter-spacing:0;display:flex;align-items:center;gap:5px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy JSON
+        </button>
+      </div>
+      <div class="code-block" id="d-rawjson" style="max-height:220px;">{
+  "id": "req_8a2f1c9b",
+  "status": 200,
+  "model": "Llama-3-70B",
+  "latency_ms": 842,
+  "tokens": { "prompt": 812, "completion": 392, "total": 1204 }
+}</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Sidebar ── */
+  let sidebarOpen = true;
+  function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+    document.getElementById('main').classList.toggle('expanded', !sidebarOpen);
+  }
+  if (window.innerWidth <= 1024) {
+    document.getElementById('sidebar').classList.add('collapsed');
+    document.getElementById('main').classList.add('expanded');
+    sidebarOpen = false;
+  }
+
+  /* ── Retention banner ── */
+  function dismissBanner() {
+    const b = document.getElementById('retentionBanner');
+    b.style.transition = 'all 0.25s ease';
+    b.style.opacity = '0';
+    b.style.transform = 'translateY(-6px)';
+    setTimeout(() => b.style.display = 'none', 250);
+  }
+
+  /* ── Date preset dropdown ── */
+  function toggleDateDropdown(e) {
+    e.stopPropagation();
+    document.getElementById('dateDropdown').classList.toggle('open');
+  }
+  function setDateRange(label, el) {
+    document.getElementById('dateLabel').textContent = label;
+    document.querySelectorAll('.date-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('dateDropdown').classList.remove('open');
+    applyFilters();
+  }
+  document.addEventListener('click', () => document.getElementById('dateDropdown').classList.remove('open'));
+
+  /* ── Custom select dropdowns ── */
+  function toggleCustomSelect(btn) {
+    const container = btn.parentElement;
+    const dd = container.querySelector('.custom-select-dropdown');
+    const isOpen = dd.classList.contains('open');
+    closeAllCustomSelects();
+    if (!isOpen) { dd.classList.add('open'); container.classList.add('open'); }
+  }
+  function selectCustomOption(opt) {
+    const dd = opt.parentElement;
+    const container = dd.parentElement;
+    const label = container.querySelector('.custom-select-label');
+    dd.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    label.textContent = opt.textContent;
+    dd.classList.remove('open');
+    container.classList.remove('open');
+    const filter = container.getAttribute('data-filter');
+    if (filter) {
+      if (filter === 'rowsPerPage') {
+        rowsPerPage = parseInt(opt.getAttribute('data-value'), 10);
+        currentPage = 1;
+        renderTable();
+      } else {
+        applyFilters();
+      }
+    }
+  }
+  function closeAllCustomSelects() {
+    document.querySelectorAll('.custom-select-dropdown.open').forEach(d => {
+      d.classList.remove('open');
+      d.parentElement.classList.remove('open');
+    });
+  }
+  function getCustomSelectValue(filterId) {
+    const container = document.querySelector(`.custom-select[data-filter="${filterId}"]`);
+    if (!container) return '';
+    const active = container.querySelector('.custom-select-option.active');
+    return active ? active.getAttribute('data-value') : '';
+  }
+  function setCustomSelectValue(filterId, value) {
+    const container = document.querySelector(`.custom-select[data-filter="${filterId}"]`);
+    if (!container) return;
+    const label = container.querySelector('.custom-select-label');
+    container.querySelectorAll('.custom-select-option').forEach(o => {
+      const isActive = o.getAttribute('data-value') === value;
+      o.classList.toggle('active', isActive);
+      if (isActive) label.textContent = o.textContent;
+    });
+  }
+  document.addEventListener('click', e => {
+    const option = e.target.closest('.custom-select-option');
+    if (option) { selectCustomOption(option); return; }
+    if (!e.target.closest('.custom-select')) closeAllCustomSelects();
+  });
+
+  /* ── Mock log data ── */
+  const USERS = ['Sarah Connor','Marcus Vance','Elena Rodriguez','James Kim'];
+  const MODELS = ['Llama-3-70B','Mistral-Nemo-12B','DeepSeek-R1','Qwen-72B','Phi-4'];
+  const ENDPOINTS = ['/v1/chat/completions','/v1/embeddings','/v1/models','/v1/completions','/v1/files'];
+  const METHODS = ['GET','POST','DELETE'];
+  const STATUSES = [200,200,200,201,400,401,403,404,429,500];
+
+  function seededRandom(seed) {
+    let x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
+  function generateLogs(n) {
+    const logs = [];
+    for (let i = 0; i < n; i++) {
+      const r1 = seededRandom(i * 3.1), r2 = seededRandom(i * 7.7), r3 = seededRandom(i * 13.3),
+            r4 = seededRandom(i * 19.9), r5 = seededRandom(i * 23.5), r6 = seededRandom(i * 29.2);
+      const status = STATUSES[Math.floor(r1 * STATUSES.length)];
+      const method = status === 500 || status === 429 ? 'POST' : METHODS[Math.floor(r2 * METHODS.length)];
+      const minutesAgo = i * 7 + Math.floor(r3 * 5);
+      logs.push({
+        id: 'req_' + (0x10000000 + Math.floor(r4 * 0xEFFFFFFF)).toString(16).slice(0,8),
+        time: minutesAgo,
+        user: USERS[Math.floor(r5 * USERS.length)],
+        model: MODELS[Math.floor(r6 * MODELS.length)],
+        endpoint: ENDPOINTS[Math.floor(r1 * ENDPOINTS.length)],
+        method: method,
+        status: status,
+        latency: Math.floor(120 + r2 * 2400),
+        tokens: Math.floor(80 + r3 * 4200)
+      });
+    }
+    return logs;
+  }
+
+  const ALL_LOGS = generateLogs(60);
+  let filteredLogs = ALL_LOGS.slice();
+  let currentPage = 1;
+  let rowsPerPage = 10;
+
+  function timeAgoLabel(mins) {
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return mins + 'm ago';
+    const h = Math.floor(mins / 60);
+    if (h < 24) return h + 'h ago';
+    const d = Math.floor(h / 24);
+    return d + 'd ago';
+  }
+
+  function badgeClass(status) { return 'badge-' + status; }
+  function methodClass(m) { return 'method-' + m.toLowerCase(); }
+
+  function renderTable() {
+    const tbody = document.getElementById('logsTbody');
+    const start = (currentPage - 1) * rowsPerPage;
+    const pageLogs = filteredLogs.slice(start, start + rowsPerPage);
+    tbody.innerHTML = '';
+
+    document.getElementById('emptyState').style.display = filteredLogs.length === 0 ? 'block' : 'none';
+    document.querySelector('.logs-table-wrap').style.display = filteredLogs.length === 0 ? 'none' : 'block';
+    document.getElementById('paginationBar').style.display = filteredLogs.length === 0 ? 'none' : 'flex';
+    document.getElementById('resultCountBadge').textContent = filteredLogs.length + ' requests';
+
+    pageLogs.forEach((log, idx) => {
+      const globalIdx = ALL_LOGS.indexOf(log);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding-left:24px;"><span style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--text-hi);">${log.id}</span></td>
+        <td><span style="font-size:12.5px;color:var(--text-md);">${timeAgoLabel(log.time)}</span></td>
+        <td><span style="font-size:12.5px;color:var(--text-md);">${log.user}</span></td>
+        <td><span style="font-size:12.5px;color:var(--text-md);">${log.model}</span></td>
+        <td><span style="font-family:'Geist Mono',monospace;font-size:11.5px;color:var(--text-md);">${log.endpoint}</span></td>
+        <td><span class="method-badge ${methodClass(log.method)}">${log.method}</span></td>
+        <td><span class="badge ${badgeClass(log.status)}"><span class="badge-dot"></span>${log.status}</span></td>
+        <td><span style="font-size:12.5px;color:var(--text-md);font-variant-numeric:tabular-nums;">${log.latency} ms</span></td>
+        <td><span style="font-size:12.5px;color:var(--text-md);font-variant-numeric:tabular-nums;">${log.tokens.toLocaleString()}</span></td>
+        <td style="padding-right:24px;">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:2px;position:relative;" class="row-action-cell">
+            <button class="icon-btn" title="View Details" onclick="openDrawer(${globalIdx})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="icon-btn" title="Download JSON" onclick="downloadJson(${globalIdx})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            <button class="icon-btn" title="More" onclick="toggleRowMenu(event, this)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+            </button>
+            <div class="row-menu">
+              <div class="row-menu-item" onclick="openDrawer(${globalIdx});closeAllRowMenus();"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Details</div>
+              <div class="row-menu-item" onclick="downloadJson(${globalIdx});closeAllRowMenus();"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download JSON</div>
+              <div class="row-menu-item" onclick="closeAllRowMenus();"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Request ID</div>
+            </div>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const totalPages = Math.max(1, Math.ceil(filteredLogs.length / rowsPerPage));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const start = filteredLogs.length === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+    const end = Math.min(currentPage * rowsPerPage, filteredLogs.length);
+    document.getElementById('showingText').textContent = `Showing ${start}–${end} of ${filteredLogs.length} logs`;
+
+    const container = document.getElementById('pageButtons');
+    container.innerHTML = '';
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>`;
+    prevBtn.onclick = prevPage;
+    container.appendChild(prevBtn);
+
+    for (let p = 1; p <= totalPages; p++) {
+      const b = document.createElement('button');
+      b.className = 'page-btn' + (p === currentPage ? ' active' : '');
+      b.textContent = p;
+      b.onclick = () => gotoPage(p);
+      container.appendChild(b);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>`;
+    nextBtn.onclick = nextPage;
+    container.appendChild(nextBtn);
+  }
+
+  function gotoPage(p) { currentPage = p; renderTable(); }
+  function prevPage() { if (currentPage > 1) { currentPage--; renderTable(); } }
+  function nextPage() {
+    const totalPages = Math.max(1, Math.ceil(filteredLogs.length / rowsPerPage));
+    if (currentPage < totalPages) { currentPage++; renderTable(); }
+  }
+  /* ── Filters ── */
+  function applyFilters() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const status = getCustomSelectValue('statusFilter');
+    const model = getCustomSelectValue('modelFilter');
+    const user = getCustomSelectValue('userFilter');
+    const sort = getCustomSelectValue('sortFilter') || 'newest';
+
+    filteredLogs = ALL_LOGS.filter(log => {
+      if (q && !(log.id.toLowerCase().includes(q) || log.model.toLowerCase().includes(q) || log.endpoint.toLowerCase().includes(q))) return false;
+      if (status && String(log.status) !== status) return false;
+      if (model && log.model !== model) return false;
+      if (user && log.user !== user) return false;
+      return true;
+    });
+
+    filteredLogs.sort((a, b) => sort === 'oldest' ? b.time - a.time : a.time - b.time);
+    currentPage = 1;
+    renderTable();
+  }
+
+  function resetFilters(btn) {
+    const icon = btn.querySelector('svg');
+    if (icon) icon.classList.add('reset-spinning');
+    document.getElementById('searchInput').value = '';
+    setCustomSelectValue('statusFilter', '');
+    setCustomSelectValue('modelFilter', '');
+    setCustomSelectValue('userFilter', '');
+    setCustomSelectValue('sortFilter', 'newest');
+    document.getElementById('dateLabel').textContent = 'Last 7 Days';
+    document.querySelectorAll('.date-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.date-item')[1].classList.add('active');
+    applyFilters();
+    setTimeout(() => { if (icon) icon.classList.remove('reset-spinning'); }, 600);
+  }
+
+  /* ── Row action menu ── */
+  function toggleRowMenu(e, btn) {
+    e.stopPropagation();
+    const menu = btn.parentElement.querySelector('.row-menu');
+    const isOpen = menu.classList.contains('open');
+    closeAllRowMenus();
+    if (!isOpen) menu.classList.add('open');
+  }
+  function closeAllRowMenus() {
+    document.querySelectorAll('.row-menu.open').forEach(m => m.classList.remove('open'));
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.row-action-cell')) closeAllRowMenus();
+  });
+
+  /* ── Drawer ── */
+  function openDrawer(idx) {
+    const log = ALL_LOGS[idx];
+    if (!log) return;
+    document.getElementById('drawerReqId').textContent = log.id;
+    document.getElementById('d-reqid').textContent = log.id;
+    document.getElementById('d-time').textContent = timeAgoLabel(log.time) + ' · Jul 11, 2026';
+    document.getElementById('d-user').textContent = log.user;
+    document.getElementById('d-endpoint').textContent = log.endpoint;
+    document.getElementById('d-method').innerHTML = `<span class="method-badge ${methodClass(log.method)}">${log.method}</span>`;
+    document.getElementById('d-status').innerHTML = `<span class="badge ${badgeClass(log.status)}"><span class="badge-dot"></span>${log.status}</span>`;
+    document.getElementById('d-latency').textContent = log.latency + ' ms';
+    document.getElementById('d-tokens').textContent = log.tokens.toLocaleString() + ' tokens';
+    document.getElementById('d-payload').textContent = `{
+  "model": "${log.model}",
+  "messages": [{ "role": "user", "content": "..." }],
+  "temperature": 0.7
+}`;
+    document.getElementById('d-rawjson').textContent = JSON.stringify({
+      id: log.id, status: log.status, model: log.model, endpoint: log.endpoint,
+      method: log.method, latency_ms: log.latency, tokens: log.tokens
+    }, null, 2);
+
+    document.getElementById('drawerOverlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+  }
+  function closeDrawer() {
+    document.getElementById('drawerOverlay').classList.remove('open');
+    document.getElementById('drawer').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  function copyRawJson(btn) {
+    const text = document.getElementById('d-rawjson').textContent;
+    navigator.clipboard?.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Copied`;
+      setTimeout(() => btn.innerHTML = original, 1600);
+    });
+  }
+
+  function downloadJson(idx) {
+    const log = ALL_LOGS[idx];
+    const blob = new Blob([JSON.stringify(log, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = log.id + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportCsv(btn) {
+    const header = 'request_id,time,user,model,endpoint,method,status,latency_ms,tokens\n';
+    const rows = filteredLogs.map(l => [l.id, timeAgoLabel(l.time), l.user, l.model, l.endpoint, l.method, l.status, l.latency, l.tokens].join(',')).join('\n');
+    const blob = new Blob([header + rows], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'pullo-logs-export.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+
+    const original = btn.innerHTML;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Exported`;
+    setTimeout(() => btn.innerHTML = original, 1800);
+  }
+
+  /* ── Error / loading demo hooks (not auto-triggered) ── */
+  function retryLoad() {
+    document.getElementById('errorState').style.display = 'none';
+    document.getElementById('logsCard').style.display = 'block';
+    renderTable();
+  }
+
+  /* ── Init ── */
+  renderTable();
+</script>
+</body>
+</html>

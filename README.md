@@ -1,374 +1,373 @@
-# PullO
-
 <div align="center">
 
-<img src="https://runtimeco.qzz.io/images/logo.png" alt="PullO Logo" width="120"/>
+<img src="frontend/public/pullo-logo.svg" alt="PullO" width="120"/>
 
 # Connect your local AI to your team.
 
-### Securely expose Ollama, LM Studio, and llama.cpp as OpenAI-compatible APIs without exposing your machine.
+**PullO is a private AI network layer that turns local models (Ollama, LM Studio, llama.cpp) into secure, team-accessible OpenAI-compatible APIs. No port forwarding. No tunnels. No cloud inference bills.**
+
+[![Status](https://img.shields.io/badge/Status-Active-success)](https://pullo.ai)
+[![License](https://img.shields.io/badge/License-Proprietary-red)](LICENSE.md)
+[![Website](https://img.shields.io/badge/Web-pullo.ai-blue)](https://pullo.ai)
 
 [🌐 Website](https://pullo.ai) •
-[🚀 Live Demo](https://pullo.ai) •
+[🚀 Live Demo — Coming Soon](#) •
 [📖 Documentation](./docs) •
-[🎥 Demo Video](#) •
-[📊 Pitch Deck](#)
-
----
-
-![Status](https://img.shields.io/badge/Status-Active-success)
-![Version](https://img.shields.io/badge/Version-V1-blue)
-![License](https://img.shields.io/badge/License-Proprietary-red)
+[🎥 Demo Video — Coming Soon](#) •
+[📊 Pitch Deck — Coming Soon](pitch/)
 
 </div>
 
 ---
 
-# Repository Notice
+## About This Repository
 
-> **PullO is a proprietary commercial product.**
-
-This repository is a **public showcase** containing documentation, architecture diagrams, screenshots, branding assets, API examples, and other public resources.
-
-The production backend, browser extension, infrastructure, deployment tooling, and implementation details remain **closed-source**.
+This repo hosts PullO's public website, documentation, brand assets, and showcase materials. The platform itself — API routing, auth, and extension runtime — is closed-source and maintained separately.
 
 ---
 
-# Why PullO?
+## The Problem
 
-Running AI locally has never been easier.
+Running AI locally has never been easier. A single `ollama pull` gives any developer a state-of-the-art LLM on their laptop. But sharing that model with a teammate, an agent, or a CI pipeline is still a networking headache.
 
-Sharing it securely with your team still is.
+The standard approach is port forwarding — punching a hole in your firewall so inbound traffic can reach your machine. That works until your ISP doesn't give you a public IP, your corporate VPN blocks inbound connections, or you need to share access with more than one person without exposing your entire machine.
 
-Today developers rely on:
+Tools like ngrok and Cloudflare Tunnels improve on raw port forwarding, but they were built for web services, not AI. They expose the machine itself, not a scoped API. Every teammate you share the URL with gets raw access to whatever is listening on that port. There's no API key scoping, no per-model access control, no usage tracking.
 
-- Port Forwarding
-- SSH
-- Cloudflare Tunnels
-- ngrok
-- VPNs
-- Complex networking
-
-These solutions weren't designed for collaborative AI.
-
-They expose machines, require networking knowledge, or become difficult to manage across teams.
-
-PullO changes that.
-
-It transforms your local AI into a secure OpenAI-compatible endpoint that your team can use without exposing your local machine.
+Teams that need multi-user access to local models end up stitching together SSH jump boxes, VPN configs, reverse proxies, and ad‑hoc auth layers. It works, barely, until someone changes their IP or the tunnel drops. And none of it was designed for the streaming, tool-calling, multi-model workflows that modern local AI demands.
 
 ---
 
-# What is PullO?
+## The Solution
 
-PullO is a collaboration platform built for Local AI.
+PullO replaces the entire networking layer with a pull-based model. Instead of opening an inbound port, a lightweight browser extension on your machine establishes a single persistent outbound WebSocket connection to PullO's cloud relay. The extension then polls for incoming requests.
 
-It allows developers and teams to securely expose models running on:
+When a teammate calls your model via the OpenAI-compatible API, the request is authenticated, validated, and forwarded over that WebSocket to your extension. The extension calls your local provider (Ollama, LM Studio, llama.cpp, or any OpenAI-compatible endpoint), streams the response back through the relay, and the caller receives a standard OpenAI response — without ever knowing where the model actually ran.
 
-- Ollama
-- LM Studio
-- llama.cpp
+Your machine is never directly reachable. There are no open ports, no dynamic DNS, no VPN. The model stays local; only the API surface is shared.
 
-through familiar OpenAI-compatible APIs.
-
-Instead of moving models to the cloud, PullO lets teams bring collaboration to local AI.
+This design works behind any NAT, firewall, or corporate proxy. If your machine can reach the internet, PullO can serve requests to it.
 
 ---
 
-# Key Features
+## Why PullO
 
-## 🤝 Team Workspaces
-
-Organize members into isolated workspaces with shared AI infrastructure.
-
----
-
-## 🧠 Local AI Integration
-
-Works with:
-
-- Ollama
-- LM Studio
-- llama.cpp
-
-No cloud GPU required.
+| | Traditional Tunneling (ngrok, Cloudflare) | PullO |
+|---|---|---|
+| **Connection model** | Inbound port forwarding (push) | Outbound WebSocket polling (pull) |
+| **Firewall compatibility** | Blocked by corporate proxies | Works behind any NAT/proxy |
+| **Machine exposure** | Entire port exposed to the internet | Zero inbound ports; machine unreachable |
+| **Auth model** | Single URL, no built-in auth | Scoped API keys per workspace, per model |
+| **Multi-user sharing** | Share a raw URL | Role-based team workspaces |
+| **Usage tracking** | None | Per-request analytics, token counts, rate limits |
+| **Provider support** | Web services only | Ollama, LM Studio, llama.cpp, OpenAI-compatible |
+| **Streaming** | Depends on the tunnel | Native SSE streaming end-to-end |
 
 ---
 
-## 🔌 OpenAI-Compatible APIs
+## Features
 
-Integrate existing OpenAI SDKs without changing your application.
-
----
-
-## 🔑 API Keys
-
-Generate secure API Keys with:
-
-- Model Access
-- Tool Permissions
-- Rate Limits
-- Usage Controls
-
----
-
-## 🖥 Browser Extension
-
-A lightweight browser extension securely connects your local AI to PullO.
+| Icon | Feature | Description |
+|------|---------|-------------|
+| 🔌 | **OpenAI-Compatible API** | Drop-in replacement — use existing OpenAI SDKs without changing your application code |
+| 🖥️ | **Browser Extension** | Lightweight Chrome extension establishes a secure outbound connection from your machine |
+| 🧠 | **Local Provider Support** | Works with Ollama, LM Studio, and llama.cpp out of the box; any OpenAI-compatible endpoint works |
+| 👥 | **Team Workspaces** | Organize members into isolated workspaces with shared model infrastructure and role-based access |
+| 🔑 | **Scoped API Keys** | Generate keys with model-level access, tool permissions, rate limits, and usage controls |
+| 📊 | **Usage Analytics** | Track requests, tokens, active models, and team activity per workspace |
+| 📜 | **Request Logs** | Inspect individual AI requests for debugging and monitoring (prompts are never stored) |
+| 🔒 | **Zero Inbound Ports** | Pull-based architecture means no open ports, no dynamic DNS, no VPN configuration |
+| 🛠️ | **Browser Runtime Tools** | Extension injects browser capabilities — search, read, screenshot — as LLM tool calls |
 
 ---
 
-## 📊 Analytics
+## Screenshots
 
-Track:
+<details>
+<summary><b>Landing Page</b></summary>
+<br>
 
-- Requests
-- Tokens
-- Usage
-- Models
-- Team Activity
+![Landing page screenshot — coming soon](screenshots/landing.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Dashboard</b></summary>
+<br>
+
+![Dashboard screenshot — coming soon](screenshots/dashboard.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Models</b></summary>
+<br>
+
+![Models screenshot — coming soon](screenshots/models.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>API Keys</b></summary>
+<br>
+
+![API Keys screenshot — coming soon](screenshots/api-keys.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Analytics</b></summary>
+<br>
+
+![Analytics screenshot — coming soon](screenshots/analytics.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Browser Extension</b></summary>
+<br>
+
+![Extension screenshot — coming soon](screenshots/extension.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Workspace</b></summary>
+<br>
+
+![Workspace screenshot — coming soon](screenshots/workspace.png)
+*Screenshot coming soon.*
+
+</details>
 
 ---
 
-## ⚡ Multiple Models
+## Demo
 
-Manage multiple local models inside one workspace.
-
----
-
-## 🔒 Secure Authentication
-
-Workspace-based authentication with scoped API Keys.
+🎥 Demo video — coming soon.
 
 ---
 
-## 📜 Request Logs
-
-Inspect AI requests for debugging and monitoring.
-
----
-
-## 🏢 Built for Teams
-
-Designed from the ground up for collaborative local AI development.
-
----
-
-# Supported Providers
-
-| Provider | Status |
-|-----------|--------|
-| Ollama | ✅ |
-| LM Studio | ✅ |
-| llama.cpp | ✅ |
-| OpenAI Compatible APIs | 🚧 |
-
----
-
-# High Level Architecture
+## Architecture
 
 ```
-                   Team
-
-                     │
-
-             PullO Dashboard
-
-                     │
-
-              Browser Extension
-
-                     │
-
-              PullO Platform
-
-                     │
-
-          OpenAI Compatible API
-
-                     │
-
-      Ollama • LM Studio • llama.cpp
+                    ┌─────────────┐
+                    │   Your Team  │
+                    │  (OpenAI SDK)│
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │   PullO     │
+                    │  Platform   │
+                    │(Cloud Relay)│
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │  Browser    │
+                    │  Extension  │
+                    │ (Outbound   │
+                    │  WebSocket) │
+                    └──────┬──────┘
+                           │
+                    ┌──────▼──────┐
+                    │   Local AI  │
+                    │  (Ollama /  │
+                    │  LM Studio /│
+                    │  llama.cpp) │
+                    └─────────────┘
+                           │
+                    ┌──────▼──────┐
+                    │OpenAI-      │
+                    │Compatible   │
+                    │API Response │
+                    └─────────────┘
 ```
 
-For a more detailed overview, see the documentation.
+---
+
+## Tech Stack
+
+PullO's public-facing and client-side components are built with:
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js, React 19, TypeScript |
+| **Styling** | Tailwind CSS 4, shadcn/ui, Framer Motion |
+| **3D / Visuals** | Three.js, React Three Fiber, GSAP, Lenis |
+| **Auth (frontend)** | Supabase Auth (email + Google OAuth) |
+| **Charts** | Recharts |
+| **Docs** | Next.js 15, MDX, Fuse.js search |
+| **Browser Extension** | Manifest V3 (Chrome) |
+| **Local Providers** | Ollama, LM Studio, llama.cpp (any OpenAI-compatible endpoint) |
+| **Analytics** | Vercel Analytics |
+| **Error Monitoring** | Sentry |
+| **Icons** | Lucide React |
 
 ---
 
-# Screenshots
+## Quickstart / API Example
 
-The repository includes screenshots of:
-
-- Landing Page
-- Dashboard
-- Workspace
-- Models
-- API Keys
-- Analytics
-- Browser Extension
-
-See the **screenshots/** directory.
-
----
-
-# API Example
+PullO exposes a standard OpenAI-compatible API. Use any OpenAI SDK by changing the base URL and API key.
 
 ```bash
 curl https://api.pullo.ai/v1/chat/completions \
   -H "Authorization: Bearer pk_xxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{
-      "model":"deepseek-r1",
-      "messages":[
-          {
-              "role":"user",
-              "content":"Hello!"
-          }
-      ]
+    "model": "deepseek-r1",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello!"
+      }
+    ]
   }'
 ```
 
-Compatible with existing OpenAI SDKs.
+```python
+from openai import OpenAI
 
----
+client = OpenAI(
+    base_url="https://api.pullo.ai/v1",
+    api_key="pk_xxxxxxxxx"
+)
 
-# Project Structure
+response = client.chat.completions.create(
+    model="deepseek-r1",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
 
-```
-PullO-Showcase
-
-README.md
-
-LICENSE.md
-
-ROADMAP.md
-
-SECURITY.md
-
-docs/
-
-screenshots/
-
-branding/
-
-diagrams/
-
-media/
-
-examples/
-
-pitch/
+print(response.choices[0].message.content)
 ```
 
----
+```js
+import OpenAI from 'openai'
 
-# Documentation
+const client = new OpenAI({
+  baseURL: 'https://api.pullo.ai/v1',
+  apiKey: 'pk_xxxxxxxxx'
+})
 
-Documentation includes:
+const response = await client.chat.completions.create({
+  model: 'deepseek-r1',
+  messages: [{ role: 'user', content: 'Hello!' }]
+})
 
-- Vision
-- Product Overview
-- High-Level Architecture
-- Security Model
-- API Overview
-- Extension Overview
-- Deployment Overview
-- Frequently Asked Questions
+console.log(response.choices[0].message.content)
+```
 
----
-
-# Roadmap
-
-### Current
-
-- Team Workspaces
-- Browser Extension
-- Local AI Providers
-- OpenAI-Compatible APIs
-- API Keys
-- Analytics
-- Request Logs
-- Workspace Management
-
-### Planned
-
-- Model Routing
-- Shared Tool Marketplace
-- Enterprise Authentication
-- Desktop Client
-- Team Billing
-- Provider Marketplace
+Streaming, embeddings, and tool/function calling all work with the same interface.
 
 ---
 
-# Demo
+## Repository Structure
 
-Watch PullO in action.
-
-🎥 Demo Video
-
-(Coming Soon)
-
----
-
-# Pitch Deck
-
-📊 Product Presentation
-
-(Coming Soon)
-
----
-
-# Security
-
-Security is a first-class priority.
-
-PullO uses:
-
-- Workspace Isolation
-- API Keys
-- Authentication
-- Secure Browser Extension
-- Permission Scoping
-
-Please refer to **SECURITY.md**.
+```
+PullO-Showcase/
+├── README.md              ← You are here
+├── LICENSE.md             # Proprietary license
+├── backend/               # Backend platform documentation (closed-source)
+├── docs/                  # Full documentation site (Next.js + MDX)
+├── frontend/              # Landing page and dashboard app (Next.js)
+├── screenshots/           # Product screenshots
+├── branding/              # Logo, color palette, brand assets
+├── media/                 # Press kit, social graphics, slide decks
+├── diagrams/              # Architecture and flow diagrams
+├── examples/              # Code examples and integration guides
+└── pitch/                 # Pitch deck and investor materials
+```
 
 ---
 
-# Contributing
+## Documentation
 
-PullO is currently developed internally by Runtime.co.
-
-This repository is intended for documentation and public resources only.
-
-External code contributions are not currently accepted.
-
----
-
-# License
-
-Copyright © 2026 Runtime.co
-
-All Rights Reserved.
-
-This repository contains documentation and public showcase material only.
-
-The production PullO software remains proprietary.
-
-See **LICENSE.md**.
+- [Vision](./docs/app/vision) — Product vision and long-term strategy
+- [Architecture](./docs/app/architecture) — System architecture deep-dive
+- [API Reference](./docs/app/api-reference) — Full API endpoint documentation
+- [Quickstart](./docs/app/quickstart) — Get started in 5 minutes
+- [Extension Overview](./docs/app/extension) — Browser extension setup and config
+- [Deployment Overview](./docs/app/deployment) — Deployment considerations
+- [FAQ](./docs/app/faq) — Frequently asked questions
+- [Roadmap](./docs/app/roadmap) — What's coming next
+- [SDKs](./docs/app/sdks) — Supported client libraries
+- [Tools](./docs/app/tools) — Browser runtime and MCP tool reference
+- [MCP](./docs/app/mcp) — Model Context Protocol integration
+- [Teams](./docs/app/teams) — Workspace and team management
+- [CLI Agents](./docs/app/cli-agents) — CLI agent setup
+- [Troubleshooting](./docs/app/troubleshooting) — Common issues and fixes
+- [Changelog](./docs/app/changelog) — Release history
 
 ---
 
-# Team
+## Roadmap
 
-Built with ❤️ by **Runtime.co**
+### Now
+- Team workspaces with role-based access
+- Chrome browser extension
+- Ollama, LM Studio, and llama.cpp support
+- OpenAI-compatible chat completions and embeddings API
+- API key management with scoped permissions
+- Usage analytics and request logging
+- Browser runtime tool integration (search, read, screenshot)
+
+### Next
+- Model routing across multiple local providers
+- MCP (Model Context Protocol) tool gateway
+- Enterprise SSO and SAML authentication
+- Desktop client (Electron)
+- Rate limiting and budget controls per API key
+- Public API playground
+
+### Later
+- Shared tool marketplace
+- Custom webhook tool support
+- Team billing and subscription management
+- Provider marketplace (community extensions)
+- Self-hosted relay option
+- Audit logging and compliance export
+
+---
+
+## Team
+
+PullO is built by **Runtime.co**, a student-led, developer-first team building AI infrastructure. We believe local AI deserves the same collaboration tooling that cloud AI has enjoyed — without forcing every model onto a GPU rented by the hour.
+
+---
+
+## FAQ
+
+**How is this different from ngrok?**
+ngrok exposes a port on your machine to the internet. PullO opens no ports — requests are pulled via an outbound WebSocket connection initiated by the extension. Your machine is never directly reachable.
+
+**Do my models leave my machine?**
+No. Models run locally on your hardware. PullO relays only the API request and response payloads. Prompts are never stored on our servers.
+
+**What local providers are supported?**
+Ollama, LM Studio, and llama.cpp are supported out of the box. Any process that exposes an OpenAI-compatible endpoint can also be connected.
+
+**Can I use this behind a corporate VPN or firewall?**
+Yes. The browser extension uses a single outbound WebSocket connection, which works through NAT, corporate proxies, and restricted networks where inbound tunnels are blocked.
+
+**Do I need a cloud GPU or inference provider?**
+No. All inference runs locally on the machine where the extension is installed. PullO is a relay, not an inference provider.
+
+**Is there a free tier?**
+PullO is currently in early access. Pricing and tier details will be announced as we approach general availability.
 
 ---
 
 <div align="center">
 
-### Local AI deserves better collaboration.
+**Local AI deserves better collaboration.**
 
-**PullO — Connect your local AI to your team.**
+Built by [Runtime.co](https://pullo.ai) — Copyright © 2026 Runtime.co. All rights reserved.
+
+[Website](https://pullo.ai) • [License](LICENSE.md)
 
 </div>

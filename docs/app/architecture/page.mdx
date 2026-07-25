@@ -1,0 +1,25 @@
+export const metadata = {
+  title: "Architecture",
+  description: "PullO pull-based tunnel diagram, request lifecycle, and security model deep dive.",
+};
+
+import { Callout } from "@/components/callout";
+import { ArchitectureDiagram } from "@/components/architecture-diagram";
+
+# Architecture
+
+<Callout variant="info" title="Coming soon">
+  This section is under active development. A full technical deep-dive is being written.
+</Callout>
+
+<ArchitectureDiagram />
+
+Topics that will be covered here:
+
+- Pull vs. push tunnel models — why pull wins for security
+- Detailed request lifecycle: API call → queue → extension poll → Ollama → response
+- WebSocket vs. SSE polling — how the extension stays connected
+- Request queue design and retry semantics
+- Security model: zero inbound ports, end-to-end transport encryption
+- mTLS between extension and PullO Cloud
+- Multi-host failover and load balancing

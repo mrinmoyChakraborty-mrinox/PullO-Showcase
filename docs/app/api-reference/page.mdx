@@ -1,0 +1,682 @@
+export const metadata = {
+  title: "API Reference",
+  description: "OpenAI-compatible REST API for PullO — chat completions, embeddings, streaming, error codes, and rate limits.",
+};
+
+import { Callout } from "@/components/callout";
+import { CodeWithRunGuide } from "@/components/code-with-run-guide";
+
+export const pythonHttpxGuide = {
+  language: "python-httpx",
+  title: "How to Run in VS Code",
+  steps: [
+    {
+      id: "create-file",
+      title: "Create a file",
+      icon: "vscode",
+      description: "Open VS Code → File → New File, then save it as test.py (or any name ending in .py).",
+    },
+    {
+      id: "paste-code",
+      title: "Paste the code",
+      icon: "python",
+      description: "Copy the Python snippet on the left, paste it into test.py. Replace the API key and model name placeholders with your actual values from the PullO dashboard.",
+    },
+    {
+      id: "check-python",
+      title: "Check Python is installed",
+      icon: "terminal",
+      description: "Open a terminal (Ctrl+` in VS Code) and run one of these commands. Expected output: Python 3.x.x",
+      code: [
+        { label: "Windows", lang: "bash", content: "python --version" },
+        { label: "Windows fallback", lang: "bash", content: "py --version" },
+        { label: "macOS / Linux", lang: "bash", content: "python3 --version" },
+      ],
+    },
+    {
+      id: "check-httpx",
+      title: "Check httpx is installed",
+      icon: "package",
+      description: "Verify httpx is available. If you see ModuleNotFoundError, go to step 5.",
+      code: [
+        { lang: "bash", content: 'python -c "import httpx; print(httpx.__version__)"' },
+        { label: "or", lang: "bash", content: "pip show httpx" },
+      ],
+    },
+    {
+      id: "install-httpx",
+      title: "Install httpx if missing",
+      icon: "package",
+      description: "Run the command that matches your environment. Any one of these will work:",
+      code: [
+        { label: "pip (most common)", lang: "bash", content: "pip install httpx" },
+        { label: "pip3", lang: "bash", content: "pip3 install httpx" },
+        { label: "Python module", lang: "bash", content: "python -m pip install httpx" },
+        { label: "conda", lang: "bash", content: "conda install -c conda-forge httpx" },
+      ],
+    },
+    {
+      id: "run-file",
+      title: "Run the file",
+      icon: "terminal",
+      description: "In the VS Code terminal, run your script. Swap test.py for your actual filename if different.",
+      code: [
+        { label: "Windows", lang: "bash", content: "python test.py" },
+        { label: "macOS / Linux", lang: "bash", content: "python3 test.py" },
+      ],
+    },
+    {
+      id: "what-happens",
+      title: "What happens",
+      icon: "check",
+      description: 'The script sends your message to the PullO API, which routes it to the model you specified. The model reply is printed to your terminal. Example: input "Hello" → output "Hello! How can I assist you today?"',
+    },
+  ],
+  troubleshooting: [
+    { issue: "httpx missing", error: "ModuleNotFoundError: No module named 'httpx'", solution: "Run: pip install httpx (see step 5 above)" },
+    { issue: "python not found", error: "'python' is not recognized as an internal or external command", solution: "Install Python from python.org, then restart VS Code." },
+    { issue: "auth error", error: "401 Unauthorized", solution: "Verify your API key in the PullO dashboard and update the YOUR_API_KEY value in your script." },
+    { issue: "model not found", error: "404 Model Not Found", solution: "Check the Models page in your PullO dashboard for the exact model name." },
+    { issue: "connection refused", error: "Connection refused / ConnectError", solution: "Ensure your PullO server is running and the base_url in the script is correct." },
+  ],
+};
+
+# API Reference
+
+PullO exposes an **OpenAI-compatible REST API** for model inference. Any client that works with the OpenAI SDK works with PullO — just change the `base_url` and `api_key`.
+
+## Base URL
+
+```
+https://pullo.onrender.com
+```
+
+All inference endpoints are prefixed with `/v1` for OpenAI compatibility.
+
+## Authentication
+
+Pass your API key as a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+API keys are generated from the dashboard. They are scoped to a workspace and can be restricted to specific models, tools, and rate limits.
+
+<Callout variant="caution" title="Keep your key secret">
+  API keys grant access to your locally running models. Never commit keys to source control. Use environment variables or a secrets manager.
+</Callout>
+
+Each endpoint below includes examples in **cURL**, **PowerShell**, **Python (httpx)**, and **JavaScript (fetch)**.
+
+---
+
+## Endpoints
+
+### POST /v1/chat/completions
+
+Generate a chat completion using a locally running Ollama model. Fully OpenAI-compatible — works with any OpenAI SDK client.
+
+**Request**
+
+```json
+{
+  "model": "YOUR_MODEL_NAME",
+  "messages": [
+    { "role": "system", "content": "You are a helpful assistant." },
+    { "role": "user", "content": "Explain the pull-based tunnel model." }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 512,
+  "stream": false
+}
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>model</code></td>
+      <td><code>string</code></td>
+      <td>Yes</td>
+      <td>Ollama model name (e.g. <code>llama3.2</code>, <code>mistral</code>)</td>
+    </tr>
+    <tr>
+      <td><code>messages</code></td>
+      <td><code>array</code></td>
+      <td>Yes</td>
+      <td>Array of <code>{'{role, content}'}</code> objects</td>
+    </tr>
+    <tr>
+      <td><code>temperature</code></td>
+      <td><code>float</code></td>
+      <td>No</td>
+      <td>Sampling temperature (0–2). Default <code>0.7</code></td>
+    </tr>
+    <tr>
+      <td><code>max_tokens</code></td>
+      <td><code>integer</code></td>
+      <td>No</td>
+      <td>Maximum tokens to generate</td>
+    </tr>
+    <tr>
+      <td><code>stream</code></td>
+      <td><code>boolean</code></td>
+      <td>No</td>
+      <td>Enable SSE streaming (default <code>false</code>)</td>
+    </tr>
+    <tr>
+      <td><code>session_id</code></td>
+      <td><code>string</code></td>
+      <td>No</td>
+      <td>Conversation memory session ID</td>
+    </tr>
+    <tr>
+      <td><code>top_p</code></td>
+      <td><code>float</code></td>
+      <td>No</td>
+      <td>Nucleus sampling cutoff</td>
+    </tr>
+    <tr>
+      <td><code>stop</code></td>
+      <td><code>string[]</code></td>
+      <td>No</td>
+      <td>Stop sequences</td>
+    </tr>
+  </tbody>
+</table>
+
+**cURL**
+
+```bash
+curl -X POST https://pullo.onrender.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "YOUR_MODEL_NAME",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'
+```
+
+
+**Python (httpx)**
+
+<CodeWithRunGuide guide={pythonHttpxGuide}>
+
+```python
+import httpx
+
+client = httpx.Client(
+    base_url="https://pullo.onrender.com",
+    timeout=300
+)
+
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY"
+}
+
+resp = client.post(
+    "/v1/chat/completions",
+    headers=headers,
+    json={
+        "model": "YOUR_MODEL_NAME",
+        "messages": [
+            {"role": "user", "content": "Hello"}
+        ],
+    },
+)
+
+print(resp.status_code)
+print(resp.text)  # useful for debugging
+
+data = resp.json()
+print(data["choices"][0]["message"]["content"])
+```
+
+</CodeWithRunGuide>
+
+
+**Python (OpenAI SDK)**
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://pullo.onrender.com/v1",
+    api_key="YOUR_API_KEY",
+)
+
+response = client.chat.completions.create(
+    model="YOUR_MODEL_NAME",
+    messages=[{"role": "user", "content": "Hello!"}],
+)
+print(response.choices[0].message.content)
+```
+
+**JavaScript (fetch)**
+
+```javascript
+const resp = await fetch("https://pullo.onrender.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "YOUR_MODEL_NAME",
+    messages: [{ role: "user", content: "Hello!" }],
+  }),
+});
+const data = await resp.json();
+console.log(data.choices[0].message.content);
+```
+
+**PowerShell (curl.exe)**
+
+On Windows, use `curl.exe` (the real curl) with a PowerShell here-string (`@'...'@`) for the JSON body. Backticks (`` ` ``) are PowerShell's line-continuation character — they let you spread the command across multiple lines for readability. The `--data-raw` flag prevents curl from interpreting escape sequences in the string.
+
+```powershell
+$json = @'
+{
+  "model": "YOUR_MODEL_NAME",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello!"
+    }
+  ]
+}
+'@
+
+curl.exe -X POST "https://pullo.onrender.com/v1/chat/completions" `
+  -H "Authorization: Bearer YOUR_API_KEY" `
+  -H "Content-Type: application/json" `
+  --data-raw $json
+```
+
+To inspect the full response, pipe through `ConvertFrom-Json`:
+
+```powershell
+$json = @'
+{
+  "model": "YOUR_MODEL_NAME",
+  "messages": [
+    { "role": "user", "content": "Hello!" }
+  ]
+}
+'@
+
+$resp = curl.exe -s -X POST "https://pullo.onrender.com/v1/chat/completions" `
+  -H "Authorization: Bearer YOUR_API_KEY" `
+  -H "Content-Type: application/json" `
+  --data-raw $json
+
+$resp | ConvertFrom-Json | Select-Object -ExpandProperty choices
+```
+
+**Response**
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "object": "chat.completion",
+  "created": 1720000000,
+  "model": "YOUR_MODEL_NAME",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hi! How can I help you today?"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 28,
+    "completion_tokens": 94,
+    "total_tokens": 122
+  }
+}
+```
+
+#### Streaming (SSE)
+
+Set `"stream": true` to receive a Server-Sent Events stream:
+
+**cURL**
+
+```bash
+curl -N -X POST https://pullo.onrender.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model": "YOUR_MODEL_NAME", "messages": [{"role": "user", "content": "Count to 5"}], "stream": true}'
+```
+
+**Python (httpx)**
+
+```python
+import httpx
+
+with httpx.stream(
+    "POST",
+    "https://pullo.onrender.com/v1/chat/completions",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={"model": "YOUR_MODEL_NAME", "messages": [{"role": "user", "content": "Count to 5"}], "stream": True},
+) as resp:
+    for line in resp.iter_lines():
+        if line.startswith("data: ") and line != "data: [DONE]":
+            chunk = line[6:]
+            print(chunk)
+```
+
+**JavaScript (fetch)**
+
+```javascript
+const resp = await fetch("https://pullo.onrender.com/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "YOUR_MODEL_NAME",
+    messages: [{ role: "user", content: "Count to 5" }],
+    stream: true,
+  }),
+});
+const reader = resp.body.getReader();
+const decoder = new TextDecoder();
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  const text = decoder.decode(value);
+  for (const line of text.split("\n")) {
+    if (line.startsWith("data: ") && line !== "data: [DONE]") {
+      console.log(JSON.parse(line.slice(6)));
+    }
+  }
+}
+```
+
+**PowerShell (curl.exe)**
+
+```powershell
+$json = @'
+{
+  "model": "YOUR_MODEL_NAME",
+  "messages": [
+    { "role": "user", "content": "Count to 5" }
+  ],
+  "stream": true
+}
+'@
+
+curl.exe -N -X POST "https://pullo.onrender.com/v1/chat/completions" `
+  -H "Authorization: Bearer YOUR_API_KEY" `
+  -H "Content-Type: application/json" `
+  --data-raw $json
+```
+
+Each SSE event is a JSON delta:
+
+```
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","choices":[{"delta":{"content":"The"},"index":0}]}
+
+data: {"id":"chatcmpl-abc123","object":"chat.completion.chunk","choices":[{"delta":{"content":" pull"},"index":0}]}
+
+data: [DONE]
+```
+
+The stream terminates with `data: [DONE]`. The OpenAI JS/Python SDK handles this natively when `stream=True`.
+
+---
+
+### POST /v1/embeddings
+
+Generate text embeddings using a locally running embedding model.
+
+**Request**
+
+```json
+{
+  "model": "nomic-embed-text",
+  "input": "PullO exposes local Ollama models as OpenAI-compatible APIs."
+}
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>model</code></td>
+      <td><code>string</code></td>
+      <td>Yes</td>
+      <td>Embedding model (e.g. <code>nomic-embed-text</code>, <code>mxbai-embed-large</code>)</td>
+    </tr>
+    <tr>
+      <td><code>input</code></td>
+      <td><code>string | string[]</code></td>
+      <td>Yes</td>
+      <td>Text or array of texts to embed</td>
+    </tr>
+    <tr>
+      <td><code>encoding_format</code></td>
+      <td><code>string</code></td>
+      <td>No</td>
+      <td><code>"float"</code> (default) or <code>"base64"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+**cURL**
+
+```bash
+curl -X POST https://pullo.onrender.com/v1/embeddings \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "nomic-embed-text",
+    "input": "PullO exposes local Ollama models as OpenAI-compatible APIs."
+  }'
+```
+
+**Python (httpx)**
+
+```python
+resp = httpx.post(
+    "https://pullo.onrender.com/v1/embeddings",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={
+        "model": "YOUR_MODEL_NAME",
+        "input": "PullO exposes local Ollama models as OpenAI-compatible APIs.",
+    },
+)
+print(resp.json())
+```
+
+**JavaScript (fetch)**
+
+```javascript
+const resp = await fetch("https://pullo.onrender.com/v1/embeddings", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "YOUR_MODEL_NAMEt",
+    input: "PullO exposes local Ollama models as OpenAI-compatible APIs.",
+  }),
+});
+console.log(await resp.json());
+```
+
+**PowerShell (curl.exe)**
+
+```powershell
+$json = @'
+{
+  "model": "YOUR_MODEL_NAME",
+  "input": "PullO exposes local Ollama models as OpenAI-compatible APIs."
+}
+'@
+
+curl.exe -X POST "https://pullo.onrender.com/v1/embeddings" `
+  -H "Authorization: Bearer YOUR_API_KEY" `
+  -H "Content-Type: application/json" `
+  --data-raw $json
+```
+
+**Response**
+
+```json
+{
+  "object": "list",
+  "model": "nomic-embed-text",
+  "data": [
+    {
+      "object": "embedding",
+      "index": 0,
+      "embedding": [0.0023064255, -0.009327292, ...]
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "total_tokens": 10
+  }
+}
+```
+
+---
+
+## Error Codes
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Code</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><code>400</code></td><td><code>invalid_request</code></td><td>Malformed JSON or missing required field</td></tr>
+    <tr><td><code>401</code></td><td><code>invalid_api_key</code></td><td>API key missing, malformed, or revoked</td></tr>
+    <tr><td><code>403</code></td><td><code>forbidden</code></td><td>API key does not have access to the requested model</td></tr>
+    <tr><td><code>404</code></td><td><code>model_not_found</code></td><td>Model does not exist or is not connected</td></tr>
+    <tr><td><code>422</code></td><td><code>model_offline</code></td><td>Model host machine is disconnected from PullO</td></tr>
+    <tr><td><code>429</code></td><td><code>rate_limit_exceeded</code></td><td>Too many requests — back off and retry</td></tr>
+    <tr><td><code>500</code></td><td><code>internal_error</code></td><td>Unexpected server error</td></tr>
+    <tr><td><code>503</code></td><td><code>host_disconnected</code></td><td>Extension disconnected mid-request</td></tr>
+    <tr><td><code>504</code></td><td><code>inference_timeout</code></td><td>Ollama did not respond within the configured timeout</td></tr>
+  </tbody>
+</table>
+
+All errors return a JSON body:
+
+```json
+{
+  "error": "Model 'YOUR_MODEL_NAME' is not currently connected.",
+  "request_id": "uuid-...",
+  "detail": "Model 'YOUR_MODEL_NAME' is not currently connected."
+}
+```
+
+Include the `request_id` when reporting issues.
+
+---
+
+## Rate Limits
+
+Rate limits are applied per API key. Headers are included on every inference response:
+
+```
+X-Rate-Limit-Remaining: 5
+Retry-After: 60
+```
+
+<table>
+  <thead>
+    <tr>
+      <th>Tier</th>
+      <th>RPM</th>
+      <th>Daily budget</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Free</td><td>10 requests/min</td><td>1,000 requests/day</td></tr>
+    <tr><td>Team</td><td>60 requests/min</td><td>Unlimited</td></tr>
+  </tbody>
+</table>
+
+RPM is enforced via a sliding window counter in Redis. Once exhausted, requests return `429 Rate limit exceeded` with a `Retry-After: 60` header.
+
+---
+
+## Headers
+
+Every response includes these headers:
+
+| Header | Description |
+|---|---|
+| `X-Request-Id` | Unique request ID for tracing and debugging |
+| `X-Rate-Limit-Remaining` | Remaining requests in the current minute window |
+
+Include the `X-Request-Id` when contacting support — it helps us trace the request through the system.
+
+---
+
+## Client Libraries
+
+PullO's `/v1` endpoints are fully OpenAI-compatible. Use any OpenAI SDK client — just change the `base_url`:
+
+**Python (OpenAI SDK)**
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://pullo.onrender.com/v1",
+    api_key="YOUR_API_KEY",
+)
+
+response = client.chat.completions.create(
+    model="YOUR_MODEL_NAME",
+    messages=[{"role": "user", "content": "Hello!"}],
+)
+print(response.choices[0].message.content)
+```
+
+**JavaScript (OpenAI SDK)**
+
+```javascript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://pullo.onrender.com/v1",
+  apiKey: "YOUR_API_KEY",
+});
+
+const response = await client.chat.completions.create({
+  model: "YOUR_MODEL_NAME",
+  messages: [{ role: "user", content: "Hello!" }],
+});
+console.log(response.choices[0].message.content);
+```

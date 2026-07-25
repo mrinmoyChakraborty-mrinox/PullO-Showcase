@@ -1,0 +1,142 @@
+export const metadata = {
+  title: "Quick Start",
+  description: "Install Ollama, connect the PullO extension, and make your first OpenAI-compatible API call in under 5 minutes.",
+};
+
+import { Callout } from "@/components/callout";
+
+# Quick Start
+
+Get from zero to your first local-AI API call in under **5 minutes**.
+
+<Callout variant="info" title="Prerequisites">
+  You need Google Chrome (or a Chromium browser) and a machine with at least 8 GB RAM to run a model locally.
+</Callout>
+
+<Steps>
+
+<Step number={1} title="Install Ollama">
+
+Download and install [Ollama](https://ollama.com) for your operating system. Ollama runs a local inference server at `http://localhost:11434`.
+
+```bash
+# macOS (Homebrew)
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows — download the installer from https://ollama.com/download
+```
+
+Verify Ollama is running:
+
+```bash
+curl http://localhost:11434
+# → Ollama is running
+```
+</Step>
+
+<Step number={2} title="Pull a model">
+
+Pull a model from the Ollama library. `llama3.2` is a good starting point — small enough to run on most machines, capable enough for most tasks.
+
+```bash
+ollama pull llama3.2
+```
+
+Wait for the download to complete, then verify:
+
+```bash
+ollama list
+# NAME            ID              SIZE    MODIFIED
+# llama3.2:latest  a80c4f17acd5    2.0 GB  just now
+```
+</Step>
+
+<Step number={3} title="Install the Chrome Extension">
+
+Install the **PullO** extension from the Chrome Web Store:
+
+1. Go to [runtime.co/extension](https://runtime.co/extension) or the Chrome Web Store
+2. Click **Add to Chrome**
+3. Confirm the permissions prompt
+
+The PullO icon will appear in your browser toolbar.
+</Step>
+
+<Step number={4} title="Connect to PullO">
+
+1. Click the PullO icon in your Chrome toolbar
+2. Sign in with your Runtime.co account (create a free account at [runtime.co](https://runtime.co) if you don't have one)
+3. Click **Connect** in the extension popup
+4. The status indicator will turn **green** — your local Ollama instance is now reachable through PullO
+
+```
+PullO Extension
+┌────────────────────────────┐
+│ ● Connected                │
+│                            │
+│ Models online: 1           │
+│ llama3.2:latest            │
+│                            │
+│ Queue depth: 0             │
+└────────────────────────────┘
+```
+</Step>
+
+<Step number={5} title="Make your first API call">
+
+Your models are now accessible at the PullO API endpoint. Grab your API key from the [dashboard](https://app.runtime.co/api-keys), then run:
+
+```bash
+curl https://api.runtime.co/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-local-YOUR_KEY" \
+  -d '{
+    "model": "llama3.2",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello! What is PullO?"
+      }
+    ]
+  }'
+```
+
+<Callout variant="success" title="Expected response">
+You should receive a response like this within a few seconds:
+
+```json
+{
+  "id": "chatcmpl-abc123",
+  "object": "chat.completion",
+  "created": 1720000000,
+  "model": "llama3.2",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "PullO is a pull-based tunnel that lets you expose your local Ollama models as OpenAI-compatible APIs without port forwarding or ngrok."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 14,
+    "completion_tokens": 37,
+    "total_tokens": 51
+  }
+}
+```
+</Callout>
+</Step>
+
+</Steps>
+
+## What's next?
+
+- Read the [API Reference](/api-reference) for full endpoint documentation
+- Set up [CLI tools and coding agents](/cli-agents) to use your local models with Claude Code, Cursor, or Continue.dev
+- Invite [teammates](/teams) to share access to your models

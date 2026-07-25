@@ -1,0 +1,26 @@
+export const metadata = {
+  title: "SDKs",
+  description: "PullO client libraries for Python, JavaScript/TypeScript, and Go.",
+};
+
+import { Callout } from "@/components/callout";
+
+# SDKs
+
+<Callout variant="info" title="Coming soon">
+  Official PullO SDK packages are in development. In the meantime, use the standard OpenAI SDK with a custom base URL — see the [API Reference](/api-reference#client-libraries) for a quick-start example.
+</Callout>
+
+Planned SDK packages:
+
+- **Python** — `pip install pullo` — wraps `openai` with auto-configuration
+- **JavaScript/TypeScript** — `npm install @pullo/sdk` — isomorphic, works in Node and the browser
+- **Go** — `go get github.com/runtime-co/pullo-go`
+
+Each SDK will provide:
+
+- Automatic `base_url` and `api_key` configuration from env vars
+- Model listing helpers (`client.models.list()`)
+- Streaming support with async iterators
+- TypeScript types for all request/response shapes
+- Retries and backoff on `503` / `429` errors
