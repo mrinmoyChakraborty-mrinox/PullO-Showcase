@@ -1,0 +1,38 @@
+PULLO ARCHITECTURE OVERVIEW
+============================
+
+                     ┌──────────────────────┐
+                     │     Team Apps         │
+                     │  (OpenAI SDK / Curl   │
+                     │   / LangChain / ...)  │
+                     └──────────┬───────────┘
+                                │ pk_xxx API key
+                     ┌──────────▼───────────┐
+                     │    PullO Cloud Relay  │
+                     │                       │
+                     │  ┌─────────────────┐  │
+                     │  │ Auth + Rate     │  │
+                     │  │ Limit + Queue   │  │
+                     │  └────────┬────────┘  │
+                     └──────────┬───────────┘
+                                │ WebSocket (outbound)
+                     ┌──────────▼───────────┐
+                     │  Chrome Extension     │
+                     │  (pulls requests,     │
+                     │   streams responses)  │
+                     └──────────┬───────────┘
+                                │ localhost
+                     ┌──────────▼───────────┐
+                     │    Local AI Runtime   │
+                     │                       │
+                     │  Ollama | LM Studio   │
+                     │  llama.cpp | Custom   │
+                     └────────────────────────┘
+
+
+KEY PRINCIPLES:
+- Zero inbound ports: Extension initiates all connections
+- Pull-based: Extension polls cloud queue for pending requests
+- Privacy: Prompts never stored; models never leave local hardware
+- Compatibility: OpenAI SDK drop-in via /v1/chat/completions
+- Streaming: Native SSE streaming from local model to client

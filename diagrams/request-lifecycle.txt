@@ -1,0 +1,34 @@
+PULLO REQUEST LIFECYCLE
+=========================
+
+Client            PullO Cloud        Extension          Local Model
+ (SDK)             (Relay)            (Browser)          (Ollama)
+   |                  |                  |                  |
+   | POST /v1/chat    |                  |                  |
+   | (Bearer pk_xxx)  |                  |                  |
+   |----------------->|                  |                  |
+   |                  | Validate key     |                  |
+   |                  | Rate limit check |                  |
+   |                  | Model online?    |                  |
+   |                  |                  |                  |
+   |                  | Queue request    |                  |
+   |                  |----------------->|                  |
+   |                  | (WebSocket push) |                  |
+   |                  |                  | POST /v1/chat    |
+   |                  |                  | (localhost)      |
+   |                  |                  |----------------->|
+   |                  |                  |                  |
+   |                  |                  |  Stream tokens   |
+   |                  |                  |<-----------------|
+   |                  |                  |                  |
+   |  Stream response |                  |                  |
+   |<-----------------|                  |                  |
+   |                  |                  |                  |
+
+
+TIMING:
+  Client → Cloud:    ~5-20ms  (network latency)
+  Cloud → Extension: ~1-5ms   (WebSocket push)
+  Extension → Model: ~1ms     (localhost)
+  Inference:         ~500ms+  (depends on model/hardware)
+  Response stream:   real-time SSE back through same path

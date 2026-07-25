@@ -1,0 +1,47 @@
+PULLO SECURITY MODEL
+=====================
+
+                    ┌────────────────────────┐
+                    │       Internet         │
+                    │                        │
+                    │   PullO Cloud Relay    │
+                    │   (authenticated,      │
+                    │    rate-limited API)   │
+                    └────────┬───────────────┘
+                             │
+               Only outbound │ WebSocket
+               No inbound    │ (TLS encrypted)
+               ports open    │
+                             │
+                    ┌────────▼───────────────┐
+                    │     Your Machine        │
+                    │                         │
+                    │  ┌───────────────────┐  │
+                    │  │ Chrome Extension  │  │
+                    │  │ (MV3, sandboxed)  │  │
+                    │  │                   │  │
+                    │  │ WebSocket Client  │  │
+                    │  │ API Key Storage   │  │
+                    │  │ (chrome.storage)  │  │
+                    │  └────────┬──────────┘  │
+                    │           │              │
+                    │  ┌────────▼──────────┐  │
+                    │  │ Local AI Provider │  │
+                    │  │ (localhost only)  │  │
+                    │  │ Ollama | LM Studio│  │
+                    │  │ llama.cpp | Custom│  │
+                    │  └───────────────────┘  │
+                    │                         │
+                    │  Firewall: NO inbound   │
+                    │  rules needed           │
+                    └─────────────────────────┘
+
+SECURITY PROPERTIES:
+  ✓ No public IP required
+  ✓ No open inbound ports
+  ✓ Works behind NAT / corporate proxy
+  ✓ API key authentication (SHA-256 hashed)
+  ✓ Per-model access scoping
+  ✓ Rate limiting per key (RPM + daily budget)
+  ✓ Prompts never persisted to disk
+  ✓ mTLS between extension and cloud relay

@@ -6,11 +6,11 @@
 
 **PullO is a private AI network layer that turns local models (Ollama, LM Studio, llama.cpp) into secure, team-accessible OpenAI-compatible APIs. No port forwarding. No tunnels. No cloud inference bills.**
 
-[![Status](https://img.shields.io/badge/Status-Active-success)](https://pullo.ai)
+[![Status](https://img.shields.io/badge/Status-Active-success)](https://pullo.runtimeco.qzz.io)
 [![License](https://img.shields.io/badge/License-Proprietary-red)](LICENSE.md)
-[![Website](https://img.shields.io/badge/Web-pullo.ai-blue)](https://pullo.ai)
+[![Website](https://img.shields.io/badge/Web-pullo.runtimeco.qzz.io-blue)](https://pullo.runtimeco.qzz.io)
 
-[🌐 Website](https://pullo.ai) •
+[🌐 Website](https://pullo.runtimeco.qzz.io) •
 [🚀 Live Demo — Coming Soon](#) •
 [📖 Documentation](./docs) •
 [🎥 Demo Video — Coming Soon](#) •
@@ -156,38 +156,100 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 
 ## Architecture
 
+### High-Level System
+
 ```
-                    ┌─────────────┐
-                    │   Your Team  │
-                    │  (OpenAI SDK)│
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │   PullO     │
-                    │  Platform   │
-                    │(Cloud Relay)│
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │  Browser    │
-                    │  Extension  │
-                    │ (Outbound   │
-                    │  WebSocket) │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │   Local AI  │
-                    │  (Ollama /  │
-                    │  LM Studio /│
-                    │  llama.cpp) │
-                    └─────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │OpenAI-      │
-                    │Compatible   │
-                    │API Response │
-                    └─────────────┘
+                     ┌──────────────────────┐
+                     │     Your Team Apps    │
+                     │  (OpenAI SDK / Curl   │
+                     │   / LangChain / ...)  │
+                     └──────────┬───────────┘
+                                │ pk_xxx API key
+                     ┌──────────▼───────────┐
+                     │    PullO Cloud Relay   │
+                     │                        │
+                     │  ┌──────────────────┐  │
+                     │  │ Auth + Rate Limit│  │
+                     │  │ + Request Queue  │  │
+                     │  └────────┬─────────┘  │
+                     └──────────┬───────────┘
+                                │ WebSocket (outbound)
+                     ┌──────────▼───────────┐
+                     │  Chrome Extension     │
+                     │  (pulls requests,     │
+                     │   streams responses)  │
+                     └──────────┬───────────┘
+                                │ localhost
+                     ┌──────────▼───────────┐
+                     │    Local AI Runtime   │
+                     │                        │
+                     │  Ollama  │  LM Studio  │
+                     │  llama.cpp │ Compatible │
+                     └────────────────────────┘
 ```
+
+### Request Lifecycle
+
+```
+┌─────────┐         ┌──────────┐         ┌───────────┐         ┌────────┐
+│  Client │         │  PullO   │         │ Extension │         │ Local  │
+│ (SDK)   │         │  Cloud   │         │ (Browser) │         │ Model  │
+└────┬────┘         └────┬─────┘         └─────┬─────┘         └───┬────┘
+     │                    │                     │                    │
+     │  POST /v1/chat     │                     │                    │
+     │  (Bearer pk_xxx)   │                     │                    │
+     │───────────────────>│                     │                    │
+     │                    │                     │                    │
+     │                    │  Validate API key   │                    │
+     │                    │  Check rate limit   │                    │
+     │                    │  Check model online │                    │
+     │                    │                     │                    │
+     │                    │  Queue request      │                    │
+     │                    │────────────────────>│                    │
+     │                    │  (WebSocket push)   │                    │
+     │                    │                     │                    │
+     │                    │                     │  localhost:11434   │
+     │                    │                     │───────────────────>│
+     │                    │                     │                    │
+     │                    │                     │  Generate response │
+     │                    │                     │<───────────────────│
+     │                    │                     │  (streaming SSE)   │
+     │                    │  Stream response    │                    │
+     │<───────────────────│                     │                    │
+     │                    │                     │                    │
+```
+
+### Security Model
+
+```
+                          ┌──────────────────┐
+                          │   Internet       │
+                          │                  │
+                          │  PullO Cloud     │
+                          │  (reachable)     │
+                          └────────┬─────────┘
+                                   │
+                     Only outbound │ WebSocket
+                     No inbound    │
+                     ports open    │
+                                   │
+                          ┌────────▼─────────┐
+                          │   Your Machine   │
+                          │                  │
+                          │  ┌────────────┐  │
+                          │  │ Extension  │  │
+                          │  │ (Chrome)   │  │
+                          │  └────────────┘  │
+                          │         │        │
+                          │  ┌──────▼─────┐  │
+                          │  │ Ollama /   │  │
+                          │  │ LM Studio  │  │
+                          │  │ (localhost)│  │
+                          │  └────────────┘  │
+                          └──────────────────┘
+```
+
+More detailed architecture diagrams are available in the [diagrams/](./diagrams) directory.
 
 ---
 
@@ -366,8 +428,8 @@ PullO is currently in early access. Pricing and tier details will be announced a
 
 **Local AI deserves better collaboration.**
 
-Built by [Runtime.co](https://pullo.ai) — Copyright © 2026 Runtime.co. All rights reserved.
+Built by [Runtime.co](https://pullo.runtimeco.qzz.io) — Copyright © 2026 Runtime.co. All rights reserved.
 
-[Website](https://pullo.ai) • [License](LICENSE.md)
+[Website](https://pullo.runtimeco.qzz.io) • [License](LICENSE.md)
 
 </div>
