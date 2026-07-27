@@ -24,7 +24,7 @@
 
 This repo hosts PullO's public website, documentation, brand assets, and showcase materials. The platform itself — API routing, auth, and extension runtime — is closed-source and maintained separately.
 
-> **Note for judges:** The original private monorepo (backend, extension source, infrastructure) will remain frozen until after this project is submitted for evaluation. A public deployment and open-source releases will follow once judging is complete.
+> **Judge note:** The private monorepo ([github.com/mrinmoyChakraborty-mrinox/PullO](https://github.com/mrinmoyChakraborty-mrinox/PullO)) with backend + extension source is under active development but frozen for judging. Public deployment + open-source release follow after evaluation.
 
 ---
 
