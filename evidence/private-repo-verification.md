@@ -43,27 +43,48 @@ Data sourced from the private repository's Insights page.
 
 ### Repository Overview
 
-Drop screenshot showing the private repo's GitHub page — repo name, visibility badge, description, recent activity.
+![Private repository overview](repo_screenshot.png)
 
-![Private repository overview](placeholder-repo-overview.png)
+### Recent Activity (Pulse)
 
-### Commit History
+![Repository pulse — recent PRs and activity](repo_pulse.png)
 
-Drop screenshot showing recent commits with dates and contributors. Commit messages may be blurred if desired.
+### Pull Requests
 
-![Commit history](placeholder-commit-history.png)
+![Recent pull requests](repo_recent_PRs.png)
 
 ### Contributors
 
-Drop screenshot of Insights → Contributors showing commit activity over time.
+![Contributors graph from Insights](repo_contributor_graph.png)
 
-![Contributors graph](placeholder-contributors.png)
+### Backend File Structure
 
-### Architecture Alignment
+The backend directory structure maps directly to the architecture described in this showcase.
 
-Drop screenshot showing the backend directory structure maps to the architecture described in this showcase.
+![Backend file structure](repo_backend_file_structure.png)
 
-![Backend structure](placeholder-backend-structure.png)
+<details>
+<summary><b>How this maps to the architecture</b></summary>
+
+| Directory | Architecture Role |
+|-----------|------------------|
+| `routers/` | API route handlers (v1 OpenAI-compatible, extension WebSocket, dashboard) |
+| `services/` | Business logic (auth, rate limiting, connection management, MCP gateway) |
+| `corsair-service/` | Node.js MCP (Model Context Protocol) tool gateway |
+| `migrations/` | Database schema versioning |
+| `scripts/` | Operational tooling |
+
+</details>
+
+---
+
+## Video Walkthrough
+
+A short walkthrough of the private repository on GitHub — showing the repo landing page, branch list, recent commits, and contributor graph — without exposing any source code.
+
+<video src="../media/repo.mp4" controls width="100%">
+  Your browser does not support the video tag. Download the video at <a href="../media/repo.mp4">media/repo.mp4</a>.
+</video>
 
 ---
 
