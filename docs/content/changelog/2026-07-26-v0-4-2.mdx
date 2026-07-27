@@ -1,0 +1,13 @@
+---
+title: "v0.4.2"
+date: "2026-07-26"
+tags: ["extension", "backend", "dashboard"]
+---
+
+- Fixed WebSocket status flapping caused by Render's idle timeout dropping connections faster than the extension's reconnect could recover. Added per-model heartbeats, stale-model reaper, and debounced reconnect to eliminate online/offline cycling.
+- Added user profile page with ImageKit-powered avatar upload, workspace logo support, and CDN-backed image delivery.
+- Replaced the dashboard loading state with an animated PullO loader across all pages.
+- Added SSE streaming for the model test endpoint with ThinkingIndicator and StreamingText components.
+- Refreshed dashboard UI with glassmorphism panels, ambient background artwork, and a unified design system across models, API keys, logs, and analytics pages.
+- Added user settings page and custom 404 page.
+- Reduced extension heartbeat interval from 30s to 10s for faster disconnect detection.

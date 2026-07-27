@@ -405,12 +405,11 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
             { label: 'Dashboard', icon: 'grid', hover: 'dash-dashboard', href: '/dashboard' },
             { label: 'Models', icon: 'layers', hover: 'dash-models', href: '/dashboard/models' },
             { label: 'API Keys', icon: 'key', hover: 'dash-apikeys', href: '/dashboard/api-keys' },
-            { label: 'MCP & Tools', icon: 'puzzle', href: '/dashboard/mcp' },
+            { label: 'MCP & Tools', icon: 'puzzle', hover: 'dash-mcp', href: '/dashboard/mcp' },
             { label: 'Team', icon: 'users', hover: 'dash-team', href: '/dashboard/team' },
             { label: 'Logs', icon: 'terminal', hover: 'dash-logs', href: '/dashboard/logs' },
             { label: 'Analytics', icon: 'chart', hover: 'dash-analytics', href: '/dashboard/analytics' },
-            { label: 'Profile', icon: 'user', hover: 'dash-profile', href: '/dashboard/profile' },
-          ].filter((item) => canManage || item.label !== 'MCP & Tools').map((item) => {
+          ].filter((item) => (canManage || item.label !== 'MCP & Tools') && item.label !== 'Profile').map((item) => {
             const active = item.href === '/dashboard/models'
               ? pathname.startsWith('/dashboard/models')
               : pathname === item.href
@@ -450,6 +449,13 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div style={{ padding: 8, borderTop: '1px solid var(--border)', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Link href="/dashboard/profile" className={`dash-nav-item dash-profile${pathname === '/dashboard/profile' ? ' active' : ''}`}>
+            <svg className="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" width="17" height="17">
+              <circle className="profile-ring" cx="12" cy="8" r="4" />
+              <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" />
+            </svg>
+            <span className="dash-sidebar-label">Profile</span>
+          </Link>
           {canManage && (
             <Link href="/dashboard/settings" className={`dash-nav-item dash-settings${pathname.startsWith('/dashboard/settings') ? ' active' : ''}`}>
               <svg className="dash-nav-icon settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" width="17" height="17">

@@ -100,7 +100,6 @@ export const navSections: NavSection[] = [
       {
         title: "Changelog",
         href: "/changelog",
-        badge: "Soon",
         description: "Release notes for extension, backend, dashboard",
       },
     ],

@@ -1,34 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%">
   <defs>
-    <radialGradient id="g1" cx="30%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.35"/>
-      <stop offset="50%" stop-color="#6d5dfe" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#050816" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="g2" cx="80%" cy="80%" r="60%">
-      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#050816" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#6366f1" stop-opacity="0.05"/>
+    <linearGradient id="bg0" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140f34"/>
+      <stop offset="50%" stop-color="#0a071a"/>
+      <stop offset="100%" stop-color="#05030b"/>
     </linearGradient>
+    <radialGradient id="orb0a" cx="30%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb0b" cx="70%" cy="70%" r="55%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+      <circle cx="32" cy="32" r="1.2" fill="rgba(167, 139, 250, 0.15)"/>
+    </pattern>
   </defs>
 
-  <rect width="100%" height="100%" fill="#06050b"/>
-  <rect width="100%" height="100%" fill="url(#g1)"/>
-  <rect width="100%" height="100%" fill="url(#g2)"/>
+  <rect width="100%" height="100%" fill="url(#bg0)"/>
+  <rect width="100%" height="100%" fill="url(#orb0a)"/>
+  <rect width="100%" height="100%" fill="url(#orb0b)"/>
+  <rect width="100%" height="100%" fill="url(#grid0)"/>
 
-  <!-- Glowing Nodes & Neural Net lines -->
-  <g stroke="url(#lineGrad)" stroke-width="1.5" fill="none">
-    <path d="M 100 200 Q 250 150 400 300 T 700 450" />
-    <path d="M 50 450 Q 300 350 550 550 T 750 700" />
-    <path d="M 200 750 Q 450 600 600 800 T 780 900" />
+  <!-- Ambient Glowing Rings & Neural Rays -->
+  <g fill="none" stroke="rgba(139, 92, 246, 0.15)" stroke-width="1.5">
+    <circle cx="400" cy="500" r="320" stroke-dasharray="8 8"/>
+    <circle cx="400" cy="500" r="220"/>
+    <path d="M 100 200 Q 400 350 700 200" stroke="rgba(99, 102, 241, 0.2)" stroke-width="2"/>
+    <path d="M 150 800 Q 400 650 650 800" stroke="rgba(168, 85, 247, 0.2)" stroke-width="2"/>
   </g>
-
-  <!-- Glowing Orbs -->
-  <circle cx="400" cy="300" r="4" fill="#a78bfa" filter="drop-shadow(0 0 8px #a78bfa)"/>
-  <circle cx="250" cy="150" r="3" fill="#c084fc" filter="drop-shadow(0 0 6px #c084fc)"/>
-  <circle cx="550" cy="550" r="5" fill="#818cf8" filter="drop-shadow(0 0 10px #818cf8)"/>
-  <circle cx="600" cy="800" r="4" fill="#f472b6" filter="drop-shadow(0 0 8px #f472b6)"/>
 </svg>

@@ -25,8 +25,8 @@ const quickLinks = [
     description:
       "Install Ollama, connect the extension, and make your first API call in under 5 minutes.",
     href: "/quickstart",
-    accentColor: "rgba(109,93,254,0.15)",
-    borderColor: "rgba(109,93,254,0.25)",
+    accentColor: "rgba(45,212,200,0.15)",
+    borderColor: "rgba(45,212,200,0.25)",
   },
   {
     icon: <Code2 size={18} />,
@@ -43,8 +43,8 @@ const quickLinks = [
     description:
       "Common questions about PullO, privacy, latency, supported models, and how it compares to ngrok.",
     href: "/faq",
-    accentColor: "rgba(139,92,246,0.1)",
-    borderColor: "rgba(139,92,246,0.2)",
+    accentColor: "rgba(59,130,246,0.1)",
+    borderColor: "rgba(59,130,246,0.2)",
   },
   {
     icon: <Terminal size={18} />,
@@ -90,8 +90,8 @@ export default function HomePage() {
             gap: "6px",
             padding: "4px 10px",
             borderRadius: "999px",
-            background: "rgba(109,93,254,0.1)",
-            border: "1px solid rgba(109,93,254,0.2)",
+            background: "rgba(45,212,200,0.1)",
+            border: "1px solid rgba(45,212,200,0.2)",
             marginBottom: "20px",
             fontSize: "0.75rem",
             fontWeight: 500,
@@ -166,7 +166,7 @@ export default function HomePage() {
               gap: "8px",
               padding: "10px 20px",
               borderRadius: "var(--radius-lg)",
-              background: "var(--color-iris-500)",
+              background: "linear-gradient(135deg, #3b82f6, #2dd4c8)",
               color: "#fff",
               fontWeight: 600,
               fontSize: "0.9rem",
@@ -283,9 +283,9 @@ export default function HomePage() {
                       fontWeight: 600,
                       padding: "2px 7px",
                       borderRadius: "999px",
-                      background: "rgba(109,93,254,0.15)",
+                      background: "rgba(45,212,200,0.15)",
                       color: "var(--color-iris-500)",
-                      border: "1px solid rgba(109,93,254,0.2)",
+                      border: "1px solid rgba(45,212,200,0.2)",
                     }}
                   >
                     {item.badge}

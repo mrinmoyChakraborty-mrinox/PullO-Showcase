@@ -1,11 +1,11 @@
 'use client'
 
-// Pullo Split-Screen Auth Page (Updated)
+// Pullo Split-Screen Auth Page (Updated with Google Auth & Back to PullO branding)
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, Sparkles, Cpu, Zap, Layers, Server, ShieldCheck, Key, Users, Activity, Lock, TrendingUp, CheckCircle2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/lib/auth-context'
 import './login.css'
@@ -17,24 +17,24 @@ interface LoginPageProps {
 const HERO_SLIDES = [
   {
     id: 0,
-    image: '/images/auth-slide-0.svg',
-    bgGradient: 'radial-gradient(circle at 20% 20%, rgba(109, 93, 254, 0.45), transparent 60%), radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.3), transparent 50%), linear-gradient(145deg, #1b1435 0%, #0d0a1a 50%, #06050b 100%)',
-    heading: 'Capturing Moments, Creating Memories',
-    subtext: 'Turn local AI infrastructure into team superpowers with end-to-end privacy.',
+    image: '/images/first.png',
+    bgGradient: 'linear-gradient(180deg, rgba(15, 12, 36, 0.2) 0%, rgba(5, 3, 11, 0.65) 100%)',
+    heading: 'Plug In. Scale Up.',
+    subtext: 'Add models and teammates in minutes, not sprints.',
   },
   {
     id: 1,
-    image: '/images/auth-slide-1.svg',
-    bgGradient: 'radial-gradient(circle at 75% 25%, rgba(56, 189, 248, 0.35), transparent 60%), radial-gradient(circle at 25% 75%, rgba(109, 93, 254, 0.35), transparent 50%), linear-gradient(145deg, #0b1d3a 0%, #090e24 50%, #040612 100%)',
-    heading: "Your Local AI. Your Team's API.",
-    subtext: 'Zero data leaves your machine with enterprise corporate firewall security.',
+    image: '/images/second.png',
+    bgGradient: 'linear-gradient(180deg, rgba(8, 27, 46, 0.2) 0%, rgba(3, 7, 15, 0.65) 100%)',
+    heading: 'One Endpoint. Every Model.',
+    subtext: 'Run and route local LLMs without juggling a dozen configs.',
   },
   {
     id: 2,
-    image: '/images/auth-slide-2.svg',
-    bgGradient: 'radial-gradient(circle at 50% 30%, rgba(236, 72, 153, 0.35), transparent 60%), radial-gradient(circle at 80% 90%, rgba(124, 58, 237, 0.35), transparent 50%), linear-gradient(145deg, #280c2e 0%, #12071d 50%, #06030a 100%)',
-    heading: 'High Performance, Zero Compromise',
-    subtext: 'OpenAI-compatible endpoints running at maximum GPU performance.',
+    image: '/images/third.png',
+    bgGradient: 'linear-gradient(180deg, rgba(36, 10, 42, 0.2) 0%, rgba(8, 2, 10, 0.65) 100%)',
+    heading: 'Built for Teams, Not Just Machines.',
+    subtext: 'Manage access, keys, and usage across your whole team from one dashboard.',
   },
 ]
 
@@ -183,25 +183,7 @@ export default function LoginPage({ initialMode = 'login' }: LoginPageProps) {
     }
   }
 
-  const handleAppleLogin = async () => {
-    const supabase = createClient()
-    const cbUrl = window.location.origin + '/auth/callback?redirect=' + encodeURIComponent(redirectTo)
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'apple',
-      options: {
-        redirectTo: cbUrl,
-      },
-    })
 
-    if (error) {
-      console.error('Apple OAuth:', error)
-      if (mode === 'login') {
-        setLoginError('Apple Sign In is not currently configured.')
-      } else {
-        setRegisterError('Apple Sign In is not currently configured.')
-      }
-    }
-  }
 
   const currentSlide = HERO_SLIDES[activeSlide]
 
@@ -237,7 +219,14 @@ export default function LoginPage({ initialMode = 'login' }: LoginPageProps) {
             </div>
 
             <Link href="/" className="auth-back-btn">
-              Back to website <ArrowRight size={13} />
+              <Image
+                src="/images/pullo-logo.png"
+                alt="PullO Logo"
+                width={16}
+                height={16}
+                style={{ borderRadius: 4 }}
+              />
+              Back to PullO <ArrowRight size={13} />
             </Link>
           </div>
 
@@ -471,18 +460,7 @@ export default function LoginPage({ initialMode = 'login' }: LoginPageProps) {
                         d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"
                       />
                     </svg>
-                    Google
-                  </button>
-
-                  <button
-                    type="button"
-                    className="auth-provider-btn"
-                    onClick={handleAppleLogin}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.65c.66-.8 1.11-1.92.99-3.04-.96.04-2.13.64-2.82 1.44-.61.71-1.15 1.85-.99 2.96 1.07.08 2.16-.54 2.82-1.36z" />
-                    </svg>
-                    Apple
+                    Continue with Google
                   </button>
                 </div>
               </>
@@ -624,18 +602,7 @@ export default function LoginPage({ initialMode = 'login' }: LoginPageProps) {
                         d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.3-6.7-5.3L1.6 16C3.5 19.8 7.4 23 12 23z"
                       />
                     </svg>
-                    Google
-                  </button>
-
-                  <button
-                    type="button"
-                    className="auth-provider-btn"
-                    onClick={handleAppleLogin}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.65c.66-.8 1.11-1.92.99-3.04-.96.04-2.13.64-2.82 1.44-.61.71-1.15 1.85-.99 2.96 1.07.08 2.16-.54 2.82-1.36z" />
-                    </svg>
-                    Apple
+                    Continue with Google
                   </button>
                 </div>
               </>

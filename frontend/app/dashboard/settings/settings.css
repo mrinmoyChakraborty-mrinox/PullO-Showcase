@@ -130,7 +130,7 @@ nav.side-nav{ flex:1; padding:0 8px; overflow-y:auto; display:flex; flex-directi
 .docs-nav:hover .line-2{ transition-delay:70ms; }
 .docs-nav:hover .line-3{ transition-delay:140ms; }
 .profile-nav .profile-ring{ transition:transform 220ms cubic-bezier(0.22,1,0.36,1); transform-box:fill-box; transform-origin:center; }
-.profile-nav:hover .profile-ring{ transform:scale(1.12); }
+.profile-nav:hover .profile-ring{ transform:scale(1.35); }
 .signout-btn .signout-arrow{ transition:transform 220ms cubic-bezier(0.22,1,0.36,1); }
 .signout-btn:hover .signout-arrow{ animation:signoutWiggle .7s ease-in-out infinite; }
 @keyframes signoutWiggle{ 0%{transform:translateX(0);} 25%{transform:translateX(5px);} 50%{transform:translateX(.5px);} 75%{transform:translateX(5px);} 100%{transform:translateX(0);} }
@@ -239,7 +239,7 @@ select.field-input{ appearance:none; cursor:pointer; }
 }
 .logo-preview img{ width:100%; height:100%; object-fit:cover; }
 .logo-actions{ display:flex; flex-direction:column; gap:8px; }
-.logo-actions .row{ display:flex; gap:10px; }
+.logo-actions .row{ display:flex; gap:10px; align-items:center; }
 .hint{ font-size:11.5px; color:var(--text-lo); margin-top:2px; }
 
 /* members table */

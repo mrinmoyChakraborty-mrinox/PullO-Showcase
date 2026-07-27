@@ -89,9 +89,9 @@ export function Topbar() {
           fontSize: "0.72rem",
           padding: "3px 8px",
           borderRadius: "999px",
-          background: "rgba(109,93,254,0.1)",
+          background: "rgba(45,212,200,0.1)",
           color: "var(--color-iris-500)",
-          border: "1px solid rgba(109,93,254,0.2)",
+          border: "1px solid rgba(45,212,200,0.2)",
           flexShrink: 0,
         }}
       >

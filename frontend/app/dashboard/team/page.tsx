@@ -472,6 +472,7 @@ export default function TeamPage() {
                       {filteredMembers.map((m, idx) => (
                         <tr key={m.user_id}>
                           <td style={{ paddingLeft: 24 }}>
+                            <Link href={`/profile/${m.user_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                               <div
                                 style={{
@@ -508,6 +509,7 @@ export default function TeamPage() {
                                 )}
                               </div>
                             </div>
+                            </Link>
                           </td>
                           <td>
                             <span

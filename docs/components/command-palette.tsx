@@ -211,11 +211,11 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                       borderRadius: "var(--radius-md)",
                       background:
                         highlighted === i
-                          ? "rgba(109,93,254,0.1)"
+                          ? "rgba(45,212,200,0.1)"
                           : "transparent",
                       border:
                         highlighted === i
-                          ? "1px solid rgba(109,93,254,0.2)"
+                          ? "1px solid rgba(45,212,200,0.2)"
                           : "1px solid transparent",
                       cursor: "pointer",
                       textAlign: "left",
@@ -339,7 +339,7 @@ export function CommandPaletteTrigger() {
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.borderColor =
-            "rgba(109,93,254,0.4)";
+            "rgba(45,212,200,0.4)";
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLButtonElement).style.borderColor =

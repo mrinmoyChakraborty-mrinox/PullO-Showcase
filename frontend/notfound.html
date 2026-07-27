@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 | PullO Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060d16;
+    --bg-panel: #0b1622;
+    --border: #16283a;
+    --teal: #2dd4c8;
+    --blue: #3b82f6;
+    --text: #eaf2f6;
+    --text-dim: #7e93a3;
+    --text-mid: #a9bccb;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ height:100%; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Inter","Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;
+    min-height:100vh; overflow:hidden; position:relative;
+    background:
+      radial-gradient(900px 500px at 50% 0%, rgba(59,130,246,0.10), transparent 60%),
+      radial-gradient(700px 420px at 80% 90%, rgba(45,212,200,0.08), transparent 60%),
+      var(--bg);
+  }
+
+  /* starfield */
+  .stars{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+  .star{ position:absolute; background:#cfe4ee; border-radius:50%; opacity:0.7; animation:twinkle 3s ease-in-out infinite; }
+  @keyframes twinkle{ 0%,100%{opacity:.25;} 50%{opacity:.9;} }
+  .shoot{
+    position:absolute; width:70px; height:1.5px;
+    background:linear-gradient(90deg, transparent, rgba(45,212,200,0.9), transparent);
+    transform:rotate(-25deg); opacity:0; animation:shoot 6s ease-in infinite;
+  }
+  @keyframes shoot{
+    0%{ opacity:0; transform:translate(0,0) rotate(-25deg); }
+    5%{ opacity:1; }
+    20%{ opacity:0; transform:translate(-260px,140px) rotate(-25deg); }
+    100%{ opacity:0; }
+  }
+
+  /* header */
+  .brand{
+    position:relative; z-index:5; display:flex; align-items:center; gap:10px;
+    padding:26px 34px;
+  }
+  .brand-mark{
+    width:32px; height:32px; border-radius:50%; flex-shrink:0;
+    background:conic-gradient(from 210deg, var(--blue), var(--teal), var(--blue));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 18px rgba(45,212,200,0.35);
+  }
+  .brand-mark::after{ content:""; width:14px; height:14px; border-radius:50%; background:var(--bg); }
+  .brand span{ font-size:17px; font-weight:700; letter-spacing:-0.02em; color:var(--text); }
+
+  /* content */
+  .wrap{
+    position:relative; z-index:5;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:10px 20px 60px;
+    min-height:calc(100vh - 90px);
+  }
+
+  .scene{ position:relative; width:420px; max-width:88vw; height:300px; margin-bottom:6px; }
+  .glow{
+    position:absolute; left:50%; top:46%; transform:translate(-50%,-50%);
+    width:340px; height:340px; border-radius:50%;
+    background:radial-gradient(circle, rgba(45,212,200,0.16), transparent 70%);
+    filter:blur(4px);
+  }
+
+  .moon-wrap{ position:absolute; left:50%; bottom:14px; transform:translateX(-50%); }
+  .ring{
+    position:absolute; left:50%; top:48%; transform:translate(-50%,-50%) rotate(-8deg);
+    width:270px; height:70px; border:2px solid rgba(45,212,200,0.55);
+    border-radius:50%; box-shadow:0 0 18px rgba(45,212,200,0.35);
+  }
+  .moon{
+    width:180px; height:180px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #24404f, #0c1620 72%);
+    border:1px solid rgba(255,255,255,0.06);
+    box-shadow:0 0 50px rgba(45,212,200,0.12), inset -14px -14px 30px rgba(0,0,0,0.5);
+    position:relative; overflow:hidden;
+  }
+  .crater{ position:absolute; border-radius:50%; background:rgba(0,0,0,0.35); box-shadow:inset 2px 2px 4px rgba(0,0,0,0.4); }
+
+  .astro{
+    position:absolute; left:50%; bottom:150px; transform:translateX(-50%);
+    animation:float 3.4s ease-in-out infinite;
+  }
+  @keyframes float{ 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(-8px); } }
+
+  .bubble{
+    position:absolute; left:calc(50% + 66px); bottom:236px;
+    width:40px; height:32px; border-radius:10px 10px 10px 3px;
+    background:var(--bg-panel); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; color:var(--teal); font-size:16px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.4);
+    animation:float 3.4s ease-in-out infinite;
+    animation-delay:0.1s;
+  }
+
+  h1.code{
+    font-size:112px; font-weight:900; line-height:1; letter-spacing:-0.03em;
+    background:linear-gradient(180deg, #dff5f2, var(--teal) 55%, var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 60px rgba(45,212,200,0.25);
+    margin-top:6px;
+  }
+  h2.msg{ font-size:26px; font-weight:800; margin-top:6px; letter-spacing:-0.01em; }
+  p.sub{ font-size:14.5px; color:var(--text-dim); margin-top:12px; line-height:1.6; max-width:360px; }
+
+  .go-home{
+    margin-top:30px;
+    display:inline-flex; align-items:center; gap:10px;
+    background:linear-gradient(135deg, var(--blue), var(--teal));
+    color:#04141c; border:none; border-radius:12px; font-weight:700; font-size:14.5px;
+    padding:14px 26px; cursor:pointer; text-decoration:none; position:relative;
+    box-shadow:0 10px 32px rgba(45,212,200,0.28);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .go-home::before{
+    content:''; position:absolute; inset:-8px; border-radius:16px;
+    background:radial-gradient(circle, rgba(45,212,200,0.35), transparent 70%);
+    opacity:0; transition:opacity .35s ease; z-index:-1;
+    filter:blur(10px);
+  }
+  .go-home:hover{ transform:translateY(-2px); box-shadow:0 14px 38px rgba(45,212,200,0.5); }
+  .go-home:hover::before{ opacity:1; }
+  .go-home svg{ transition:transform .2s ease; }
+  .go-home:hover svg{ transform:translateX(3px); }
+
+  header{
+    position:relative; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 40px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .toggle-wrap{
+    display:flex; align-items:center; gap:9px;
+  }
+  .toggle-wrap span{ font-size:11.5px; color:var(--text-dim); font-weight:600; }
+  .switch{
+    width:42px; height:23px; border-radius:20px; background:var(--bg-panel);
+    border:1px solid var(--border); position:relative; cursor:pointer;
+    transition:background .2s ease;
+  }
+  .switch::after{
+    content:""; position:absolute; top:2px; left:2px; width:17px; height:17px; border-radius:50%;
+    background:var(--text-dim); transition:all .25s cubic-bezier(.4,0,.2,1);
+  }
+  .switch.on{ background:linear-gradient(135deg, var(--blue), var(--teal)); border-color:transparent; }
+  .switch.on::after{ left:21px; background:#04141c; }
+
+  /* footer clouds */
+  .clouds{ position:fixed; bottom:0; left:0; right:0; height:120px; pointer-events:none; z-index:1; overflow:hidden; }
+  .cloud{ position:absolute; bottom:-40px; border-radius:50%; background:rgba(11,22,34,0.9); filter:blur(1px); }
+
+  @media (max-width:480px){
+    h1.code{ font-size:78px; }
+    h2.msg{ font-size:20px; }
+    .scene{ height:260px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+  <div class="clouds">
+    <div class="cloud" style="width:220px;height:140px;left:-40px;"></div>
+    <div class="cloud" style="width:160px;height:100px;left:100px;bottom:-60px;"></div>
+    <div class="cloud" style="width:240px;height:150px;right:-50px;"></div>
+    <div class="cloud" style="width:170px;height:110px;right:120px;bottom:-60px;"></div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="public/images/pullo-logo.png" alt="PullO Logo" style="height:34px;width:auto;">
+      <span style="font-size:18px;font-weight:700;color:var(--text-hi);letter-spacing:-0.02em;">PullO</span>
+    </div>
+    <div class="toggle-wrap">
+      <span id="toggleLabel">Go Home</span>
+      <div class="switch" id="homeToggle" onclick="toggleGoHome()"></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="scene">
+      <div class="glow"></div>
+
+      <div class="bubble">?</div>
+
+      <svg class="astro" width="150" height="150" viewBox="0 0 150 150" fill="none">
+        <!-- backpack -->
+        <rect x="55" y="70" width="14" height="26" rx="5" fill="#1a2e3d" stroke="#2dd4c8" stroke-width="1.5"/>
+        <!-- body -->
+        <path d="M60 72c0-14 8-22 15-22s15 8 15 22v20c0 10-7 16-15 16s-15-6-15-16z" fill="#e9f2f5" stroke="#c3d4da" stroke-width="1.5"/>
+        <!-- chest panel -->
+        <rect x="68" y="80" width="14" height="10" rx="2" fill="#2dd4c8" opacity="0.85"/>
+        <!-- legs -->
+        <path d="M64 106c-2 8-3 16-1 22" stroke="#e9f2f5" stroke-width="9" stroke-linecap="round"/>
+        <path d="M86 106c2 8 3 16 1 22" stroke="#e9f2f5" stroke-width="9" stroke-linecap="round"/>
+        <!-- boots -->
+        <ellipse cx="62" cy="130" rx="8" ry="5" fill="#c3d4da"/>
+        <ellipse cx="88" cy="130" rx="8" ry="5" fill="#c3d4da"/>
+        <!-- arms -->
+        <path d="M60 78c-8 2-14 8-15 16" stroke="#e9f2f5" stroke-width="8" stroke-linecap="round"/>
+        <path d="M90 78c8 2 13 8 15 15" stroke="#e9f2f5" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="44" cy="96" r="5.5" fill="#c3d4da"/>
+        <circle cx="106" cy="94" r="5.5" fill="#c3d4da"/>
+        <!-- helmet -->
+        <circle cx="75" cy="48" r="27" fill="#e9f2f5" stroke="#c3d4da" stroke-width="1.5"/>
+        <circle cx="75" cy="48" r="19" fill="#0c1a24"/>
+        <circle cx="69" cy="42" r="4.5" fill="rgba(255,255,255,0.35)"/>
+        <path d="M60 30c3-5 9-8 15-8" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+
+      <div class="moon-wrap">
+        <div class="ring"></div>
+        <div class="moon">
+          <div class="crater" style="width:26px;height:26px;top:24px;left:26px;"></div>
+          <div class="crater" style="width:18px;height:18px;top:70px;left:110px;"></div>
+          <div class="crater" style="width:34px;height:34px;top:100px;left:34px;"></div>
+          <div class="crater" style="width:14px;height:14px;top:40px;left:120px;"></div>
+          <div class="crater" style="width:20px;height:20px;top:130px;left:100px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="code">404</h1>
+    <h2 class="msg">Oops! Page not found.</h2>
+    <p class="sub">The page you're looking for doesn't exist or may have been moved.</p>
+
+    <a href="#" class="go-home" id="goHomeBtn" onclick="return goHome(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg>
+      Go Home
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <script>
+    // starfield generation
+    const starsEl = document.getElementById('stars');
+    for(let i=0;i<70;i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random()*2 + 1;
+      s.style.width = size+'px';
+      s.style.height = size+'px';
+      s.style.left = Math.random()*100+'%';
+      s.style.top = Math.random()*70+'%';
+      s.style.animationDelay = (Math.random()*3)+'s';
+      starsEl.appendChild(s);
+    }
+    for(let i=0;i<2;i++){
+      const sh = document.createElement('div');
+      sh.className = 'shoot';
+      sh.style.left = (60+Math.random()*30)+'%';
+      sh.style.top = (10+Math.random()*20)+'%';
+      sh.style.animationDelay = (i*3+Math.random()*2)+'s';
+      starsEl.appendChild(sh);
+    }
+
+    // Go Home behavior + toggle
+    let autoRedirect = false;
+    function goHome(e){
+      e.preventDefault();
+      window.location.href = '/dashboard';
+      return false;
+    }
+    function toggleGoHome(){
+      autoRedirect = !autoRedirect;
+      const sw = document.getElementById('homeToggle');
+      const label = document.getElementById('toggleLabel');
+      sw.classList.toggle('on', autoRedirect);
+      if(autoRedirect){
+        label.textContent = 'Redirecting…';
+        setTimeout(()=>{ window.location.href = '/dashboard'; }, 900);
+      } else {
+        label.textContent = 'Go Home';
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+---
+title: "v0.4.0"
+date: "2026-06-30"
+tags: ["extension", "backend", "dashboard"]
+---
+
+- Initial release of the Chrome Extension v2.0 with Ollama, LM Studio, and Custom URL provider management. Included multi-tab popup UI and a tool execution loop supporting up to 10 iterations with browser runtime tools (web search, page reader, screenshot, calculator, and more).
+- Implemented workspace-scoped architecture with database migrations for models, devices, and API keys. Added device registration flow (ADQ-002/003).
+- Deployed Redis infrastructure for rate limiting (RPM/RPD), request queuing, heartbeat monitoring, and realtime counter services via Upstash Redis.
+- Launched OpenAI-compatible API endpoints (`/v1/chat/completions`, `/v1/embeddings`) with pull-based WebSocket transport, API key authentication (SHA-256 hash), and per-key policy enforcement.
+- Built the Next.js 14 dashboard with Supabase auth (email/password + Google OAuth), sidebar layout, and live backend metrics for models, API keys, and workspace members.
+- Published the interactive 3D landing page with Three.js laptop model, network particles, and terminal animation.
+- Set up GitHub Actions CI/CD pipelines for backend (lint + test), frontend (lint + build), and extension (lint + package).

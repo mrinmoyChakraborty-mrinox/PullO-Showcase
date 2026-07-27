@@ -1,0 +1,96 @@
+.pp-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background:
+    radial-gradient(1100px 500px at 15% -10%, rgba(59, 130, 246, 0.10), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(45, 212, 200, 0.08), transparent 55%),
+    #060d16;
+}
+
+.pp-card {
+  width: 100%;
+  max-width: 400px;
+  background: #0b1622;
+  border: 1px solid #16283a;
+  border-radius: 18px;
+  padding: 40px 36px;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(45, 212, 200, 0.04);
+}
+
+.pp-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  border: 3px solid rgba(45, 212, 200, 0.4);
+  box-shadow: 0 0 26px rgba(45, 212, 200, 0.25);
+  overflow: hidden;
+}
+.pp-avatar--fallback {
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+}
+.pp-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pp-name {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #eaf2f6;
+  letter-spacing: -0.02em;
+}
+
+.pp-location {
+  font-size: 13px;
+  color: #a9bccb;
+  margin-bottom: 8px;
+}
+
+.pp-bio {
+  font-size: 13px;
+  color: #7e93a3;
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+
+.pp-since {
+  font-size: 12px;
+  color: #7e93a3;
+  margin-top: 20px;
+  border-top: 1px solid #16283a;
+  padding-top: 16px;
+}
+
+.pp-empty {
+  text-align: center;
+}
+.pp-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.3;
+}
+.pp-empty h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #eaf2f6;
+  margin: 0 0 6px;
+}
+.pp-empty p {
+  font-size: 13px;
+  color: #7e93a3;
+  margin: 0;
+}

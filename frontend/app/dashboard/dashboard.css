@@ -407,7 +407,7 @@
 }
 
 .dash-profile:hover .profile-ring {
-  transform: scale(1.12);
+  transform: scale(1.35);
 }
 
 .signout-arrow {
@@ -679,25 +679,6 @@ button:hover .signout-arrow {
 .dash-btn-danger:hover {
   background: rgba(251, 113, 133, 0.1);
   border-color: rgba(251, 113, 133, 0.5);
-}
-
-/* ── Code chip (API key) ── */
-.dash-api-key-chip {
-  background: rgba(2, 22, 36, 0.5);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
-  font-family: 'Geist Mono', 'Geist Mono Fallback', monospace;
-  font-size: 12px;
-  color: var(--text-md);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: border-color 0.15s;
-}
-
-.dash-api-key-chip:hover {
-  border-color: var(--border-hi);
 }
 
 /* ── Method badge ── */
@@ -1036,6 +1017,22 @@ button:hover .signout-arrow {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── MCP puzzle icon hover animation ── */
+@keyframes mcp-corner-walk {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(270deg); }
+}
+
+.dash-mcp .dash-nav-icon {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dash-mcp:hover .dash-nav-icon {
+  animation: mcp-corner-walk 2s ease-in-out infinite;
 }
 
 /* ── Responsive ── */

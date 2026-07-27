@@ -1,34 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%">
   <defs>
-    <radialGradient id="g1" cx="70%" cy="30%" r="75%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
-      <stop offset="60%" stop-color="#6366f1" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#040612" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="gridGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#040612" stop-opacity="0.02"/>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081b2e"/>
+      <stop offset="50%" stop-color="#05101d"/>
+      <stop offset="100%" stop-color="#03070f"/>
     </linearGradient>
+    <radialGradient id="orb1a" cx="70%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb1b" cx="30%" cy="75%" r="55%">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid1" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M 36 0 L 0 0 0 36" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+      <circle cx="36" cy="36" r="1.2" fill="rgba(56, 189, 248, 0.2)"/>
+    </pattern>
   </defs>
 
-  <rect width="100%" height="100%" fill="#040612"/>
-  <rect width="100%" height="100%" fill="url(#g1)"/>
+  <rect width="100%" height="100%" fill="url(#bg1)"/>
+  <rect width="100%" height="100%" fill="url(#orb1a)"/>
+  <rect width="100%" height="100%" fill="url(#orb1b)"/>
+  <rect width="100%" height="100%" fill="url(#grid1)"/>
 
-  <!-- Perspective Grid lines -->
-  <g stroke="url(#gridGrad)" stroke-width="1">
-    <line x1="100" y1="0" x2="100" y2="1000"/>
-    <line x1="250" y1="0" x2="250" y2="1000"/>
-    <line x1="400" y1="0" x2="400" y2="1000"/>
-    <line x1="550" y1="0" x2="550" y2="1000"/>
-    <line x1="700" y1="0" x2="700" y2="1000"/>
-
-    <line x1="0" y1="200" x2="800" y2="200"/>
-    <line x1="0" y1="400" x2="800" y2="400"/>
-    <line x1="0" y1="600" x2="800" y2="600"/>
-    <line x1="0" y1="800" x2="800" y2="800"/>
+  <g fill="none" stroke="rgba(56, 189, 248, 0.15)" stroke-width="1.5">
+    <circle cx="400" cy="500" r="300" stroke-dasharray="12 6"/>
+    <path d="M 0 300 Q 400 450 800 300" stroke="rgba(56, 189, 248, 0.2)" stroke-width="2"/>
+    <path d="M 0 700 Q 400 550 800 700" stroke="rgba(99, 102, 241, 0.2)" stroke-width="2"/>
   </g>
-
-  <!-- Cyan Tech Accents -->
-  <circle cx="550" cy="400" r="6" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)"/>
-  <circle cx="250" cy="600" r="4" fill="#818cf8" filter="drop-shadow(0 0 8px #818cf8)"/>
 </svg>

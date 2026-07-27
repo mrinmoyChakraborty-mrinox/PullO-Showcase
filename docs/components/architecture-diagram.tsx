@@ -73,7 +73,7 @@ export function ArchitectureDiagram() {
           width: 200,
           height: 200,
           background:
-            "radial-gradient(circle, rgba(109,93,254,0.08) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(45,212,200,0.08) 0%, transparent 70%)",
           pointerEvents: "none",
         }}
       />
@@ -93,15 +93,15 @@ export function ArchitectureDiagram() {
               borderRadius: "var(--radius-lg)",
               width: "100%",
               background: node.highlight
-                ? "rgba(109,93,254,0.1)"
+                ? "rgba(45,212,200,0.1)"
                 : "var(--color-bg-elevated)",
               border: `1px solid ${
                 node.highlight
-                  ? "rgba(109,93,254,0.3)"
+                  ? "rgba(45,212,200,0.3)"
                   : "var(--color-border-default)"
               }`,
               boxShadow: node.highlight
-                ? "0 0 0 1px rgba(109,93,254,0.15), 0 4px 16px rgba(109,93,254,0.1)"
+                ? "0 0 0 1px rgba(45,212,200,0.15), 0 4px 16px rgba(45,212,200,0.1)"
                 : "inset 0 1px 2px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)",
             }}
           >
@@ -151,13 +151,13 @@ export function ArchitectureDiagram() {
                   width: 1,
                   height: 20,
                   background:
-                    "linear-gradient(to bottom, rgba(109,93,254,0.4), rgba(109,93,254,0.2))",
+                    "linear-gradient(to bottom, rgba(45,212,200,0.4), rgba(45,212,200,0.2))",
                 }}
               />
               <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
                 <path
                   d="M6 7L0 0h12L6 7z"
-                  fill="rgba(109,93,254,0.6)"
+                  fill="rgba(45,212,200,0.6)"
                 />
               </svg>
             </motion.div>

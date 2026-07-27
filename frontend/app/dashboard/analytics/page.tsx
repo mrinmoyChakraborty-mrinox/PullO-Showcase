@@ -148,8 +148,8 @@ const CustomLatencyDot = (props: DotProps) => {
   if (cx == null || cy == null) return null
   return (
     <g>
-      <circle cx={cx} cy={cy} r={7} fill="#8B5CF6" opacity={0.16} pointerEvents="none" />
-      <circle cx={cx} cy={cy} r={5} fill="#8B5CF6" opacity={0.45} pointerEvents="none" />
+      <circle cx={cx} cy={cy} r={7} fill="#3b82f6" opacity={0.16} pointerEvents="none" />
+      <circle cx={cx} cy={cy} r={5} fill="#3b82f6" opacity={0.45} pointerEvents="none" />
       <circle cx={cx} cy={cy} r={3.6} fill="url(#latencyDotGradient)" pointerEvents="none" />
       <circle cx={cx} cy={cy} r={1.2} fill="#FFFFFF" pointerEvents="none" />
     </g>
@@ -161,8 +161,8 @@ const CustomActiveLatencyDot = (props: DotProps) => {
   if (cx == null || cy == null) return null
   return (
     <g>
-      <circle cx={cx} cy={cy} r={11} fill="#8B5CF6" opacity={0.24} pointerEvents="none" />
-      <circle cx={cx} cy={cy} r={7.5} fill="#8B5CF6" opacity={0.6} pointerEvents="none" />
+      <circle cx={cx} cy={cy} r={11} fill="#3b82f6" opacity={0.24} pointerEvents="none" />
+      <circle cx={cx} cy={cy} r={7.5} fill="#3b82f6" opacity={0.6} pointerEvents="none" />
       <circle cx={cx} cy={cy} r={4.5} fill="url(#latencyDotGradient)" pointerEvents="none" />
       <circle cx={cx} cy={cy} r={1.6} fill="#FFFFFF" pointerEvents="none" />
     </g>
@@ -449,8 +449,8 @@ export default function AnalyticsPage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              padding: 10, background: 'linear-gradient(135deg, rgba(124,58,237,0.2), rgba(168,85,247,0.1))',
-              border: '1px solid rgba(139,92,246,0.2)', borderRadius: 10, color: '#8B5CF6',
+              padding: 10, background: 'linear-gradient(135deg, rgba(45,212,200,0.2), rgba(59,130,246,0.1))',
+              border: '1px solid rgba(45,212,200,0.2)', borderRadius: 10, color: '#2dd4c8',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               <IconActivity className="" style={{ width: 24, height: 24 }} />
@@ -478,9 +478,9 @@ export default function AnalyticsPage() {
                   style={{
                     padding: '6px 14px', fontSize: 12, fontWeight: 600, border: 'none', borderRadius: 7,
                     cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s',
-                    background: selectedRange === range ? '#8B5CF6' : 'transparent',
+                    background: selectedRange === range ? '#2dd4c8' : 'transparent',
                     color: selectedRange === range ? '#fff' : '#94A3B8',
-                    boxShadow: selectedRange === range ? '0 4px 12px rgba(139,92,246,0.25)' : 'none',
+                    boxShadow: selectedRange === range ? '0 4px 12px rgba(45,212,200,0.25)' : 'none',
                   }}
                 >
                   {range}
@@ -507,7 +507,7 @@ export default function AnalyticsPage() {
               disabled={isRefreshing}
               style={{
                 padding: 8, background: '#121728', border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 9, color: isRefreshing ? '#8B5CF6' : '#94A3B8', cursor: 'pointer',
+                borderRadius: 9, color: isRefreshing ? '#2dd4c8' : '#94A3B8', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.15s', fontFamily: 'inherit',
               }}
@@ -529,7 +529,7 @@ export default function AnalyticsPage() {
           {/* Total Requests */}
           <div style={{
             background: 'var(--glass)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12,
+            border: '1px solid rgba(45,212,200,0.15)', borderRadius: 12,
             padding: 20, position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -537,7 +537,7 @@ export default function AnalyticsPage() {
                 Total Requests
                 <IconInfo className="" style={{ width: 14, height: 14, color: 'rgba(148,163,184,0.6)' }} title="Total API transactions completed" />
               </span>
-              <div style={{ padding: 6, background: 'rgba(124,58,237,0.1)', color: '#A855F7', borderRadius: 8, display: 'flex' }}>
+              <div style={{ padding: 6, background: 'rgba(45,212,200,0.1)', color: '#2dd4c8', borderRadius: 8, display: 'flex' }}>
                 <IconZap className="" style={{ width: 16, height: 16 }} />
               </div>
             </div>
@@ -554,7 +554,7 @@ export default function AnalyticsPage() {
                   <div style={{ width: 80, height: 36 }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={requestsSparkline}>
-                        <Line type="monotone" dataKey="value" stroke="#8B5CF6" strokeWidth={1.8} dot={false} />
+                        <Line type="monotone" dataKey="value" stroke="#2dd4c8" strokeWidth={1.8} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -566,7 +566,7 @@ export default function AnalyticsPage() {
           {/* Avg. Latency */}
           <div style={{
             background: 'var(--glass)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12,
+            border: '1px solid rgba(45,212,200,0.15)', borderRadius: 12,
             padding: 20, position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -574,7 +574,7 @@ export default function AnalyticsPage() {
                 Avg. Latency
                 <IconInfo className="" style={{ width: 14, height: 14, color: 'rgba(148,163,184,0.6)' }} title="Average time taken for server responses" />
               </span>
-              <div style={{ padding: 6, background: 'rgba(139,92,246,0.1)', color: '#8B5CF6', borderRadius: 8, display: 'flex' }}>
+              <div style={{ padding: 6, background: 'rgba(59,130,246,0.1)', color: '#3b82f6', borderRadius: 8, display: 'flex' }}>
                 <IconClock className="" style={{ width: 16, height: 16 }} />
               </div>
             </div>
@@ -591,7 +591,7 @@ export default function AnalyticsPage() {
                   <div style={{ width: 80, height: 36 }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={latencySparkline}>
-                        <Line type="monotone" dataKey="value" stroke="#A855F7" strokeWidth={1.8} dot={false} />
+                        <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={1.8} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -603,7 +603,7 @@ export default function AnalyticsPage() {
           {/* Error Rate */}
           <div style={{
             background: 'var(--glass)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12,
+            border: '1px solid rgba(45,212,200,0.15)', borderRadius: 12,
             padding: 20, position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -640,7 +640,7 @@ export default function AnalyticsPage() {
           {/* Tokens Consumed */}
           <div style={{
             background: 'var(--glass)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12,
+            border: '1px solid rgba(45,212,200,0.15)', borderRadius: 12,
             padding: 20, position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -648,7 +648,7 @@ export default function AnalyticsPage() {
                 Tokens Consumed
                 <IconInfo className="" style={{ width: 14, height: 14, color: 'rgba(148,163,184,0.6)' }} title="Total LLM tokens processed" />
               </span>
-              <div style={{ padding: 6, background: 'rgba(59,130,246,0.1)', color: '#3B82F6', borderRadius: 8, display: 'flex' }}>
+              <div style={{ padding: 6, background: 'rgba(139,92,246,0.1)', color: '#8B5CF6', borderRadius: 8, display: 'flex' }}>
                 <IconCpu className="" style={{ width: 16, height: 16 }} />
               </div>
             </div>
@@ -713,10 +713,11 @@ export default function AnalyticsPage() {
                   <BarChart data={requestsChartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                     <defs>
                       <linearGradient id="requestsBarGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#A78BFA" stopOpacity={1} />
-                        <stop offset="25%" stopColor="#8B5CF6" stopOpacity={0.95} />
-                        <stop offset="70%" stopColor="#6D3CCF" stopOpacity={0.80} />
-                        <stop offset="100%" stopColor="#4C2A91" stopOpacity={0.48} />
+                        <stop offset="0%" stopColor="#E6F7FF" stopOpacity={1} />
+                        <stop offset="30%" stopColor="#B9E7FF" stopOpacity={0.92} />
+                        <stop offset="55%" stopColor="#86D3FF" stopOpacity={0.78} />
+                        <stop offset="80%" stopColor="#4BB6E6" stopOpacity={0.60} />
+                        <stop offset="100%" stopColor="#0F3B57" stopOpacity={0.35} />
                       </linearGradient>
                       <filter id="barBlur">
                         <feGaussianBlur stdDeviation="3.5" />
@@ -776,19 +777,19 @@ export default function AnalyticsPage() {
                   <AreaChart data={latencyChartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                     <defs>
                       <linearGradient id="latencyAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#C084FC" stopOpacity={0.28} />
-                        <stop offset="30%" stopColor="#8B5CF6" stopOpacity={0.16} />
-                        <stop offset="70%" stopColor="#4F46E5" stopOpacity={0.06} />
-                        <stop offset="100%" stopColor="#1E1B4B" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.28} />
+                        <stop offset="30%" stopColor="#3b82f6" stopOpacity={0.16} />
+                        <stop offset="70%" stopColor="#2563eb" stopOpacity={0.06} />
+                        <stop offset="100%" stopColor="#1e3a5f" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="latencyDotGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#C084FC" />
-                        <stop offset="100%" stopColor="#7C3AED" />
+                        <stop offset="0%" stopColor="#60a5fa" />
+                        <stop offset="100%" stopColor="#3b82f6" />
                       </linearGradient>
                       <linearGradient id="latencyCursorGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#A855F7" stopOpacity={0.6} />
-                        <stop offset="50%" stopColor="#8B5CF6" stopOpacity={0.2} />
-                        <stop offset="100%" stopColor="#7C3AED" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.6} />
+                        <stop offset="50%" stopColor="#2563eb" stopOpacity={0.2} />
+                        <stop offset="100%" stopColor="#1e40af" stopOpacity={0} />
                       </linearGradient>
                       <filter id="latencyLineGlow" x="-50%" y="-50%" width="200%" height="200%">
                         <feGaussianBlur stdDeviation="5" result="coloredBlur" />
@@ -817,7 +818,7 @@ export default function AnalyticsPage() {
                       type="monotone"
                       dataKey="value"
                       name="Latency"
-                      stroke="#8B5CF6"
+                      stroke="#3b82f6"
                       strokeWidth={2.5}
                       strokeLinecap="round"
                       fillOpacity={0}
@@ -906,7 +907,7 @@ export default function AnalyticsPage() {
                       }}
                       className="analytics-donut-center"
                     >
-                      <span style={{ fontSize: 20, fontWeight: 800, color: '#F8FAFC', textShadow: '0 0 12px rgba(139,92,246,0.4)' }}>
+                      <span style={{ fontSize: 20, fontWeight: 800, color: '#F8FAFC', textShadow: '0 0 12px rgba(45,212,200,0.4)' }}>
                         {analytics ? `${analytics.errorRate.toFixed(2)}%` : '—'}
                       </span>
                       <span style={{ fontSize: 10, textTransform: 'uppercase', fontWeight: 600, color: '#94A3B8', letterSpacing: '0.05em', marginTop: 2 }}>
@@ -968,13 +969,13 @@ export default function AnalyticsPage() {
                   <AreaChart data={liveRequestBuffer} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                     <defs>
                       <linearGradient id="liveArea" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.12} />
-                        <stop offset="100%" stopColor="#7C3AED" stopOpacity={0.0} />
+                        <stop offset="0%" stopColor="#E6F7FF" stopOpacity={0.12} />
+                        <stop offset="100%" stopColor="#0F3B57" stopOpacity={0.0} />
                       </linearGradient>
                       <linearGradient id="verticalTrail" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.4} />
-                        <stop offset="35%" stopColor="#8B5CF6" stopOpacity={0.1} />
-                        <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0.0} />
+                        <stop offset="0%" stopColor="#86D3FF" stopOpacity={0.35} />
+                        <stop offset="40%" stopColor="#4BB6E6" stopOpacity={0.12} />
+                        <stop offset="100%" stopColor="#0F3B57" stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.04)" />
@@ -998,12 +999,12 @@ export default function AnalyticsPage() {
                       type="monotone"
                       dataKey="value"
                       name="Requests/sec"
-                      stroke="#8B5CF6"
+                      stroke="#4BB6E6"
                       strokeWidth={1.2}
-                      strokeOpacity={0.22}
+                      strokeOpacity={0.25}
                       fillOpacity={1}
                       fill="url(#liveArea)"
-                      activeDot={{ r: 5, stroke: '#101524', strokeWidth: 1.5, fill: '#8B5CF6' }}
+                      activeDot={{ r: 5, stroke: '#101524', strokeWidth: 1.5, fill: '#4BB6E6' }}
                       dot={(props: { cx?: number; cy?: number; index?: number }) => {
                         if (props.cx == null || props.cy == null) return null
                         const isLast = props.index === liveRequestBuffer.length - 1
@@ -1011,14 +1012,14 @@ export default function AnalyticsPage() {
                           <g>
                             {isLast && (
                               <>
-                                <circle cx={props.cx} cy={props.cy} r={5.5} fill="none" stroke="#8B5CF6" strokeWidth={1} className="live-request-pulse-1" pointerEvents="none" />
-                                <circle cx={props.cx} cy={props.cy} r={5.5} fill="none" stroke="#8B5CF6" strokeWidth={1} className="live-request-pulse-2" pointerEvents="none" />
+                                <circle cx={props.cx} cy={props.cy} r={5.5} fill="none" stroke="#4BB6E6" strokeWidth={1} className="live-request-pulse-1" pointerEvents="none" />
+                                <circle cx={props.cx} cy={props.cy} r={5.5} fill="none" stroke="#4BB6E6" strokeWidth={1} className="live-request-pulse-2" pointerEvents="none" />
                               </>
                             )}
                             <rect x={props.cx - 2.5} y={props.cy} width={5} height={10} fill="url(#verticalTrail)" opacity={0.14} pointerEvents="none" />
-                            <circle cx={props.cx} cy={props.cy} r={7} fill="#8B5CF6" opacity={0.18} pointerEvents="none" />
-                            <circle cx={props.cx} cy={props.cy} r={5} fill="#8B5CF6" opacity={0.6} pointerEvents="none" />
-                            <circle cx={props.cx} cy={props.cy} r={3.6} fill="#A855F7" opacity={0.95} pointerEvents="none" />
+                            <circle cx={props.cx} cy={props.cy} r={7} fill="#4BB6E6" opacity={0.18} pointerEvents="none" />
+                            <circle cx={props.cx} cy={props.cy} r={5} fill="#4BB6E6" opacity={0.6} pointerEvents="none" />
+                            <circle cx={props.cx} cy={props.cy} r={3.6} fill="#86D3FF" opacity={0.95} pointerEvents="none" />
                             <circle cx={props.cx} cy={props.cy} r={1.3} fill="#FFFFFF" pointerEvents="none" />
                           </g>
                         )

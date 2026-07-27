@@ -10,12 +10,17 @@ import {
   listModels,
   getRecentRequests,
   getUsageData,
+  testModel,
+  testModelStream,
   type Model,
   type RecentRequest,
   type UsageBucket,
   type DashboardMetrics,
 } from '@/lib/api'
 import { useWorkspace } from '@/lib/workspace-context'
+import StreamingText from '@/components/ui/streaming-text'
+import ThinkingIndicator from '@/components/ui/thinking-indicator'
+import { toast } from '@/components/ui/toast'
 
 export default function DashboardPage() {
   const { user, loading: authLoading } = useAuth()
@@ -29,16 +34,41 @@ export default function DashboardPage() {
   const [refreshingRequests, setRefreshingRequests] = useState(false)
   const [reconnectingModelId, setReconnectingModelId] = useState<string | null>(null)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
-  const copyKey = useCallback((key: string) => {
-    navigator.clipboard?.writeText(key).then(() => {
+  const copyKey = useCallback(async (key: string) => {
+    if (!key) return
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(key)
+        setCopiedKey(key)
+        setTimeout(() => setCopiedKey(null), 1800)
+        return
+      }
+    } catch {
+      // fallback execCommand
+    }
+    try {
+      const textArea = document.createElement('textarea')
+      textArea.value = key
+      textArea.style.position = 'fixed'
+      textArea.style.top = '-9999px'
+      textArea.style.left = '-9999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
       setCopiedKey(key)
       setTimeout(() => setCopiedKey(null), 1800)
-    })
+    } catch {
+      // ignore
+    }
   }, [])
 
+  const [testingModelId, setTestingModelId] = useState<string | null>(null)
+  const [testResponse, setTestResponse] = useState<{ modelId: string; content: string; streaming?: boolean } | null>(null)
+  const [testError, setTestError] = useState<string | null>(null)
   const { activeWsId, myRole } = useWorkspace()
   const isOwnerOrAdmin = myRole === 'owner' || myRole === 'admin'
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'
 
   const handleRefreshModels = useCallback(() => {
     if (!activeWsId || refreshingModels) return
@@ -328,38 +358,107 @@ export default function DashboardPage() {
                     {model.status === 'online' ? 'Online' : 'Offline'}
                   </div>
                 </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/models/${model.id}?workspace_id=${activeWsId}`) }}
+                  style={{ fontSize: 11, color: 'var(--text-lo)', background: 'none', border: '1px solid var(--border)', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', transition: 'color 0.15s, border-color 0.15s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-hi)'; e.currentTarget.style.borderColor = 'var(--border-hi)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-lo)'; e.currentTarget.style.borderColor = 'var(--border)' }}
+                >
+                  View Details
+                </button>
               </div>
 
               {isOwnerOrAdmin ? (
                 <>
-                  {model.status === 'online' ? (
+                    {model.status === 'online' ? (
                     <>
-                      <div style={{ padding: '12px 16px' }}>
-                        <div className="dash-api-key-chip">
-                          <span>{model.apiKey}</span>
+                      {testingModelId === model.id ? (
+                        <div style={{ padding: '16px 16px', marginTop: 'auto', borderTop: '1px solid var(--border)', maxHeight: 200, overflowY: 'auto' }}>
+                          <ThinkingIndicator words={["Thinking", "Reasoning", "Planning", "Refining"]} showIcon={false} />
+                          {testError && (
+                            <div style={{ fontSize: 11, color: '#FB7185', marginTop: 8, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{testError}</div>
+                          )}
+                        </div>
+                      ) : testResponse?.modelId === model.id ? (
+                        <div style={{ padding: '14px 16px', marginTop: 'auto', borderTop: '1px solid var(--border)', maxHeight: 200, overflowY: 'auto' }}>
+                          <div style={{ fontSize: 12, color: 'var(--text-lo)', marginBottom: 6 }}>Test Response</div>
+                          {testResponse.streaming ? (
+                            <div style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-hi)', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+                              {testResponse.content}
+                            </div>
+                          ) : (
+                            <StreamingText
+                              text={testResponse.content}
+                              speed={60}
+                              showCursor={false}
+                              style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-hi)', overflowWrap: 'break-word', wordBreak: 'break-word' }}
+                            />
+                          )}
+                          <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
+                            <button
+                              className="dash-btn-ghost"
+                              onClick={(e) => { e.stopPropagation(); setTestResponse(null) }}
+                              style={{ fontSize: 11, padding: '6px 14px' }}
+                            >
+                              Clear
+                            </button>
+                            <button
+                              className="dash-btn-primary"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTestError(null)
+                                setTestResponse(null)
+                                setTestingModelId(model.id)
+                                let accumulated = ''
+                                testModelStream(activeWsId!, model.id, (token) => {
+                                  accumulated += token
+                                  setTestResponse({ modelId: model.id, content: accumulated, streaming: true })
+                                }).then(res => {
+                                  setTestResponse({ modelId: model.id, content: res.content, streaming: false })
+                                }).catch(err => {
+                                  setTestError(err.message)
+                                  toast.error(err.message)
+                                }).finally(() => {
+                                  setTestingModelId(null)
+                                })
+                              }}
+                              style={{ fontSize: 11, padding: '6px 14px' }}
+                            >
+                              Retest
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ padding: '12px 16px', marginTop: 'auto', borderTop: '1px solid var(--border)' }}>
                           <button
-                            onClick={() => copyKey(model.apiKey)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: copiedKey === model.apiKey ? '#34D399' : 'var(--text-lo)', padding: 2, borderRadius: 4, transition: 'color 0.15s' }}
-                            onMouseEnter={(e) => { if (copiedKey !== model.apiKey) e.currentTarget.style.color = '#A78BFA' }}
-                            onMouseLeave={(e) => { if (copiedKey !== model.apiKey) e.currentTarget.style.color = 'var(--text-lo)' }}
+                            className="dash-btn-primary"
+                            style={{ width: '100%', justifyContent: 'center' }}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setTestError(null)
+                              setTestResponse(null)
+                              setTestingModelId(model.id)
+                              let accumulated = ''
+                              testModelStream(activeWsId!, model.id, (token) => {
+                                accumulated += token
+                                setTestResponse({ modelId: model.id, content: accumulated, streaming: true })
+                              }).then(res => {
+                                setTestResponse({ modelId: model.id, content: res.content, streaming: false })
+                              }).catch(err => {
+                                setTestError(err.message)
+                                toast.error(err.message)
+                              }).finally(() => {
+                                setTestingModelId(null)
+                              })
+                            }}
                           >
-                            {copiedKey === model.apiKey ? (
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" /></svg>
-                            ) : (
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                            )}
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                            Test Endpoint
                           </button>
                         </div>
-                      </div>
-
-                      <div style={{ padding: '12px 16px', marginTop: 'auto', borderTop: '1px solid var(--border)' }}>
-                        <button className="dash-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                          Test Endpoint
-                        </button>
-                      </div>
+                      )}
                     </>
-                  ) : (
+                    ) : (
                     <>
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 28, textAlign: 'center', gap: 12 }}>
                         <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -375,7 +474,8 @@ export default function DashboardPage() {
                       <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)' }}>
                         <button
                           className="dash-btn-danger"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation()
                             if (!activeWsId || reconnectingModelId === model.id) return
                             setReconnectingModelId(model.id)
                             listModels(activeWsId).then(setModels).catch(() => {}).finally(() => setReconnectingModelId(null))
@@ -394,13 +494,8 @@ export default function DashboardPage() {
                 </>
               ) : (
                 <>
-                  <div style={{ padding: '12px 16px' }}>
-                    <div className="dash-api-key-chip" style={{ fontFamily: "'Geist Mono', 'Geist Mono Fallback', monospace", fontSize: 12, color: 'var(--text-md)' }}>
-                      {backendUrl}/v1/chat/completions
-                    </div>
-                  </div>
                   <div style={{ padding: '12px 16px', marginTop: 'auto', borderTop: '1px solid var(--border)' }}>
-                    <button className="dash-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                    <button className="dash-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/models/${model.id}?workspace_id=${activeWsId}`) }}>
                       View Details
                     </button>
                   </div>

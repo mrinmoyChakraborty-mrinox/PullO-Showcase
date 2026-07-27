@@ -254,16 +254,16 @@ function StepBadgeNode({
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0, cursor: onClick ? "pointer" : "default", padding: 0,
         background: isActive
-          ? "rgba(109, 93, 254, 0.22)"
+          ? "rgba(45, 212, 200, 0.22)"
           : isCompleted
           ? "rgba(34, 197, 94, 0.15)"
-          : "rgba(109, 93, 254, 0.06)",
+          : "rgba(45, 212, 200, 0.06)",
         border: isActive
           ? "1.5px solid var(--color-iris-500)"
           : isCompleted
           ? "1px solid rgba(34, 197, 94, 0.4)"
-          : "1px solid rgba(109, 93, 254, 0.18)",
-        boxShadow: isActive ? "0 0 10px rgba(109, 93, 254, 0.35)" : "none",
+          : "1px solid rgba(45, 212, 200, 0.18)",
+        boxShadow: isActive ? "0 0 10px rgba(45, 212, 200, 0.35)" : "none",
         transition: "all 150ms ease",
       }}
     >
@@ -321,8 +321,8 @@ function GuideStep({
             background: isRailCompleted
               ? "linear-gradient(to bottom, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0.15) 100%)"
               : isActive
-              ? "linear-gradient(to bottom, rgba(109, 93, 254, 0.4) 0%, rgba(109, 93, 254, 0.1) 100%)"
-              : "rgba(109, 93, 254, 0.12)",
+              ? "linear-gradient(to bottom, rgba(45, 212, 200, 0.4) 0%, rgba(45, 212, 200, 0.1) 100%)"
+              : "rgba(45, 212, 200, 0.12)",
             transition: "background 150ms ease",
           }} />
         )}
@@ -511,7 +511,7 @@ function ExpandModal({ title, steps, troubleshooting, visitedSteps, onClose }: {
           </motion.button>
 
           {/* Bottom border glow */}
-          <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(109,93,254,0.3) 0%, rgba(109,93,254,0.05) 50%, transparent 100%)" }} />
+          <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(45,212,200,0.3) 0%, rgba(45,212,200,0.05) 50%, transparent 100%)" }} />
         </div>
 
         {/* Body with two-col layout: step list + step detail */}
@@ -532,7 +532,7 @@ function ExpandModal({ title, steps, troubleshooting, visitedSteps, onClose }: {
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     width: "100%", padding: "7px 10px", borderRadius: "var(--radius-md)",
-                    background: isActive ? "rgba(109, 93, 254, 0.12)" : "transparent",
+                    background: isActive ? "rgba(45, 212, 200, 0.12)" : "transparent",
                     border: "none", cursor: "pointer", textAlign: "left", transition: "all 120ms ease",
                   }}
                 >
@@ -657,8 +657,8 @@ export function RunGuidePanel({
             <span style={{
               fontSize: "0.6rem", fontWeight: 700,
               color: "var(--color-iris-500)",
-              background: "rgba(109, 93, 254, 0.12)",
-              border: "1.5px solid rgba(109, 93, 254, 0.4)",
+              background: "rgba(45, 212, 200, 0.12)",
+              border: "1.5px solid rgba(45, 212, 200, 0.4)",
               borderRadius: 999,
               padding: "1px 7px",
               letterSpacing: "0.04em",
@@ -689,7 +689,7 @@ export function RunGuidePanel({
           </div>
 
           {/* Bottom border glow (§2.1) */}
-          <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(109,93,254,0.3) 0%, rgba(109,93,254,0.05) 50%, transparent 100%)" }} />
+          <div style={{ position: "absolute", bottom: -1, left: 0, right: 0, height: 1, background: "linear-gradient(90deg, rgba(45,212,200,0.3) 0%, rgba(45,212,200,0.05) 50%, transparent 100%)" }} />
         </div>
 
         {/* ── Scrollable step list ────────────────────────────── */}
@@ -766,8 +766,8 @@ export function RunGuidePanel({
               opacity: activeStep >= steps.length - 1 ? 0.35 : 1,
               cursor: activeStep >= steps.length - 1 ? "not-allowed" : "pointer",
               display: "flex", alignItems: "center", gap: 4,
-              background: activeStep < steps.length - 1 ? "rgba(109, 93, 254, 0.14)" : undefined,
-              borderColor: activeStep < steps.length - 1 ? "rgba(109, 93, 254, 0.35)" : undefined,
+              background: activeStep < steps.length - 1 ? "rgba(45, 212, 200, 0.14)" : undefined,
+              borderColor: activeStep < steps.length - 1 ? "rgba(45, 212, 200, 0.35)" : undefined,
             }}
             whileTap={activeStep < steps.length - 1 ? { scale: 0.94 } : undefined}
           >

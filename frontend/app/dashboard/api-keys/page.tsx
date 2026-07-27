@@ -25,6 +25,37 @@ function isExpired(expiresAt: string | null | undefined): boolean {
   return new Date(expiresAt) < new Date()
 }
 
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  if (!text) return false
+  try {
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch (e) {
+    console.warn('navigator.clipboard.writeText failed, using fallback execCommand', e)
+  }
+
+  try {
+    if (typeof document === 'undefined') return false
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'fixed'
+    textArea.style.top = '-9999px'
+    textArea.style.left = '-9999px'
+    textArea.style.opacity = '0'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    const successful = document.execCommand('copy')
+    document.body.removeChild(textArea)
+    return successful
+  } catch (err) {
+    console.error('Fallback execCommand copy failed', err)
+    return false
+  }
+}
+
 function SkeletonRows() {
   return (
     <div className="divide-y divide-white/[0.06]">
@@ -54,7 +85,6 @@ export default function ApiKeysPage() {
   const canManage = myRole === 'owner' || myRole === 'admin'
   const [modalOpen, setModalOpen] = useState(false)
   const [revealedId, setRevealedId] = useState<string | null>(null)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
   const [keyName, setKeyName] = useState('')
   const [keyExpiry, setKeyExpiry] = useState('never')
   const [keyBudget, setKeyBudget] = useState('')
@@ -64,6 +94,7 @@ const [showCustomTools, setShowCustomTools] = useState(false)
 const [customTools, setCustomTools_] = useState<CustomTool[]>([])
   const [creating, setCreating] = useState(false)
   const [createdKey, setCreatedKey] = useState<CreatedKeyResult | null>(null)
+  const [keyCopied, setKeyCopied] = useState(false)
   const [revokeTarget, setRevokeTarget] = useState<string | null>(null)
   const [revoking, setRevoking] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
@@ -123,44 +154,13 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
     enabled: !!activeWsId,
   })
 
-  const [revealedKeys, setRevealedKeys] = useState<Record<string, string>>({})
   const handleReveal = useCallback(
-    async (id: string) => {
-      if (revealedKeys[id]) {
-        setRevealedId((prev) => (prev === id ? null : prev))
-        return
-      }
-      if (!activeWsId) return
-      try {
-        const fullKey = await revealKey(activeWsId, id)
-        setRevealedKeys((prev) => ({ ...prev, [id]: fullKey }))
-        setRevealedId(id)
-        setTimeout(() => setRevealedId((cur) => (cur === id ? null : cur)), 10000)
-      } catch { /* fallback - show prefix */ }
+    (id: string) => {
+      setRevealedId((prev) => (prev === id ? null : id))
+      setTimeout(() => setRevealedId((cur) => (cur === id ? null : cur)), 10000)
     },
-    [activeWsId, revealedKeys],
+    [],
   )
-
-  const handleCopy = useCallback(async (keyId: string, fallbackText?: string) => {
-    try {
-      if (!activeWsId) return
-      const fullKey = await revealKey(activeWsId, keyId)
-      await navigator.clipboard.writeText(fullKey)
-    } catch {
-      if (fallbackText) {
-        await navigator.clipboard.writeText(fallbackText).catch(() => {})
-      }
-      setCopyNotice('Only the prefix was copied. Re-create the key to get the full value.')
-      if (copyNoticeTimeout.current) clearTimeout(copyNoticeTimeout.current)
-      copyNoticeTimeout.current = setTimeout(() => setCopyNotice(null), 3000)
-      return
-    }
-    setCopiedId(keyId)
-    if (copyNoticeTimeout.current) clearTimeout(copyNoticeTimeout.current)
-    setCopyNotice('Copied to clipboard!')
-    copyNoticeTimeout.current = setTimeout(() => setCopyNotice(null), 1800)
-    setTimeout(() => setCopiedId((cur) => (cur === keyId ? null : cur)), 1800)
-  }, [activeWsId])
 
   const activeWorkspace = workspaces.find((w) => w.id === activeWsId)
 
@@ -209,7 +209,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
         {canManage && (
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-violet-500/40 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-teal-500/40 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
@@ -243,7 +243,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
             </svg>
             <h2 className="text-sm font-bold tracking-tight text-white">Your Keys</h2>
             {!isLoading && !isError && keys && (
-              <span className="inline-flex items-center rounded-full border border-violet-500/20 bg-violet-500/12 px-2 py-0.5 text-[11px] font-semibold text-violet-400">
+              <span className="inline-flex items-center rounded-full border border-teal-500/25 bg-teal-500/12 px-2 py-0.5 text-[11px] font-semibold text-teal-400">
                 {keys.length} {keys.length === 1 ? 'Key' : 'Keys'}
               </span>
             )}
@@ -262,8 +262,8 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
 
         {!isLoading && !isError && keys && keys.length === 0 && (
           <div className="flex flex-col items-center py-16 text-center">
-            <div className="mb-5 flex size-16 items-center justify-center rounded-xl border border-violet-500/20 bg-violet-500/10">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8">
+            <div className="mb-5 flex size-16 items-center justify-center rounded-xl border border-teal-500/25 bg-teal-500/10">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2dd4c8" strokeWidth="1.8">
                 <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
               </svg>
             </div>
@@ -272,7 +272,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
             {canManage && (
               <button
                 onClick={() => setModalOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-violet-500/40 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-teal-500/40 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 5v14M5 12h14" />
@@ -301,7 +301,6 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                 {keys.map((key) => {
                   const expired = isExpired(key.expires_at)
                   const isRevealed = revealedId === key.id
-                  const isCopied = copiedId === key.id
                   return (
                     <tr key={key.id} className="group transition-colors hover:bg-white/[0.02]">
                       <td className="px-6 py-4">
@@ -310,7 +309,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-mono text-[13px] text-white/70">{isRevealed ? (revealedKeys[key.id] ?? key.prefix ?? '……') : maskKey(key.prefix)}</span>
+                          <span className="font-mono text-[13px] text-white/70">{isRevealed ? (key.prefix ?? '……') : maskKey(key.prefix)}</span>
                           {canManage && (
                             <button
                               onClick={() => handleReveal(key.id)}
@@ -323,18 +322,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                               }
                             </button>
                           )}
-                          {canManage && (
-                            <button
-                              onClick={() => handleCopy(key.id, key.prefix)}
-                              className="flex size-6 items-center justify-center rounded text-white/30 transition-all hover:bg-white/[0.06] hover:text-white/80"
-                              title="Copy Key"
-                            >
-                              {isCopied
-                                ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                : <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                              }
-                            </button>
-                          )}
+
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -391,6 +379,34 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                               )}
                             </div>
                           )}
+                          {!key.revealed && (
+                            <button
+                              onClick={async () => {
+                                if (!activeWsId) return
+                                try {
+                                  const fullKey = await revealKey(activeWsId, key.id)
+                                  setCreatedKey({
+                                    key: fullKey,
+                                    id: key.id,
+                                    label: key.label || 'Untitled Key',
+                                    expires_at: key.expires_at || null,
+                                    message: 'Copy this key now. It will not be shown again.',
+                                  })
+                                  setKeyCopied(false)
+                                  queryClient.invalidateQueries({ queryKey: ['api-keys'] })
+                                } catch (e: any) {
+                                  const msg = e?.message || 'Failed to reveal key'
+                                  setCopyNotice(msg)
+                                  if (copyNoticeTimeout.current) clearTimeout(copyNoticeTimeout.current)
+                                  copyNoticeTimeout.current = setTimeout(() => setCopyNotice(null), 4000)
+                                }
+                              }}
+                              className="flex size-7 items-center justify-center rounded-md text-white/30 transition-all hover:bg-emerald-500/10 hover:text-emerald-400"
+                              title="Reveal key (one-time)"
+                            >
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                          )}
                           {canManage && (
                             <button
                               onClick={() => setRevokeTarget(key.id)}
@@ -418,7 +434,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
           <div className="relative z-10 mx-4 w-full max-w-xl rounded-2xl border border-white/[0.08] bg-[#0F1420] shadow-2xl backdrop-blur-2xl max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-white/[0.06] px-7 py-5">
               <div className="flex items-center gap-2.5">
-                <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-lg">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-teal-500 shadow-lg">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
                 </div>
                 <div>
@@ -439,7 +455,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                   value={keyName}
                   onChange={(e) => setKeyName(e.target.value)}
                   placeholder="e.g. Production Key"
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-violet-500/50 focus:bg-violet-500/[0.04] focus:shadow-[0_0_0_3px_rgba(124,58,237,0.1)]"
+                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-teal-500/50 focus:bg-teal-500/[0.04] focus:shadow-[0_0_0_3px_rgba(45,212,200,0.1)]"
                 />
               </div>
 
@@ -458,7 +474,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                       onClick={() => setKeyExpiry(opt.value)}
                       className={`rounded-lg border px-3.5 py-2 text-xs font-semibold transition-all ${
                         keyExpiry === opt.value
-                          ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                          ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                           : 'border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/70'
                       }`}
                     >
@@ -484,7 +500,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                           onChange={(e) => { setModelSearchQuery(e.target.value); setModelDropdownOpen(true) }}
                           onFocus={() => { setModelDropdownOpen(true) }}
                           placeholder={selectedLabel || "Search models…"}
-                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] py-2.5 pl-9 pr-3.5 text-sm text-white outline-none transition-all placeholder:text-white/40 focus:border-violet-500/50 focus:bg-violet-500/[0.04]"
+                          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] py-2.5 pl-9 pr-3.5 text-sm text-white outline-none transition-all placeholder:text-white/40 focus:border-teal-500/50 focus:bg-teal-500/[0.04]"
                         />
                       )
                     })()}
@@ -509,10 +525,10 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                                     e.target.checked ? [...prev, m.id] : prev.filter((id) => id !== m.id)
                                   )
                                 }}
-                                className="size-3.5 accent-violet-500"
+                                className="size-3.5 accent-teal-500"
                               />
                               <div className="flex items-center gap-2">
-                                <div className="size-2 rounded-full bg-violet-500/50" />
+                                <div className="size-2 rounded-full bg-teal-500/50" />
                                 {m.name}
                               </div>
                             </label>
@@ -537,7 +553,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                       onClick={() => setKeyTools((prev) => ({ ...prev, [tool.id]: !prev[tool.id] }))}
                       className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${
                         keyTools[tool.id]
-                          ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                          ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                           : 'border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/70'
                       }`}
                     >
@@ -548,7 +564,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                     onClick={() => setShowCustomTools(prev => !prev)}
                     className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${
                       showCustomTools
-                        ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                        ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                         : 'border-dashed border-white/[0.06] text-white/30 hover:border-white/[0.12] hover:text-white/50'
                     }`}
                   >
@@ -566,7 +582,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                           onClick={() => setKeyTools((prev) => ({ ...prev, [`custom:${t.id}`]: !prev[`custom:${t.id}`] }))}
                           className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${
                             keyTools[`custom:${t.id}`]
-                              ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                              ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                               : 'border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/70'
                           }`}
                         >
@@ -591,7 +607,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                         )}
                         className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${
                           selectedCorsairPlugins.includes(p.plugin_id)
-                            ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                            ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                             : 'border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/70'
                         }`}
                       >
@@ -615,7 +631,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                         )}
                         className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${
                           selectedMcpIds.includes(s.id)
-                            ? 'border-violet-500/40 bg-violet-500/15 text-violet-300'
+                            ? 'border-teal-500/40 bg-teal-500/15 text-teal-300'
                             : 'border-white/[0.06] text-white/40 hover:border-white/[0.12] hover:text-white/70'
                         }`}
                       >
@@ -635,7 +651,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                     value={keyBudget}
                     onChange={(e) => setKeyBudget(e.target.value)}
                     placeholder="Unlimited"
-                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-violet-500/50"
+                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-teal-500/50"
                   />
                 </div>
                 <div>
@@ -645,7 +661,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                     value={keyRpm}
                     onChange={(e) => setKeyRpm(e.target.value)}
                     placeholder="No limit"
-                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-violet-500/50"
+                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-sm text-white outline-none transition-all placeholder:text-white/25 focus:border-teal-500/50"
                   />
                 </div>
               </div>
@@ -678,6 +694,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                       rpm_limit: keyRpm ? Number(keyRpm) : undefined,
                     })
                     setCreatedKey(result)
+                    setKeyCopied(false)
                     track('api_key.created', 1, { workspace_id: activeWsId })
                     setKeyName('')
                     setKeyExpiry('never')
@@ -696,7 +713,7 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
                     setCreating(false)
                   }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition-all hover:shadow-violet-500/40 disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition-all hover:shadow-teal-500/40 disabled:opacity-40"
               >
                 {creating ? (
                   <>
@@ -725,24 +742,71 @@ const [customTools, setCustomTools_] = useState<CustomTool[]>([])
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <h2 className="mb-1 text-lg font-bold text-white">Key Created Successfully</h2>
-            <p className="mb-6 text-sm text-white/50">This is the only time you will see this key. Copy and store it securely.</p>
+            <p className="mb-1 text-sm text-white/50">This is the only time you will see this key. Copy and store it securely.</p>
+            {keyCopied ? (
+              <div className="mb-4 flex items-start gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-2.5 text-left">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" className="mt-0.5 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
+                <p className="text-xs leading-relaxed text-emerald-300/90">
+                  <strong className="text-emerald-200">Key copied!</strong> You can now safely close this dialog. The full key will not be shown again.
+                </p>
+              </div>
+            ) : (
+              <div className="mb-4 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-amber-500/10 p-2.5 text-left">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" className="mt-0.5 shrink-0"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                <p className="text-xs leading-relaxed text-amber-300/90">
+                  <strong className="text-amber-200">This key will only be shown once.</strong> Make sure to copy it now — you won&apos;t be able to see the full key again. If you lose it, revoke this key and create a new one.
+                </p>
+              </div>
+            )}
             <div className="mb-5 rounded-xl border border-white/[0.08] bg-black/40 p-4">
-              <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-white/30">Your API Key</div>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-white/30">Your API Key</span>
+                {!keyCopied && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!createdKey?.key) return
+                      const ok = await copyTextToClipboard(createdKey.key)
+                      if (ok) {
+                        setKeyCopied(true)
+                        setCopyNotice('API Key copied to clipboard!')
+                        if (copyNoticeTimeout.current) clearTimeout(copyNoticeTimeout.current)
+                        copyNoticeTimeout.current = setTimeout(() => setCopyNotice(null), 2500)
+                      }
+                    }}
+                    className="text-[11px] font-medium text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy
+                  </button>
+                )}
+              </div>
               <div className="break-all font-mono text-sm text-emerald-400 select-all">{createdKey.key}</div>
             </div>
             <div className="flex gap-2.5 justify-center">
-              <button
-                onClick={() => { navigator.clipboard.writeText(createdKey.key); setCopyNotice('Copied!') }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition-all hover:shadow-violet-500/40"
-              >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                Copy Key
-              </button>
+              {!keyCopied && (
+                <button
+                  onClick={async () => {
+                    if (!createdKey?.key) return
+                    const ok = await copyTextToClipboard(createdKey.key)
+                    if (ok) {
+                      setKeyCopied(true)
+                      setCopyNotice('API Key copied to clipboard!')
+                      if (copyNoticeTimeout.current) clearTimeout(copyNoticeTimeout.current)
+                      copyNoticeTimeout.current = setTimeout(() => setCopyNotice(null), 2500)
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg transition-all hover:shadow-violet-500/40 cursor-pointer"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Key
+                </button>
+              )}
               <button
                 onClick={() => setCreatedKey(null)}
-                className="rounded-lg border border-white/[0.06] px-5 py-2.5 text-xs font-semibold text-white/50 transition-all hover:bg-white/[0.06] hover:text-white"
+                className="rounded-lg border border-white/[0.06] px-5 py-2.5 text-xs font-semibold text-white/50 transition-all hover:bg-white/[0.06] hover:text-white cursor-pointer"
               >
-                Done
+                {keyCopied ? 'Close' : 'Done'}
               </button>
             </div>
           </div>

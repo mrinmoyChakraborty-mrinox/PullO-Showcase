@@ -102,9 +102,9 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
                             transition: "color 120ms ease, background 120ms ease",
                             ...(isActive
                               ? {
-                                  background: "rgba(109,93,254,0.1)",
+                                  background: "rgba(45,212,200,0.1)",
                                   boxShadow:
-                                    "0 0 0 1px rgba(109,93,254,0.25), 0 2px 6px rgba(109,93,254,0.12)",
+                                    "0 0 0 1px rgba(45,212,200,0.25), 0 2px 6px rgba(45,212,200,0.12)",
                                 }
                               : {}),
                           }}
@@ -134,9 +134,9 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
                                 letterSpacing: "0.04em",
                                 padding: "2px 6px",
                                 borderRadius: "999px",
-                                background: "rgba(109,93,254,0.15)",
+                                background: "rgba(45,212,200,0.15)",
                                 color: "var(--color-iris-500)",
-                                border: "1px solid rgba(109,93,254,0.2)",
+                                border: "1px solid rgba(45,212,200,0.2)",
                               }}
                             >
                               {item.badge}

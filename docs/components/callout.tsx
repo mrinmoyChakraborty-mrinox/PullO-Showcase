@@ -16,7 +16,7 @@ const config: Record<
   info: {
     icon: <Info size={16} />,
     borderColor: "var(--color-iris-500)",
-    bgColor: "rgba(109, 93, 254, 0.07)",
+    bgColor: "rgba(45, 212, 200, 0.07)",
     titleColor: "var(--color-iris-500)",
   },
   success: {

@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useCallback, useEffect, useState, type ReactNode } from 'react'
-import { listWorkspaces, getWorkspace, type Workspace } from '@/lib/api'
+import { listWorkspaces, getWorkspace, setDefaultWorkspace, type Workspace } from '@/lib/api'
 
 export type WorkspaceRole = 'owner' | 'admin' | 'member'
 
@@ -41,6 +41,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       if (id) {
         localStorage.setItem('pullo_active_ws_id', id)
+        setDefaultWorkspace(id).catch(() => {})
       } else {
         localStorage.removeItem('pullo_active_ws_id')
       }

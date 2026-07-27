@@ -160,8 +160,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               width: 28,
               height: 28,
               borderRadius: "50%",
-              background: "rgba(109,93,254,0.15)",
-              border: "1px solid rgba(109,93,254,0.3)",
+              background: "rgba(45,212,200,0.15)",
+              border: "1px solid rgba(45,212,200,0.3)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -169,7 +169,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               fontWeight: 700,
               color: "var(--color-iris-500)",
               flexShrink: 0,
-              boxShadow: "0 0 0 3px rgba(109,93,254,0.06)",
+              boxShadow: "0 0 0 3px rgba(45,212,200,0.06)",
             }}
           >
             {number}
@@ -180,7 +180,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               width: 1,
               flex: 1,
               background:
-                "linear-gradient(to bottom, rgba(109,93,254,0.25) 0%, transparent 100%)",
+                "linear-gradient(to bottom, rgba(45,212,200,0.25) 0%, transparent 100%)",
               marginTop: "6px",
             }}
           />

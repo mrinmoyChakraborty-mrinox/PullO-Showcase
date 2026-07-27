@@ -102,14 +102,17 @@ export function ChapterRail() {
 
   return (
     <div
-      className="fixed right-5 top-1/2 z-30 -translate-y-1/2 transition-opacity duration-500"
+      className="fixed right-6 top-1/2 z-40 -translate-y-1/2 transition-all duration-500"
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? 'auto' : 'none' }}
     >
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-5 backdrop-blur-xl">
+      <div className="rounded-full border border-white/20 bg-[#0c101d]/85 px-3.5 py-4 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-indigo-500/50 hover:bg-[#0c101d]/95 hover:shadow-indigo-500/20">
         <ChapterScrubber
           chapters={SCRUBBER_CHAPTERS}
           currentIndex={activeIdx >= 0 ? activeIdx : undefined}
           onSelect={scrollToBeat}
+          peakLength={44}
+          restLength={18}
+          rowHeight={12}
         />
       </div>
     </div>

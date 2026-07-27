@@ -50,10 +50,13 @@ export default function ProfilePage() {
 
   const [devices, setDevices] = useState<Device[]>([])
   const [devicesLoading, setDevicesLoading] = useState(true)
+  const [isPublic, setIsPublic] = useState(false)
+  const [publicToggling, setPublicToggling] = useState(false)
 
   useEffect(() => {
     getProfile().then((data) => {
       setProfileData(data)
+      setIsPublic((data as any).is_public === true)
       setLoading(false)
     }).catch(() => setLoading(false))
 
@@ -186,6 +189,28 @@ export default function ProfilePage() {
     }
   }, [])
 
+  const handleTogglePublic = useCallback(async () => {
+    setPublicToggling(true)
+    try {
+      const updated = await updateProfile({ is_public: !isPublic })
+      setProfileData(updated)
+      setIsPublic((updated as any).is_public === true)
+      if (!isPublic) {
+        navigator.clipboard.writeText(`${window.location.origin}/profile/${user?.id}`)
+        toast.success('Public profile link copied!')
+      }
+    } catch (e) {
+      toast.error('Failed to update visibility setting')
+    } finally {
+      setPublicToggling(false)
+    }
+  }, [isPublic, user?.id])
+
+  const copyProfileLink = useCallback(() => {
+    navigator.clipboard.writeText(`${window.location.origin}/profile/${user?.id}`)
+    toast.success('Profile link copied!')
+  }, [user?.id])
+
   const handleSave = useCallback(async () => {
     setSaving(true)
     try {
@@ -239,10 +264,17 @@ export default function ProfilePage() {
             {profileData?.bio && <div className="hero-bio">{profileData.bio}</div>}
             {profileData?.location && <div className="hero-location">📍 {profileData.location}</div>}
           </div>
-          <button className="btn-primary" onClick={openEditProfileModal} style={{ marginLeft: 'auto', alignSelf: 'center' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" /></svg>
-            Edit Profile
-          </button>
+          <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignSelf: 'center' }}>
+            {isPublic && (
+              <button className="btn-ghost" onClick={copyProfileLink} style={{ fontSize: 12 }}>
+                🔗 Copy Link
+              </button>
+            )}
+            <button className="btn-primary" onClick={openEditProfileModal}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z" /></svg>
+              Edit Profile
+            </button>
+          </div>
         </div>
 
         <div className="grid">
@@ -260,6 +292,29 @@ export default function ProfilePage() {
             </div>
 
             <button className="btn-ghost" onClick={() => toast.default('Coming soon')}>Manage Plan</button>
+          </div>
+
+          <div className="card">
+            <div className="card-head">
+              <h3>🌐 Public Profile</h3>
+              <div
+                className={`toggle${isPublic ? '' : ' off'}`}
+                onClick={() => { if (!publicToggling) handleTogglePublic() }}
+                style={{ opacity: publicToggling ? 0.5 : 1, cursor: publicToggling ? 'not-allowed' : 'pointer' }}
+              />
+            </div>
+            <div style={{ padding: '12px 20px 16px', fontSize: 13, color: 'var(--text-lo)', lineHeight: 1.5 }}>
+              {isPublic
+                ? 'Your profile is publicly visible at your shareable link.'
+                : 'Enable this to create a public profile page others can view.'}
+            </div>
+            {isPublic && (
+              <div style={{ padding: '0 20px 16px' }}>
+                <button className="btn-ghost" onClick={copyProfileLink} style={{ fontSize: 12 }}>
+                  🔗 Copy profile link
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="card">

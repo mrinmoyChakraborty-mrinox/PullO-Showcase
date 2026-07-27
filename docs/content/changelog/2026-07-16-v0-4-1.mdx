@@ -1,0 +1,14 @@
+---
+title: "v0.4.1"
+date: "2026-07-16"
+tags: ["backend", "dashboard"]
+---
+
+- Integrated Corsair SDK as a Universal MCP Gateway, enabling workspace-scoped MCP server management and tool injection into the chat completion loop. Supported integrations: GitHub, Slack, Gmail, and Linear.
+- Launched the documentation site (pullo-docs.vercel.app) with 15 MDX pages covering Quickstart, API Reference, Architecture, MCP, Tools, Teams, CLI, Extension, FAQ, Troubleshooting, SDKs, and Changelog.
+- Implemented RBAC (Owner/Admin/Member) enforced at the API layer for all workspace operations.
+- Replaced CORS-blocked fetch-based web search with Chrome offscreen document API, including bot-detection validation and tab-based fallback.
+- Added Sentry error tracking for both backend (FastAPI) and frontend (Next.js) with custom metrics for API keys and page views.
+- Added Recharts-based analytics dashboard with requests, latency, tokens, and hourly/daily/weekly views.
+- Replaced SMTP with Resend for team invitation emails, including professional HTML email templates.
+- Added Privacy Policy and Terms & Conditions pages.

@@ -184,6 +184,8 @@ export interface ApiKey {
   tool_config?: Record<string, unknown> | null
   tokens?: number
   requests?: number
+  revealed_at?: string | null
+  revealed?: boolean
 }
 
 export interface QueueDepth {
@@ -296,6 +298,10 @@ export async function getWorkspace(id: string): Promise<Workspace> {
   return get<Workspace>(`/dashboard/workspaces/${id}`)
 }
 
+export async function setDefaultWorkspace(id: string): Promise<void> {
+  await post(`/dashboard/workspaces/${id}/set-default`)
+}
+
 export async function renameWorkspace(id: string, name: string): Promise<Workspace> {
   return apiPatch<Workspace>(`/dashboard/workspaces/${id}`, { name })
 }
@@ -338,6 +344,63 @@ export async function updateModel(workspaceId: string, modelId: string, data: Re
 
 export async function deleteModel(workspaceId: string, modelId: string): Promise<void> {
   return del(`/dashboard/workspaces/${workspaceId}/models/${modelId}`)
+}
+
+export async function testModel(workspaceId: string, modelId: string): Promise<{ content: string }> {
+  return post<{ content: string }>(`/dashboard/workspaces/${workspaceId}/models/${modelId}/test`)
+}
+
+export async function testModelStream(
+  workspaceId: string,
+  modelId: string,
+  onToken: (token: string) => void,
+): Promise<{ content: string }> {
+  const headers = await authHeaders()
+  const res = await fetch(`${BACKEND}/dashboard/workspaces/${workspaceId}/models/${modelId}/test`, {
+    method: 'POST',
+    headers,
+  })
+  if (!res.ok) {
+    let detail = `${res.status} ${res.statusText}`
+    try { const body = await res.text(); if (body) detail += ` — ${body.slice(0, 200)}` } catch {}
+    throw new Error(detail)
+  }
+
+  const reader = res.body?.getReader()
+  if (!reader) throw new Error('Response body is not readable')
+
+  const decoder = new TextDecoder()
+  let buffer = ''
+  let fullContent = ''
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const events = buffer.split('\n\n')
+      buffer = events.pop() || ''
+      for (const event of events) {
+        for (const line of event.split('\n')) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6)
+            if (data === '[DONE]') continue
+            try {
+              const parsed = JSON.parse(data)
+              if (typeof parsed.token === 'string') {
+                fullContent += parsed.token
+                onToken(parsed.token)
+              }
+            } catch {}
+          }
+        }
+      }
+    }
+  } finally {
+    reader.cancel()
+  }
+
+  return { content: fullContent }
 }
 
 export async function getQueueDepth(workspaceId: string, modelId: string): Promise<QueueDepth> {
@@ -800,8 +863,23 @@ export async function getProfile(): Promise<ProfileData> {
   return get<ProfileData>('/auth/profile')
 }
 
-export async function updateProfile(patch: { full_name?: string | null; avatar_url?: string | null; bio?: string | null; location?: string | null }): Promise<ProfileData> {
+export async function updateProfile(patch: { full_name?: string | null; avatar_url?: string | null; bio?: string | null; location?: string | null; is_public?: boolean | null }): Promise<ProfileData> {
   return apiPatch<ProfileData>('/auth/profile', patch)
+}
+
+export type PublicProfile = {
+  full_name: string | null
+  avatar_url: string | null
+  bio: string | null
+  location: string | null
+  created_at: string | null
+}
+
+export async function getPublicProfile(userId: string): Promise<PublicProfile | null> {
+  const res = await fetch(`${BACKEND}/api/public/profile/${userId}`)
+  if (res.status === 404) return null
+  if (!res.ok) await handleError(res)
+  return res.json()
 }
 
 export async function uploadAvatar(file: File): Promise<{ url: string }> {

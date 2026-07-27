@@ -64,7 +64,10 @@ export function ChapterScrubber({
   const reducedRef = useRef(false)
   const activeIdxRef = useRef<number | null>(null)
   const hoveredRef = useRef(false)
-
+  const currentIndexRef = useRef(currentIndex)
+  useEffect(() => {
+    currentIndexRef.current = currentIndex
+  }, [currentIndex])
   const totalHeight = chapters.length * rowHeight
 
   const springPointer = useCallback(() => {
@@ -92,16 +95,29 @@ export function ChapterScrubber({
       setCrestIdx(idx)
     }
 
-    const ticks = railRef.current?.querySelectorAll<HTMLDivElement>('[data-tick]')
+    const currentIdx = hoveredRef.current && s > 0.1 ? activeIdxRef.current : (currentIndexRef.current ?? activeIdxRef.current)
+
+    const ticks = railRef.current?.querySelectorAll<HTMLDivElement>('[data-tick-bar]')
     if (ticks) {
       for (let i = 0; i < ticks.length; i++) {
         const tick = ticks[i]
         const dist = (i * rowHeight - p) / (radius * rowHeight)
         const rise = s * raisedCos(dist)
-        const length = restLength + (peakLength - restLength) * rise
-        const opacity = 0.35 + 0.65 * rise
+        const isCurrent = currentIdx != null && i === currentIdx
+        const length = restLength + (peakLength - restLength) * rise + (isCurrent ? 8 : 0)
+        const opacity = isCurrent ? 1 : 0.45 + 0.55 * rise
         tick.style.width = `${length}px`
         tick.style.opacity = `${opacity}`
+        if (isCurrent) {
+          tick.style.background = 'linear-gradient(90deg, #6d5dfe 0%, #38bdf8 100%)'
+          tick.style.boxShadow = '0 0 10px rgba(109, 93, 254, 0.8)'
+        } else if (rise > 0.1) {
+          tick.style.background = 'rgba(167, 139, 250, 0.9)'
+          tick.style.boxShadow = '0 0 6px rgba(167, 139, 250, 0.4)'
+        } else {
+          tick.style.background = 'rgba(226, 232, 240, 0.5)'
+          tick.style.boxShadow = 'none'
+        }
       }
     }
 
@@ -223,10 +239,10 @@ export function ChapterScrubber({
   }, [onSelect])
 
   const visibleCardIdx = useMemo(() => {
-    const idx = activeIdxRef.current
+    const idx = hoveredRef.current ? activeIdxRef.current : (currentIndex ?? null)
     if (idx == null || idx < 0 || idx >= chapters.length) return null
     return idx
-  }, [crestIdx, chapters.length])
+  }, [crestIdx, currentIndex, chapters.length])
 
   return (
     <div className={className} style={{ position: 'relative', width: '100%', maxWidth: 320 }}>
@@ -256,35 +272,38 @@ export function ChapterScrubber({
               [side === 'right' ? 'right' : 'left']: '100%',
               top: 0,
               transform: 'translateY(-50%)',
-              marginLeft: side === 'right' ? 12 : 0,
-              marginRight: side === 'left' ? 12 : 0,
-              background: 'rgb(12 18 38 / 0.9)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 8,
-              padding: '10px 14px',
+              marginLeft: side === 'right' ? 14 : 0,
+              marginRight: side === 'left' ? 14 : 0,
+              background: 'rgba(12, 16, 29, 0.95)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(109, 93, 254, 0.4)',
+              borderRadius: 12,
+              padding: '12px 16px',
               minWidth: 200,
               maxWidth: 280,
-              boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+              boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(109, 93, 254, 0.25)',
               opacity: 0,
               pointerEvents: 'none',
-              zIndex: 10,
+              zIndex: 50,
             }}
           >
             {chapters[visibleCardIdx]?.meta && (
               <div style={{
                 fontSize: 10,
-                  color: 'var(--color-text-soft, #b8c0d4)',
-                marginBottom: 2,
-                fontWeight: 500,
-                letterSpacing: '0.04em',
+                color: '#a78bfa',
+                marginBottom: 3,
+                fontWeight: 600,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
               }}>
                 {chapters[visibleCardIdx].meta}
               </div>
             )}
             <div style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: 'var(--color-text-soft, #b8c0d4)',
+              fontSize: 13.5,
+              fontWeight: 700,
+              color: '#ffffff',
               marginBottom: 4,
               lineHeight: 1.4,
             }}>
@@ -292,7 +311,7 @@ export function ChapterScrubber({
             </div>
             <div style={{
               fontSize: 11.5,
-              color: 'var(--color-text-soft, #b8c0d4)',
+              color: '#cbd5e1',
               lineHeight: 1.5,
               display: '-webkit-box',
               WebkitLineClamp: 3,
@@ -313,7 +332,6 @@ export function ChapterScrubber({
             aria-label={`${ch.title}${ch.meta ? ` — ${ch.meta}` : ''}${ch.description ? `. ${ch.description}` : ''}`}
             tabIndex={i === 0 ? 0 : -1}
             data-idx={i}
-            data-tick
             onClick={() => handleSelect(ch, i)}
             onKeyDown={handleKeyDown}
             onFocus={() => {
@@ -343,16 +361,17 @@ export function ChapterScrubber({
             }}
           >
             <div
-              data-tick
+              data-tick-bar
               style={{
-                height: 2,
-                borderRadius: 1,
+                height: 3,
+                borderRadius: 2,
                 background: i === currentIndex
-                  ? '#FF6B35'
-                  : 'var(--color-text-soft, #b8c0d4)',
-                width: restLength,
-                opacity: i === currentIndex ? 1 : 0.35,
-                transition: reducedRef.current ? 'none' : undefined,
+                  ? 'linear-gradient(90deg, #6d5dfe 0%, #38bdf8 100%)'
+                  : 'rgba(226, 232, 240, 0.5)',
+                boxShadow: i === currentIndex ? '0 0 10px rgba(109, 93, 254, 0.8)' : 'none',
+                width: i === currentIndex ? restLength + 8 : restLength,
+                opacity: i === currentIndex ? 1 : 0.5,
+                transition: reducedRef.current ? 'none' : 'background 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s',
                 flexShrink: 0,
               }}
             />

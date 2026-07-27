@@ -9,6 +9,7 @@ import {
   listModels,
   type Model,
 } from '@/lib/api'
+import { ModelCardSkeleton } from '@/components/dashboard/model-card-skeleton'
 
 export default function ModelsPage() {
   const { user, loading: authLoading } = useAuth()
@@ -169,7 +170,7 @@ export default function ModelsPage() {
       {loading ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} style={{ height: 220, borderRadius: 16, background: 'var(--surface-2)', border: '1px solid var(--border)', animation: 'pulse 1.5s infinite' }} />
+            <ModelCardSkeleton key={i} />
           ))}
         </div>
       ) : error ? (
