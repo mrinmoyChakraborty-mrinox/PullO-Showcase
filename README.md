@@ -89,8 +89,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Landing Page</b></summary>
 <br>
 
-![Landing page screenshot — coming soon](screenshots/landing.png)
-*Screenshot coming soon.*
+![Landing Page](screenshots/landingPage1.png)
 
 </details>
 
@@ -98,8 +97,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Dashboard</b></summary>
 <br>
 
-![Dashboard screenshot — coming soon](screenshots/dashboard.png)
-*Screenshot coming soon.*
+![Dashboard](screenshots/dashboard1.png)
 
 </details>
 
@@ -107,8 +105,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Models</b></summary>
 <br>
 
-![Models screenshot — coming soon](screenshots/models.png)
-*Screenshot coming soon.*
+![Models](screenshots/models1.png)
 
 </details>
 
@@ -116,8 +113,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>API Keys</b></summary>
 <br>
 
-![API Keys screenshot — coming soon](screenshots/api-keys.png)
-*Screenshot coming soon.*
+![API Keys](screenshots/apiKey1.png)
 
 </details>
 
@@ -125,8 +121,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Analytics</b></summary>
 <br>
 
-![Analytics screenshot — coming soon](screenshots/analytics.png)
-*Screenshot coming soon.*
+![Analytics](screenshots/analytics1.png)
 
 </details>
 
@@ -134,8 +129,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Browser Extension</b></summary>
 <br>
 
-![Extension screenshot — coming soon](screenshots/extension.png)
-*Screenshot coming soon.*
+![Browser Extension](screenshots/extension1.jpeg)
 
 </details>
 
@@ -143,8 +137,7 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 <summary><b>Workspace</b></summary>
 <br>
 
-![Workspace screenshot — coming soon](screenshots/workspace.png)
-*Screenshot coming soon.*
+![Workspace](screenshots/workspace1.png)
 
 </details>
 
