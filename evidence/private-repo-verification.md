@@ -11,9 +11,9 @@ This document provides verifiable evidence that PullO's production backend is ma
 | **Platform** | GitHub |
 | **Visibility** | Private |
 | **Organization** | [mrinmoyChakraborty-mrinox](https://github.com/mrinmoyChakraborty-mrinox) |
-| **Created** | Late May / Early June 2026 |
+| **Created** | June 2026 |
 | **Last Commit** | Week of July 26, 2026 — active development ongoing |
-| **Total Commits** | 307 (across 9 weeks, accelerating trend) |
+| **Total Commits** | 305 (across 8 weeks, accelerating trend) |
 | **Branches** | _— set this from the repo page —_ |
 | **Contributors** | _— set this from Insights → Contributors —_ |
 | **Languages** | _— set this from the repo page language bar —_ |
@@ -23,7 +23,6 @@ This document provides verifiable evidence that PullO's production backend is ma
 ```
 Week of       Commits
 ─────────────────────
-May 31            2     █
 Jun 07            3     █
 Jun 14            4     ██
 Jun 21            9     ████
@@ -33,10 +32,10 @@ Jul 12           78     ██████████████████�
 Jul 19          109     ██████████████████████████████████████████████████████
 Jul 26           41     ████████████████████
 ─────────────────────
-Total: 307 commits · 9 weeks
+Total: 305 commits · 8 weeks (hackathon period)
 ```
 
-Data sourced from [Commits over time.csv](../Commits%20over%20time.csv) — exported from the private repository's Insights page.
+Data sourced from the private repository's Insights page.
 
 ---
 
