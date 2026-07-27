@@ -160,6 +160,8 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 
 ### High-Level System
 
+![Technical Architecture](diagrams/technical-architecture.png)
+
 ```
                      ┌──────────────────────┐
                      │     Your Team Apps    │
@@ -191,6 +193,8 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
 ```
 
 ### Request Lifecycle
+
+![Request Life Cycle](diagrams/request-life-cycle.png)
 
 ```
 ┌─────────┐         ┌──────────┐         ┌───────────┐         ┌────────┐
@@ -251,9 +255,9 @@ This design works behind any NAT, firewall, or corporate proxy. If your machine 
                           └──────────────────┘
 ```
 
-More detailed architecture diagrams are available in the [diagrams/](./diagrams) directory.
-
 ---
+
+More architecture diagrams — including backend server structure, extension internals, and detailed flowcharts — are available in the [diagrams/](./diagrams) directory.
 
 ## Tech Stack
 

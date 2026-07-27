@@ -82,8 +82,8 @@ The backend directory structure maps directly to the architecture described in t
 
 A short walkthrough of the private repository on GitHub — showing the repo landing page, branch list, recent commits, and contributor graph — without exposing any source code.
 
-<video src="../media/repo.mp4" controls width="100%">
-  Your browser does not support the video tag. Download the video at <a href="../media/repo.mp4">media/repo.mp4</a>.
+<video src="https://raw.githubusercontent.com/mrinmoyChakraborty-mrinox/PullO-Showcase/main/media/repo.mp4" controls width="100%">
+  Your browser does not support the video tag. <a href="https://raw.githubusercontent.com/mrinmoyChakraborty-mrinox/PullO-Showcase/main/media/repo.mp4">Download the video</a>.
 </video>
 
 ---

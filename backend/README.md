@@ -15,7 +15,11 @@ Instead of pushing requests into a machine (requiring open ports), a browser ext
 
 ---
 
-## Architecture (Request Lifecycle)
+## Architecture
+
+![FastAPI Backend Architecture](../diagrams/fastapi-backend.png)
+
+### Request Lifecycle
 
 ```
 Client (OpenAI SDK)
