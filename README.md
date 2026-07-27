@@ -12,7 +12,7 @@
 
 [🌐 Website](https://pullo.runtimeco.qzz.io) •
 [🚀 Live Demo — Coming Soon](#) •
-[📖 Documentation](./docs) •
+[📖 Documentation](https://pullo-docs.vercel.app) •
 [🎥 Demo Video — Coming Soon](#) •
 [📊 Pitch Deck — Coming Soon](pitch/)
 
@@ -355,21 +355,23 @@ PullO-Showcase/
 
 ## Documentation
 
-- [Vision](./docs/app/vision) — Product vision and long-term strategy
-- [Architecture](./docs/app/architecture) — System architecture deep-dive
-- [API Reference](./docs/app/api-reference) — Full API endpoint documentation
-- [Quickstart](./docs/app/quickstart) — Get started in 5 minutes
-- [Extension Overview](./docs/app/extension) — Browser extension setup and config
-- [Deployment Overview](./docs/app/deployment) — Deployment considerations
-- [FAQ](./docs/app/faq) — Frequently asked questions
-- [Roadmap](./docs/app/roadmap) — What's coming next
-- [SDKs](./docs/app/sdks) — Supported client libraries
-- [Tools](./docs/app/tools) — Browser runtime and MCP tool reference
-- [MCP](./docs/app/mcp) — Model Context Protocol integration
-- [Teams](./docs/app/teams) — Workspace and team management
-- [CLI Agents](./docs/app/cli-agents) — CLI agent setup
-- [Troubleshooting](./docs/app/troubleshooting) — Common issues and fixes
-- [Changelog](./docs/app/changelog) — Release history
+Live docs site: [pullo-docs.vercel.app](https://pullo-docs.vercel.app)
+
+- [Vision](https://pullo-docs.vercel.app/vision) — Product vision and long-term strategy
+- [Architecture](https://pullo-docs.vercel.app/architecture) — System architecture deep-dive
+- [API Reference](https://pullo-docs.vercel.app/api-reference) — Full API endpoint documentation
+- [Quickstart](https://pullo-docs.vercel.app/quickstart) — Get started in 5 minutes
+- [Extension Overview](https://pullo-docs.vercel.app/extension) — Browser extension setup and config
+- [Deployment Overview](https://pullo-docs.vercel.app/deployment) — Deployment considerations
+- [FAQ](https://pullo-docs.vercel.app/faq) — Frequently asked questions
+- [Roadmap](https://pullo-docs.vercel.app/roadmap) — What's coming next
+- [SDKs](https://pullo-docs.vercel.app/sdks) — Supported client libraries
+- [Tools](https://pullo-docs.vercel.app/tools) — Browser runtime and MCP tool reference
+- [MCP](https://pullo-docs.vercel.app/mcp) — Model Context Protocol integration
+- [Teams](https://pullo-docs.vercel.app/teams) — Workspace and team management
+- [CLI Agents](https://pullo-docs.vercel.app/cli-agents) — CLI agent setup
+- [Troubleshooting](https://pullo-docs.vercel.app/troubleshooting) — Common issues and fixes
+- [Changelog](https://pullo-docs.vercel.app/changelog) — Release history
 
 ---
 
