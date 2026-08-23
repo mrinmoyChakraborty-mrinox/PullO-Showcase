@@ -12,96 +12,23 @@ export interface NavSection {
 
 export const navSections: NavSection[] = [
   {
-    title: "Getting Started",
+    title: "Home",
     items: [
-      {
-        title: "Overview",
-        href: "/",
-        description: "What is PullO and how it works",
-      },
-      {
-        title: "Quick Start",
-        href: "/quickstart",
-        description: "Install Ollama, connect the extension, make your first API call",
-      },
-      {
-        title: "FAQ",
-        href: "/faq",
-        description: "Common questions about PullO",
-      },
+      { title: "Overview", href: "/" },
     ],
   },
   {
-    title: "Reference",
+    title: "Docs",
     items: [
-      {
-        title: "API Reference",
-        href: "/api-reference",
-        description: "REST API endpoints, auth, request/response schemas",
-      },
-      {
-        title: "SDKs",
-        href: "/sdks",
-        badge: "Soon",
-        description: "Python, JavaScript, and Go client libraries",
-      },
+      { title: "Getting Started", href: "/getting-started" },
+      { title: "Reference", href: "/reference" },
+      { title: "Guides", href: "/guides" },
     ],
   },
   {
-    title: "Guides",
+    title: "Resources",
     items: [
-      {
-        title: "Chrome Extension",
-        href: "/extension",
-        badge: "Soon",
-        description: "Extension popup, connect/disconnect, troubleshooting",
-      },
-      {
-        title: "CLI & Agents",
-        href: "/cli-agents",
-        badge: "Soon",
-        description: "Claude Code, Cursor, Continue.dev, LangChain setup",
-      },
-      {
-        title: "Teams",
-        href: "/teams",
-        badge: "Soon",
-        description: "Invite teammates, roles, workspaces",
-      },
-      {
-        title: "Tools",
-        href: "/tools",
-        badge: "Soon",
-        description: "Web search, calculator, URL reader — per-model/key config",
-      },
-      {
-        title: "MCP",
-        href: "/mcp",
-        badge: "Soon",
-        description: "MCP server connections, custom tools, webhooks",
-      },
-      {
-        title: "Architecture",
-        href: "/architecture",
-        badge: "Soon",
-        description: "Pull-based tunnel diagram, request lifecycle, security model",
-      },
-      {
-        title: "Troubleshooting",
-        href: "/troubleshooting",
-        badge: "Soon",
-        description: "Common errors, Chrome suspension behavior",
-      },
-    ],
-  },
-  {
-    title: "Changelog",
-    items: [
-      {
-        title: "Changelog",
-        href: "/changelog",
-        description: "Release notes for extension, backend, dashboard",
-      },
+      { title: "Changelog", href: "/changelog" },
     ],
   },
 ];

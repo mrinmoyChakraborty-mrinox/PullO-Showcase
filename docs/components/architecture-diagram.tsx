@@ -3,25 +3,25 @@
 import { motion } from "framer-motion";
 
 const nodes = [
-  { id: "dev", label: "Developer", sublabel: "API Client / App", icon: "👤" },
+  { id: "dev", label: "Developer", sublabel: "AI Client", icon: "👤" },
   {
     id: "cloud",
-    label: "PullO Cloud",
-    sublabel: "Request Queue",
+    label: "Cloud Relay",
+    sublabel: "Request Routing",
     icon: "☁",
     highlight: true,
   },
   {
     id: "ext",
-    label: "Chrome Extension",
+    label: "Browser Extension",
     sublabel: "Pull Worker",
     icon: "🔌",
   },
   {
-    id: "ollama",
-    label: "Ollama",
-    sublabel: "localhost:11434",
-    icon: "🦙",
+    id: "local",
+    label: "Local AI",
+    sublabel: "Models on Device",
+    icon: "🖥️",
   },
 ];
 
@@ -46,7 +46,7 @@ const nodeVariants = {
 export function ArchitectureDiagram() {
   return (
     <div
-      aria-label="Architecture diagram: Developer sends request to PullO Cloud, which is pulled by the Chrome Extension and forwarded to local Ollama"
+      aria-label="Architecture diagram: Developer sends request to cloud relay, which is pulled by the browser extension and forwarded to local AI"
       style={{
         padding: "32px 24px",
         borderRadius: "var(--radius-xl)",

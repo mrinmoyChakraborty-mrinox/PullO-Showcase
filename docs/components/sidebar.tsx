@@ -5,7 +5,42 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Menu, ChevronDown } from "lucide-react";
-import { navSections } from "@/lib/nav";
+
+interface NavItem {
+  title: string;
+  href: string;
+  badge?: string;
+}
+
+const navSections = [
+  {
+    title: "Home",
+    items: [
+      { title: "Overview", href: "/" },
+      { title: "Getting Started", href: "/getting-started" },
+    ],
+  },
+  {
+    title "Features",
+    items: [
+      { title: "Privacy", href: "/features/privacy" },
+      { title: "API", href: "/features/api" },
+    ],
+  },
+  {
+    title "Docs",
+    items: [
+      { title: "Introduction", href: "/docs/introduction" },
+      { title: "Architecture", href: "/docs/architecture" },
+    ],
+  },
+  {
+    title "Blog",
+    items: [
+      { title: "Announcements", href: "/blog" },
+    ],
+  },
+];
 
 interface SidebarContentProps {
   onNavClick?: () => void;
@@ -159,7 +194,7 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
 export function Sidebar() {
   return (
     <aside
-      aria-label="Docs sidebar"
+      aria-label="Documentation sidebar"
       style={{
         width: "var(--sidebar-width)",
         flexShrink: 0,

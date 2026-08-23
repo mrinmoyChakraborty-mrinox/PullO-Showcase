@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, Star } from "lucide-react";
-import { CommandPaletteTrigger } from "./command-palette";
-import { MobileSidebar } from "./sidebar";
+import { ExternalLink } from "lucide-react";
 
 export function Topbar() {
   return (
@@ -24,11 +22,6 @@ export function Topbar() {
         gap: "16px",
       }}
     >
-      {/* Mobile menu trigger */}
-      <div style={{ display: "none" }} className="mobile-menu-btn">
-        <MobileSidebar />
-      </div>
-
       {/* Logo */}
       <Link
         href="/"
@@ -98,11 +91,6 @@ export function Topbar() {
         v1.0
       </span>
 
-      {/* Search — grows to fill space */}
-      <div style={{ flex: 1, maxWidth: 360 }}>
-        <CommandPaletteTrigger />
-      </div>
-
       {/* Right actions */}
       <div
         style={{
@@ -114,7 +102,7 @@ export function Topbar() {
         }}
       >
         <Link
-          href={process.env.NEXT_PUBLIC_MAIN_APP_URL || "https://pullo.runtimeco.qzz.io/"}
+          href="/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="PullO website"
@@ -142,7 +130,7 @@ export function Topbar() {
 
       <style>{`
         @media (max-width: 768px) {
-          .mobile-menu-btn { display: flex !important; }
+          /* mobile menu trigger handled separately */
         }
       `}</style>
     </header>
