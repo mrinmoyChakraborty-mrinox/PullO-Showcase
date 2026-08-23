@@ -33,20 +33,223 @@ Your machine is never directly reachable. There are no open ports, no dynamic DN
 | **Provider support** | Web services only | Ollama, LM Studio, llama.cpp, OpenAI-compatible |
 | **Streaming** | Depends on the tunnel | Native SSE streaming end-to-end |
 
-### Features
+---
 
-- 🔒 **Privacy by Design** — Your prompts and model weights never leave your machine
-- 🔌 **OpenAI-Compatible API** — Drop-in replacement. Use existing SDKs without code changes
-- 👥 **Team Workspaces** — Organize members into isolated workspaces with role-based access
-- 🔑 **Scoped API Keys** — Generate keys with model-level access, tool permissions, rate limits, and usage controls
-- 📊 **Usage Analytics** — Track requests, tokens, active models, and team activity per workspace
-- 🛠️ **Browser Runtime Tools** — Extension injects browser capabilities (search, read, screenshot) as LLM tool calls
-- ⚡ **Zero Inbound Ports** — Pull-based architecture means no open ports, no dynamic DNS, no VPN configuration
-- 🌐 **Works Everywhere** — Behind corporate firewalls, on VPNs, in air-gapped environments
+## Features
 
-### Quickstart
+| Icon | Feature | Description |
+|------|---------|-------------|
+| 🔌 | **OpenAI-Compatible API** | Drop-in replacement — use existing OpenAI SDKs without changing your application code |
+| 🖥️ | **Browser Extension** | Lightweight Chrome extension establishes a secure outbound connection from your machine |
+| 🧠 | **Local Provider Support** | Works with Ollama, LM Studio, and llama.cpp out of the box; any OpenAI-compatible endpoint works |
+| 👥 | **Team Workspaces** | Organize members into isolated workspaces with shared model infrastructure and role-based access |
+| 🔑 | **Scoped API Keys** | Generate keys with model-level access, tool permissions, rate limits, and usage controls |
+| 📊 | **Usage Analytics** | Track requests, tokens, active models, and team activity per workspace |
+| 📜 | **Request Logs** | Inspect individual AI requests for debugging and monitoring (prompts are never stored) |
+| 🔒 | **Zero Inbound Ports** | Pull-based architecture means no open ports, no dynamic DNS, no VPN configuration |
+| 🛠️ | **Browser Runtime Tools** | Extension injects browser capabilities — search, read, screenshot — as LLM tool calls |
 
-Use any OpenAI-compatible client with the PullO endpoint.
+---
+
+## Screenshots
+
+<details>
+<summary><b>Landing Page</b></summary>
+<br>
+
+![Landing page screenshot — coming soon](screenshots/landing.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Dashboard</b></summary>
+<br>
+
+![Dashboard screenshot — coming soon](screenshots/dashboard.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Models</b></summary>
+<br>
+
+![Models screenshot — coming soon](screenshots/models.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>API Keys</b></summary>
+<br>
+
+![API Keys screenshot — coming soon](screenshots/api-keys.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Analytics</b></summary>
+<br>
+
+![Analytics screenshot — coming soon](screenshots/analytics.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Browser Extension</b></summary>
+<br>
+
+![Extension screenshot — coming soon](screenshots/extension.png)
+*Screenshot coming soon.*
+
+</details>
+
+<details>
+<summary><b>Workspace</b></summary>
+<br>
+
+![Workspace screenshot — coming soon](screenshots/workspace.png)
+*Screenshot coming soon.*
+
+</details>
+
+---
+
+## Demo
+
+🎥 Demo video — coming soon.
+
+---
+
+## Architecture
+
+### High-Level System
+
+![Technical Architecture](diagrams/technical-architecture.png)
+
+```
+                     ┌──────────────────────┐
+                     │     Your Team Apps    │
+                     │  (OpenAI SDK / Curl   │
+                     │   / LangChain / ...)  │
+                     └──────────┬───────────┘
+                                │ pk_xxx API key
+                     ┌──────────▼───────────┐
+                     │    PullO Cloud Relay   │
+                     │                        │
+                     │  ┌──────────────────┐  │
+                     │  │ Auth + Rate Limit│  │
+                     │  │ + Request Queue  │  │
+                     │  └────────┬─────────┘  │
+                     └──────────┬───────────┘
+                                │ WebSocket (outbound)
+                     ┌──────────▼───────────┐
+                     │  Chrome Extension     │
+                     │  (pulls requests,     │
+                     │   streams responses)  │
+                     └──────────┬───────────┘
+                                │ localhost
+                     ┌──────────▼───────────┐
+                     │    Local AI Runtime   │
+                     │                        │
+                     │  Ollama  │  LM Studio  │
+                     │  llama.cpp │ Compatible │
+                     └────────────────────────┘
+```
+
+### Request Lifecycle
+
+![Request Life Cycle](diagrams/request-life-cycle.png)
+
+```
+┌─────────┐         ┌──────────┐         ┌───────────┐         ┌────────┐
+│  Client │         │  PullO   │         │ Extension │         │ Local  │
+│ (SDK)   │         │  Cloud   │         │ (Browser) │         │ Model  │
+└────┬────┘         └────┬─────┘         └─────┬─────┘         └───┬────┘
+     │                    │                     │                    │
+     │  POST /v1/chat     │                     │                    │
+     │  (Bearer pk_xxx)   │                     │                    │
+     │───────────────────>│                     │                    │
+     │                    │                     │                    │
+     │                    │  Validate API key   │                    │
+     │                    │  Check rate limit   │                    │
+     │                    │  Check model online │                    │
+     │                    │                     │                    │
+     │                    │  Queue request      │                    │
+     │                    │────────────────────>│                    │
+     │                    │  (WebSocket push)   │                    │
+     │                    │                     │                    │
+     │                    │                     │  localhost:11434   │
+     │                    │                     │───────────────────>│
+     │                    │                     │                    │
+     │                    │                     │  Generate response │
+     │                    │                     │<───────────────────│
+     │                    │                     │  (streaming SSE)   │
+     │                    │  Stream response    │                    │
+     │<───────────────────│                     │                    │
+     │                    │                     │                    │
+```
+
+### Security Model
+
+```
+                          ┌──────────────────┐
+                          │   Internet       │
+                          │                  │
+                          │  PullO Cloud     │
+                          │  (reachable)     │
+                          └────────┬─────────┘
+                                   │
+                     Only outbound │ WebSocket
+                     No inbound    │
+                     ports open    │
+                                   │
+                          ┌────────▼─────────┐
+                          │   Your Machine   │
+                          │                  │
+                          │  ┌────────────┐  │
+                          │  │ Extension  │  │
+                          │  │ (Chrome)   │  │
+                          │  └────────────┘  │
+                          │         │        │
+                          │  ┌──────▼─────┐  │
+                          │  │ Ollama /   │  │
+                          │  │ LM Studio  │  │
+                          │  │ (localhost)│  │
+                          │  └────────────┘  │
+                          └──────────────────┘
+```
+
+---
+
+More architecture diagrams — including backend server structure, extension internals, and detailed flowcharts — are available in the [diagrams/](./diagrams) directory.
+
+## Tech Stack
+
+PullO's public-facing and client-side components are built with:
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js, React 19, TypeScript |
+| **Styling** | Tailwind CSS 4, shadcn/ui, Framer Motion |
+| **3D / Visuals** | Three.js, React Three Fiber, GSAP, Lenis |
+| **Auth (frontend)** | Supabase Auth (email + Google OAuth) |
+| **Charts** | Recharts |
+| **Docs** | Next.js 15, MDX, Fuse.js search |
+| **Browser Extension** | Manifest V3 (Chrome) |
+| **Local Providers** | Ollama, LM Studio, llama.cpp (any OpenAI-compatible endpoint) |
+| **Analytics** | Vercel Analytics |
+| **Error Monitoring** | Sentry |
+| **Icons** | Lucide React |
+
+---
+
+## Quickstart / API Example
+
+PullO exposes a standard OpenAI-compatible API. Use any OpenAI SDK by changing the base URL and API key.
 
 ```bash
 curl https://api.pullo.ai/v1/chat/completions \
